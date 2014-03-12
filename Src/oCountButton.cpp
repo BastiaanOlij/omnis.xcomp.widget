@@ -191,8 +191,7 @@ int	oCountButton::invokeMethod(qlong pMethodId, EXTCompInfo* pECI) {
 			return oBaseVisComponent::invokeMethod(pMethodId, pECI);
 		}; break;
 	}*/
-
-	return 1;
+	return 1L;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

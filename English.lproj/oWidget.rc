@@ -1,0 +1,20 @@
+
+1   BITMAP  DISCARDABLE     "OWIDGET.BMP"
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+	1000			"Widget Library"
+	2000			"oDateTime"
+	2001			"oCountButton"
+	4000			"$localtime:our datetime in the local timezone"
+	4001			"$utc:our datetime as UTC"
+	4100			"$counter:counter to display"
+	4101			"$radius:radius"
+	4102			"$spacing:spacing"
+	5000			"click:Button has been clicked"
+	7000			"seconds:Seconds"
+	8000			"$addSeconds:$addSeconds() Add seconds to datetime."
+	31000			"FrameworkWndProc"
+END
+
+

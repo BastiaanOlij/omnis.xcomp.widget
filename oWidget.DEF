@@ -1,0 +1,4 @@
+LIBRARY         widget
+EXPORTS
+    FrameworkWndProc	@1
+ 

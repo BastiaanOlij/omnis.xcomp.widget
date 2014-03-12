@@ -1,0 +1,413 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		96CA4E210907E82600C234AA /* n_complib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CA4E200907E82600C234AA /* n_complib.framework */; };
+		96D631100905059400E0F291 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
+		96D631130905059400E0F291 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
+		AC1535A916206B3700AACACB /* qString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1535A716206B3700AACACB /* qString.cpp */; };
+		AC1535B116206B6100AACACB /* FrameworkWndProc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1535AE16206B6100AACACB /* FrameworkWndProc.cpp */; };
+		AC1FE1DE18D03F0F007C0416 /* oCountButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1FE1DD18D03F0F007C0416 /* oCountButton.cpp */; };
+		AC1FE3AB18D074A5007C0416 /* drawingfunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1FE3AA18D074A5007C0416 /* drawingfunctions.cpp */; };
+		AC1FE3C718D07573007C0416 /* oBaseNVComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1FE3C618D07573007C0416 /* oBaseNVComponent.cpp */; };
+		AC1FE3CE18D0765E007C0416 /* oBaseVisComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1FE3CD18D0765E007C0416 /* oBaseVisComponent.cpp */; };
+		AC1FE3F218D0796F007C0416 /* oUTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1FE3F018D0796F007C0416 /* oUTF8.cpp */; };
+		AC51E43818CFEA140056D838 /* oDateTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC51E43618CFEA140056D838 /* oDateTime.cpp */; };
+		AC51E43918CFEA140056D838 /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC51E43718CFEA140056D838 /* widget.cpp */; };
+		AC51E43E18CFEA2A0056D838 /* oWidget.bmp in Resources */ = {isa = PBXBuildFile; fileRef = AC51E43A18CFEA2A0056D838 /* oWidget.bmp */; };
+		AC51E46218CFEE130056D838 /* oWidget.rc in Resources */ = {isa = PBXBuildFile; fileRef = AC51E43C18CFEA2A0056D838 /* oWidget.rc */; };
+		ACB85D4D16275A3C00C45C63 /* oXCompLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACB85D4C16275A3C00C45C63 /* oXCompLib.cpp */; };
+		ACFCA2DD161C7574004CD3BC /* oBaseComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACFCA2D9161C7574004CD3BC /* oBaseComponent.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		96D6314209050A2E00E0F291 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.rc";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(TEMP_FILE_DIR)/omnisrc/Localizable.strings",
+			);
+			script = "/Developer/Tools/omnisrc.app/Contents/MacOS/omnisrc INPUT_FILE_PATH TEMP_FILE_DIR REZ_SEARCH_PATHS XCOMP\ncp $TEMP_FILE_DIR/omnisrc/xcomp.rsrc $INSTALL_DIR/$CONTENTS_FOLDER_PATH/Resources";
+		};
+/* End PBXBuildRule section */
+
+/* Begin PBXFileReference section */
+		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		96CA4E200907E82600C234AA /* n_complib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = n_complib.framework; path = ../complib/n_complib.framework; sourceTree = SOURCE_ROOT; };
+		96D631190905059400E0F291 /* oWidget.n_xcomp */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = oWidget.n_xcomp; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC1535A716206B3700AACACB /* qString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qString.cpp; path = ../omnis.xcomp.framework/qString.cpp; sourceTree = SOURCE_ROOT; };
+		AC1535A816206B3700AACACB /* qString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qString.h; path = ../omnis.xcomp.framework/qString.h; sourceTree = SOURCE_ROOT; };
+		AC1535AE16206B6100AACACB /* FrameworkWndProc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameworkWndProc.cpp; path = ../omnis.xcomp.framework/FrameworkWndProc.cpp; sourceTree = SOURCE_ROOT; };
+		AC1FE1DC18D03F0F007C0416 /* oCountButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oCountButton.h; path = src/oCountButton.h; sourceTree = "<group>"; };
+		AC1FE1DD18D03F0F007C0416 /* oCountButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oCountButton.cpp; path = src/oCountButton.cpp; sourceTree = "<group>"; };
+		AC1FE3AA18D074A5007C0416 /* drawingfunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = drawingfunctions.cpp; path = ../omnis.xcomp.framework/drawingfunctions.cpp; sourceTree = SOURCE_ROOT; };
+		AC1FE3C518D07573007C0416 /* oBaseNVComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseNVComponent.h; path = ../omnis.xcomp.framework/oBaseNVComponent.h; sourceTree = SOURCE_ROOT; };
+		AC1FE3C618D07573007C0416 /* oBaseNVComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseNVComponent.cpp; path = ../omnis.xcomp.framework/oBaseNVComponent.cpp; sourceTree = SOURCE_ROOT; };
+		AC1FE3CC18D0765E007C0416 /* oBaseVisComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseVisComponent.h; path = ../omnis.xcomp.framework/oBaseVisComponent.h; sourceTree = SOURCE_ROOT; };
+		AC1FE3CD18D0765E007C0416 /* oBaseVisComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseVisComponent.cpp; path = ../omnis.xcomp.framework/oBaseVisComponent.cpp; sourceTree = SOURCE_ROOT; };
+		AC1FE3F018D0796F007C0416 /* oUTF8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oUTF8.cpp; path = ../omnis.xcomp.framework/oUTF8.cpp; sourceTree = SOURCE_ROOT; };
+		AC1FE3F118D0796F007C0416 /* oUTF8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oUTF8.h; path = ../omnis.xcomp.framework/oUTF8.h; sourceTree = SOURCE_ROOT; };
+		AC51E43418CFEA030056D838 /* oDateTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDateTime.h; path = Src/oDateTime.h; sourceTree = "<group>"; };
+		AC51E43518CFEA030056D838 /* widget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = widget.h; path = Src/widget.h; sourceTree = "<group>"; };
+		AC51E43618CFEA140056D838 /* oDateTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDateTime.cpp; path = Src/oDateTime.cpp; sourceTree = "<group>"; };
+		AC51E43718CFEA140056D838 /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = widget.cpp; path = Src/widget.cpp; sourceTree = "<group>"; };
+		AC51E43B18CFEA2A0056D838 /* English */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = English; path = English.lproj/oWidget.bmp; sourceTree = "<group>"; };
+		AC51E43D18CFEA2A0056D838 /* English */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; name = English; path = English.lproj/oWidget.rc; sourceTree = "<group>"; };
+		ACB85D4B16275A3C00C45C63 /* oXCompLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oXCompLib.h; path = ../omnis.xcomp.framework/oXCompLib.h; sourceTree = SOURCE_ROOT; };
+		ACB85D4C16275A3C00C45C63 /* oXCompLib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oXCompLib.cpp; path = ../omnis.xcomp.framework/oXCompLib.cpp; sourceTree = SOURCE_ROOT; };
+		ACB85D5216275B7D00C45C63 /* xCompStandardIncludes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xCompStandardIncludes.h; path = ../omnis.xcomp.framework/xCompStandardIncludes.h; sourceTree = SOURCE_ROOT; };
+		ACBAE45316205D65001A58DD /* qArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qArray.h; path = ../omnis.xcomp.framework/qArray.h; sourceTree = SOURCE_ROOT; };
+		ACFCA2C4161C7184004CD3BC /* omnis.xcomp.framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = omnis.xcomp.framework.h; path = ../omnis.xcomp.framework/omnis.xcomp.framework.h; sourceTree = SOURCE_ROOT; };
+		ACFCA2D8161C7574004CD3BC /* oBaseComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseComponent.h; path = ../omnis.xcomp.framework/oBaseComponent.h; sourceTree = SOURCE_ROOT; };
+		ACFCA2D9161C7574004CD3BC /* oBaseComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseComponent.cpp; path = ../omnis.xcomp.framework/oBaseComponent.cpp; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		96D631120905059400E0F291 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96D631130905059400E0F291 /* Carbon.framework in Frameworks */,
+				96CA4E210907E82600C234AA /* n_complib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* xrandom */ = {
+			isa = PBXGroup;
+			children = (
+				AC15359D16206AFD00AACACB /* omnis.xcomp.framework */,
+				96D631340905093100E0F291 /* Headers */,
+				08FB77ADFE841716C02AAC07 /* Source */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
+				19C28FB4FE9D528D11CA2CBB /* Products */,
+			);
+			name = xrandom;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				96CA4E200907E82600C234AA /* n_complib.framework */,
+				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AC51E43A18CFEA2A0056D838 /* oWidget.bmp */,
+				AC51E43C18CFEA2A0056D838 /* oWidget.rc */,
+				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77ADFE841716C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				AC51E43618CFEA140056D838 /* oDateTime.cpp */,
+				AC51E43718CFEA140056D838 /* widget.cpp */,
+				AC1FE1DD18D03F0F007C0416 /* oCountButton.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		19C28FB4FE9D528D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				96D631190905059400E0F291 /* oWidget.n_xcomp */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		96D631340905093100E0F291 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				AC51E43418CFEA030056D838 /* oDateTime.h */,
+				AC1FE1DC18D03F0F007C0416 /* oCountButton.h */,
+				AC51E43518CFEA030056D838 /* widget.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		AC15359D16206AFD00AACACB /* omnis.xcomp.framework */ = {
+			isa = PBXGroup;
+			children = (
+				AC1FE3F018D0796F007C0416 /* oUTF8.cpp */,
+				AC1FE3F118D0796F007C0416 /* oUTF8.h */,
+				AC1535A716206B3700AACACB /* qString.cpp */,
+				AC1535A816206B3700AACACB /* qString.h */,
+				ACFCA2C4161C7184004CD3BC /* omnis.xcomp.framework.h */,
+				ACFCA2D8161C7574004CD3BC /* oBaseComponent.h */,
+				ACFCA2D9161C7574004CD3BC /* oBaseComponent.cpp */,
+				ACBAE45316205D65001A58DD /* qArray.h */,
+				AC1535AE16206B6100AACACB /* FrameworkWndProc.cpp */,
+				ACB85D4B16275A3C00C45C63 /* oXCompLib.h */,
+				ACB85D4C16275A3C00C45C63 /* oXCompLib.cpp */,
+				ACB85D5216275B7D00C45C63 /* xCompStandardIncludes.h */,
+				AC1FE3AA18D074A5007C0416 /* drawingfunctions.cpp */,
+				AC1FE3C518D07573007C0416 /* oBaseNVComponent.h */,
+				AC1FE3C618D07573007C0416 /* oBaseNVComponent.cpp */,
+				AC1FE3CC18D0765E007C0416 /* oBaseVisComponent.h */,
+				AC1FE3CD18D0765E007C0416 /* oBaseVisComponent.cpp */,
+			);
+			name = omnis.xcomp.framework;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		96D6310E0905059400E0F291 /* core */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 96D631150905059400E0F291 /* Build configuration list for PBXNativeTarget "core" */;
+			buildPhases = (
+				96D6310F0905059400E0F291 /* Resources */,
+				96D631110905059400E0F291 /* Sources */,
+				96D631120905059400E0F291 /* Frameworks */,
+			);
+			buildRules = (
+				96D6314209050A2E00E0F291 /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = core;
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = xrandom;
+			productReference = 96D631190905059400E0F291 /* oWidget.n_xcomp */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 96CF455E08FBABD1003AA3FE /* Build configuration list for PBXProject "oWidget_OS4" */;
+			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				english,
+			);
+			mainGroup = 089C166AFE841209C02AAC07 /* xrandom */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				96D6310E0905059400E0F291 /* core */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		96D6310F0905059400E0F291 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96D631100905059400E0F291 /* InfoPlist.strings in Resources */,
+				AC51E43E18CFEA2A0056D838 /* oWidget.bmp in Resources */,
+				AC51E46218CFEE130056D838 /* oWidget.rc in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		96D631110905059400E0F291 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACFCA2DD161C7574004CD3BC /* oBaseComponent.cpp in Sources */,
+				AC1535A916206B3700AACACB /* qString.cpp in Sources */,
+				AC1535B116206B6100AACACB /* FrameworkWndProc.cpp in Sources */,
+				ACB85D4D16275A3C00C45C63 /* oXCompLib.cpp in Sources */,
+				AC51E43818CFEA140056D838 /* oDateTime.cpp in Sources */,
+				AC51E43918CFEA140056D838 /* widget.cpp in Sources */,
+				AC1FE1DE18D03F0F007C0416 /* oCountButton.cpp in Sources */,
+				AC1FE3AB18D074A5007C0416 /* drawingfunctions.cpp in Sources */,
+				AC1FE3C718D07573007C0416 /* oBaseNVComponent.cpp in Sources */,
+				AC1FE3CE18D0765E007C0416 /* oBaseVisComponent.cpp in Sources */,
+				AC1FE3F218D0796F007C0416 /* oUTF8.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C167EFE841241C02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		AC51E43A18CFEA2A0056D838 /* oWidget.bmp */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AC51E43B18CFEA2A0056D838 /* English */,
+			);
+			name = oWidget.bmp;
+			sourceTree = "<group>";
+		};
+		AC51E43C18CFEA2A0056D838 /* oWidget.rc */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AC51E43D18CFEA2A0056D838 /* English */,
+			);
+			name = oWidget.rc;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		96CF455F08FBABD1003AA3FE /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /;
+				LIBRARY_STYLE = DYNAMIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Development;
+		};
+		96CF456008FBABD1003AA3FE /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Deployment;
+		};
+		96D631160905059400E0F291 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
+				BUILD_VARIANTS = normal;
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../complib";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = $PROJECT_DIR/../complib/n_complib.framework/Headers/carbonin.h;
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					/Developer/Headers/FlatCarbon,
+					$PROJECT_DIR/../complib/n_complib.framework/Headers,
+				);
+				INFOPLIST_FILE = "$(PROJECT_DIR)/Info.plist";
+				INIT_ROUTINE = "";
+				INSTALL_PATH = "$(PROJECT_DIR)/../_OSXDebug";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-fpermissive",
+					"-fno-for-scope",
+					"-Dismach_o",
+					"-Dismach-o",
+				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = oWidget;
+				RESMERGER_SOURCES_FORK = data;
+				REZ_SEARCH_PATHS = (
+					/Developer/Headers/FlatCarbon,
+					$PROJECT_DIR,
+					$PROJECT_DIR/English.lproj,
+				);
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+				WRAPPER_EXTENSION = n_xcomp;
+				ZERO_LINK = NO;
+			};
+			name = Development;
+		};
+		96D631170905059400E0F291 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../complib";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = $PROJECT_DIR/../complib/n_complib.framework/Headers/carbonin.h;
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					/Developer/Headers/FlatCarbon,
+					$PROJECT_DIR/../complib/n_complib.framework/Headers,
+				);
+				INFOPLIST_FILE = "$(PROJECT_DIR)/Info.plist";
+				INSTALL_PATH = "$(PROJECT_DIR)/../_OSXRelease";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-fpermissive",
+					"-fno-for-scope",
+					"-Dismach_o",
+					"-Dismach-o",
+				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				PRODUCT_NAME = oWidget;
+				RESMERGER_SOURCES_FORK = data;
+				REZ_SEARCH_PATHS = (
+					/Developer/Headers/FlatCarbon,
+					$PROJECT_DIR,
+					$PROJECT_DIR/English.lproj,
+				);
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+				SKIP_INSTALL = NO;
+				WRAPPER_EXTENSION = n_xcomp;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		96CF455E08FBABD1003AA3FE /* Build configuration list for PBXProject "oWidget_OS4" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				96CF455F08FBABD1003AA3FE /* Development */,
+				96CF456008FBABD1003AA3FE /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		96D631150905059400E0F291 /* Build configuration list for PBXNativeTarget "core" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				96D631160905059400E0F291 /* Development */,
+				96D631170905059400E0F291 /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}

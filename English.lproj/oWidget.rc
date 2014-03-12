@@ -11,6 +11,7 @@ BEGIN
 	4100			"$counter:counter to display"
 	4101			"$radius:radius"
 	4102			"$spacing:spacing"
+	4103			"$countColour:Background colour of our counter"
 	5000			"click:Button has been clicked"
 	7000			"seconds:Seconds"
 	8000			"$addSeconds:$addSeconds() Add seconds to datetime."

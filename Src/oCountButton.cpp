@@ -14,10 +14,12 @@
 
 // we only implement our constructors/destructors to get some logging going to find out if all is well...
 oCountButton::oCountButton(void) {
-	mBKTheme	= WND_BK_PARENT;
-	mCounter	= 0;
-	mIconID		= 0;
-	mRadius		= 5;
+	mBKTheme		= WND_BK_PARENT;
+	mCounter		= 0;
+	mIconID			= 0;
+	mRadius			= 5;
+	mSpacing		= 0;
+	mCountColour	= GDI_COLOR_QBLUE; 
 };
 
 oCountButton::~oCountButton(void) {
@@ -53,11 +55,13 @@ void oCountButton::doPaint(HDC pHDC) {
 		
 		int			tmpLeft = mClientRect.right - (mRadius*2);
 		qrect		tmpRect = qrect(tmpLeft - mSpacing, mClientRect.top, mClientRect.right, mClientRect.top + (mRadius*2));
-//		drawEllipse(pHDC, tmpRect, GDIgetLighterShade(GDI_COLOR_QBLUE), GDI_COLOR_QBLUE, GDI_COLOR_QWHITE, mSpacing);
-		drawEllipse(pHDC, tmpRect, mixColors(GDI_COLOR_QWHITE, GDI_COLOR_QBLUE), GDI_COLOR_QBLUE, GDI_COLOR_QWHITE, mSpacing);
+		drawEllipse(pHDC, tmpRect, mixColors(GDI_COLOR_QWHITE, mCountColour), mCountColour, GDI_COLOR_QWHITE, mSpacing);
 		
 		tmpLeft = tmpRect.left + ((tmpRect.right - tmpRect.left) >> 1);
+		GDIsetTextColor(pHDC, GDI_COLOR_QWHITE);
 		GDIdrawText(pHDC, tmpLeft, 2, (qchar *) tmpCounter.cString(), tmpCounter.length(), jstCenter);
+
+		GDIsetTextColor(pHDC, mTextColor);
 	};
 };
 
@@ -71,6 +75,7 @@ ECOproperty oCountButtonProperties[] = {
 	oCB_counter,				4100,	fftInteger,		EXTD_FLAG_PROPDATA,		0,		0,			0,		// $counter
 	oCB_radius,					4101,	fftInteger,		EXTD_FLAG_PROPDATA,		0,		0,			0,		// $radius
 	oCB_spacing,				4102,	fftInteger,		EXTD_FLAG_PROPDATA,		0,		0,			0,		// $spacing
+	oCB_countColour,			4103,	fftInteger,		EXTD_FLAG_PROPAPP+EXTD_FLAG_PWINDCOL,		0,		0,			0,		// $countColour
 };	
 
 qProperties * oCountButton::properties(void) {
@@ -125,6 +130,11 @@ qbool oCountButton::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* 
 			WNDinvalidateRect(mHWnd, NULL);			
 			return qtrue;			
 		}; break;
+		case oCB_countColour: {
+			mCountColour = pNewValue.getLong();
+			WNDinvalidateRect(mHWnd, NULL);			
+			return qtrue;			
+		}; break;
 		default:
 			return oBaseVisComponent::setProperty(pPropID, pNewValue, pECI);
 			break;
@@ -147,6 +157,9 @@ void oCountButton::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* p
 		}; break;
 		case oCB_spacing: {
 			pGetValue.setLong(mSpacing);
+		}; break;
+		case oCB_countColour: {
+			pGetValue.setLong(mCountColour);
 		}; break;
 		default:
 			oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);

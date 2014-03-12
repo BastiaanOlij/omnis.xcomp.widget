@@ -19,6 +19,7 @@ enum oCountButtonPropIDs {
 	oCB_counter			= 100,
 	oCB_radius			= 101,
 	oCB_spacing			= 102,
+	oCB_countColour		= 103,
 };
 
 enum oCountBUttonEventIDs {
@@ -31,6 +32,7 @@ private:
 	int							mCounter;
 	int							mRadius;
 	int							mSpacing;
+	qcol						mCountColour;
 	
 public:
 	oCountButton(void);

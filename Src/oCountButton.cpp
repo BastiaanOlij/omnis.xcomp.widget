@@ -161,10 +161,10 @@ void oCountButton::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* p
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This is our array of methods we support
-ECOmethodEvent oCountButtonMethods[] = {
+// ECOmethodEvent oCountButtonMethods[] = {
 	//	ID				Resource	Return type		Paramcount		Params					Flags		ExFlags
 //	1,					8000,		fftCharacter,	0,				NULL,					0,			0,			// $testMethod	
-};
+// };
 
 // return an array of method meta data
 qMethods * oCountButton::methods(void) {
@@ -191,6 +191,8 @@ int	oCountButton::invokeMethod(qlong pMethodId, EXTCompInfo* pECI) {
 			return oBaseVisComponent::invokeMethod(pMethodId, pECI);
 		}; break;
 	}*/
+
+	return 1;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

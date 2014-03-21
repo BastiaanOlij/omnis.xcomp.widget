@@ -23,7 +23,8 @@ enum oDataListPropIDs {
 	oDL_columncalcs		= 101,
 	oDL_columnwidths	= 102,
 	oDL_columnaligns	= 103,
-	oDL_groupcalcs		= 104
+	oDL_maxrowheight    = 104,
+	oDL_groupcalcs		= 120
 };
 
 enum oDataListEventIDs {
@@ -32,7 +33,12 @@ enum oDataListEventIDs {
 
 class oDataList : public oBaseVisComponent {
 private:
+	bool						mRebuildNodes;														// if true we need to rebuild our nodes
+	bool						mUpdatePositions;													// update our position data
+
 	bool						mShowSelected;														// if true we show selected lines, if false we only show the current line
+	qdim						mIndent;															// Indent for our tree
+	qdim						mLineSpacing;														// Empty space between lines in pixels
 	
 	qArray<qstring *>			mGroupCalculations;													// Calculations by which we're grouping
 	
@@ -40,14 +46,18 @@ private:
 	qArray<qstring *>			mColumnCalculations;												// Calculations for displaying our column data
 	qdimArray					mColumnWidths;														// Our column widths
 	qArray<qjst>				mColumnAligns;														// Our column aligns
+	qdim						mMaxRowHeight;														// Maximum rowheight
 
 	oDLNode						mRootNode;															// Our root node
 	
 	void						clearGroupCalcs(void);												// Clear our group calculations
 	void						clearColumnCalcs(void);												// Clear our column calculations
 	
+	void						checkColumns(void);													// Check if our column data is complete
+	qdim						drawDividers(qdim pTop, qdim pBottom);								// Draw divider lines
 	qdim						drawNode(EXTCompInfo* pECI, oDLNode &pNode, EXTqlist* pList, qdim pIndent, qdim pTop);	// Draw this node
 	qdim						drawRow(EXTCompInfo* pECI, qlong pLineNo, EXTqlist* pList, qdim pIndent, qdim pTop);	// Draw this row
+	
 public:
 	oDataList(void);
 	~oDataList(void);

@@ -5,6 +5,17 @@
  *  oDataList.cpp
  *  Implementation of our datalist object
  *
+ *  Todos:
+ *  - implement resizing columns with mouse
+ *  - find out why divider lines disappear when scrolling
+ *  - make properties for mIndent, mLineSpacing, mShowSelected, style of drawing divider lines, etc.
+ *  - implement expand/collapse groups
+ *  - implement selecting lines
+ *  - implement drag and drop lines
+ *  - implement that one of our groupings can also represent a row in our list
+ *  - implement totaling amounts
+ *  - figure out how to make our column calculations and group calculations show up in a proper editor in the property manager
+ *
  *  Bastiaan Olij
  */
 
@@ -12,8 +23,12 @@
 #include "oDataList.h"
 
 oDataList::oDataList(void) {
-	mColumnCount = 1;
-	mShowSelected = false;
+	mColumnCount		= 1;
+	mShowSelected		= false;
+	mRebuildNodes		= true;
+	mUpdatePositions	= true;
+	mIndent				= 20;
+	mLineSpacing		= 4;
 };
 
 oDataList::~oDataList(void) {
@@ -46,39 +61,90 @@ oDataList * oDataList::newObject(void) {
 	return lvNewDataList;
 };
 
+// Check if our column data is complete	and we do not have widths that don't make sense..
+void	oDataList::checkColumns(void) {
+	for (qlong i = 0; i<mColumnCount; i++) {
+		if (i>=mColumnWidths.numberOfElements()) {
+			// missing a width? add it now so we can trust it later...
+			mUpdatePositions = true;
+			mColumnWidths.push(100);
+		} else if (mColumnWidths[i]<10) {
+			mUpdatePositions = true;
+			mColumnWidths.setElementAtIndex(i, 10);
+		};
+		
+		if (i>=mColumnAligns.numberOfElements()) {
+			// make sure we've got all our aligns as well so we can trust it later..
+			mColumnAligns.push(jstLeft);
+		};
+		
+		if (i>=mColumnCalculations.numberOfElements()) {
+			// make sure we've got all our column calculations as well so we can trust it later..
+			mUpdatePositions = true;
+			mColumnCalculations.push(new qstring(QTEXT("")));
+		};		
+	};
+};
+
+// Draw divider lines
+qdim	oDataList::drawDividers(qdim pTop, qdim pBottom) {
+	qdim	left = 0;
+	for (qlong i = 0; i<mColumnCount; i++) {
+		left += mColumnWidths[i];
+		drawLine(qpoint(left-mOffsetX,mClientRect.top), qpoint(left-mOffsetX,mClientRect.bottom), 1, GDI_COLOR_QGRAY, patStd0); // should make the color and linestyle configurable
+	};
+	
+	return left;
+};
+
 // Draw this node
 qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, EXTqlist* pList, qdim pIndent, qdim pTop) {
 	qdim	headerHeight = 0;
 	
+	// if our top doesn't match we must update further positions.. 
+	if ((pNode.mTop != pTop) && (!mUpdatePositions)) {
+		addToTraceLog("Top positions do not match while we're reusing positions?");
+		mUpdatePositions = true;
+	} else if ((!mUpdatePositions) && ((pNode.mTop - mOffsetY > mClientRect.bottom) || (pNode.mBottom - mOffsetY < mClientRect.top))) {
+		// fully offscreen? no point in drawing!
+		return pNode.mBottom;
+	};
+	
+	// write top info back into our node..
+	pNode.mTop = pTop;
+	
 	if (pIndent == -1) {
 		// our root node, ignore this...
 		pIndent = 0;
-		
-		addToTraceLog("Drawing root node");
 	} else {
-		qdim	iconwidth = 32;
-
+		// Note, we may end up drawing our grouping even if it is off screen but some of the children are onscreen but there shouldn't be too much overhead int hat.
 		if (pNode.lineNo()!=0) {
 			// draw as a full line
-			headerHeight = drawRow(pECI, pNode.lineNo(), pList, pIndent+iconwidth, pTop);
+			headerHeight = drawRow(pECI, pNode.lineNo(), pList, pIndent + mIndent, pTop + 2);
 			headerHeight -= pTop;
 		} else {
 			// Draw our description
 			qrect	columnRect;
-
-			columnRect.left		= pIndent - mOffsetX + iconwidth + 1;
-			columnRect.top		= pTop;
-			columnRect.right	= mColumnWidths[0] - mOffsetX - 1;
-			columnRect.bottom	= pTop + 150;
+			qdim width = mColumnWidths[0] - pIndent - mIndent - 4;
 			
-			headerHeight = drawText(pNode.description(), columnRect, mTextColor, jstLeft, true, true);
-			headerHeight -= pTop;
+			headerHeight = 2 + getTextHeight(pNode.description(), width > 10 ? width : 10, true, true);
+			if (headerHeight > mMaxRowHeight) {
+				headerHeight = mMaxRowHeight;
+			};
+
+			columnRect.left		= pIndent - mOffsetX + mIndent + 2;
+			columnRect.top		= pTop - mOffsetY + 2;
+			columnRect.right	= mColumnWidths[0] - mOffsetX - 2;
+			columnRect.bottom	= columnRect.top + headerHeight;
+			
+			drawText(pNode.description(), columnRect, mTextColor, jstLeft, true, true);
 		};
-		
+
 		// now draw expanded/collapsed icon
+		drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(-mOffsetX + 1, pTop - mOffsetY));
 		
-		
-		pIndent += iconwidth;
+		pIndent += mIndent;
+		headerHeight += mLineSpacing;
 	};
 	
 	if (pNode.expanded()) {
@@ -92,8 +158,33 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, EXTqlist* pList, qdi
 		};
 		
 		// draw line nodes
-		for (i = 0; i<pNode.lineNodeCount(); i++) {
-			pTop = drawRow(pECI, pNode.getLineNoAtIndex(i), pList, pIndent, pTop);
+		for (i = 0; i<pNode.rowCount(); i++) {
+			sDLRow	lvRow = pNode.getRowAtIndex(i);
+
+			// check if our top position is valid..
+			if ((lvRow.mTop!=pTop) && (!mUpdatePositions)) {
+				addToTraceLog("Top positions do not match while we're reusing positions?");
+				mUpdatePositions = true;				
+			};
+			
+			if (mUpdatePositions || ((lvRow.mTop - mOffsetY < mClientRect.bottom) && (lvRow.mBottom - mOffsetY > mClientRect.top))) {
+				// write top info back into our line..
+				lvRow.mTop = pTop;
+				
+				// draw line
+				pTop = drawRow(pECI, lvRow.mLineNo, pList, pIndent, pTop);
+				
+				// write top info back into our line..
+				lvRow.mBottom = pTop;
+				
+				// store our updated positions...
+				pNode.setRowAtIndex(i, lvRow);
+			} else {
+				pTop = lvRow.mBottom;
+			};
+			
+			// draw a horizontal line?
+			pTop += mLineSpacing;
 		};
 		
 		// draw totals?
@@ -105,6 +196,9 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, EXTqlist* pList, qdi
 		pTop += headerHeight;
 	};
 	
+	// write bottom info back into our node..
+	pNode.mBottom = pTop;
+	
 	return pTop;
 };
 
@@ -112,6 +206,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, EXTqlist* pList, qdi
 qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, EXTqlist* pList, qdim pIndent, qdim pTop) {
 	qdim				left			= 0;
 	qdim				lineheight		= 14; // minimum line height...
+	qlong				i;
 	qlong				oldCurRow		= pList->getCurRow();
 	bool				isSelected		= ((mShowSelected && pList->isRowSelected(pLineNo)) || (!mShowSelected && (pLineNo == oldCurRow)));
 	qArray<qstring *>	columndata;
@@ -119,7 +214,7 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, EXTqlist* pList, qdim 
 	pList->setCurRow(pLineNo);
 
 	// 1) find the line height of each text to find the highest line
-	for (qlong i = 0; i < mColumnCount; i++) {
+	for (i = 0; i < mColumnCount; i++) {
 		qstring *		calcstr = mColumnCalculations[i];
 		qstring *		newdata;
 		
@@ -155,38 +250,43 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, EXTqlist* pList, qdim 
 				
 		columndata.push(newdata);
 
-		qdim width = mColumnWidths[i] - 2 - (i==0 ? pIndent : 0);
+		qdim width = mColumnWidths[i] - 4 - (i==0 ? pIndent : 0);
 		qdim columnHeight = getTextHeight(newdata->cString(), width > 10 ? width : 10, true, true);
 		if (columnHeight>lineheight) {				
 			lineheight = columnHeight;
 		};
 	};
 	
-	if (isSelected) {		
-		// 2) draw our blue background 
-
-		// 3) redraw our divider lines as we'll have drawn over those
-		
+	// Too heigh?
+	if (lineheight > mMaxRowHeight) {
+		lineheight = mMaxRowHeight;
 	};
 	
-	// 4) draw our text
-	left = -mOffsetX;
-	for (i = 0; i < mColumnCount; i++) {
-		qstring *	data = columndata[i];
-		qrect		columnRect;
+	if ((pTop - mOffsetY < mClientRect.bottom) && (pTop + lineheight - mOffsetY > mClientRect.top)) {
+		if (isSelected) {		
+			// 2) draw our blue background 
+			
+		};
 		
-		if (i==0) {
-			columnRect.left	= left + pIndent + 1;
-		} else {
-			columnRect.left	= left + 1;
-		}
-		columnRect.right	= left + mColumnWidths[i] - 1;
-		columnRect.top		= pTop;
-		columnRect.bottom	= pTop + lineheight;
-		
-		drawText(data->cString(), columnRect, mTextColor, mColumnAligns[i], true, true);
-
-		left += mColumnWidths[i];
+		// 3) draw our text
+		left = -mOffsetX;
+		for (i = 0; i < mColumnCount; i++) {
+			qstring *	data = columndata[i];
+			qrect		columnRect;
+			
+			if (i==0) {
+				columnRect.left	= left + pIndent + 2;
+			} else {
+				columnRect.left	= left + 2;
+			}
+			columnRect.right	= left + mColumnWidths[i] - 2;
+			columnRect.top		= pTop - mOffsetY;
+			columnRect.bottom	= pTop - mOffsetY + lineheight;
+			
+			drawText(data->cString(), columnRect, mTextColor, mColumnAligns[i], true, true);
+			
+			left += mColumnWidths[i];
+		};
 	};
 
 	// cleanup...
@@ -202,44 +302,16 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, EXTqlist* pList, qdim 
 
 // Do our drawing in here
 void oDataList::doPaint(EXTCompInfo* pECI) {
-	// need to get this from our scrollbars, also it would be better to set the offset through the SDK but we need to make sure that our clipping behaves accordingly..
+	// The way this is structured is that as long as the contents of the list doesn't change nor the way we display our list, we reuse as much of what we've calculated before
+	// That means the first time we draw our list we calculate the size of all texts and build our nodes
+	// After that we skip as much of the logic as we can and effectively only draw lines that are visible.
 	
 	// call base class to draw background
 	oBaseVisComponent::doPaint(pECI);
 	
-	// draw our divider lines
-	qdim	left = -mOffsetX;
-	for (qlong i = 0; i<mColumnCount; i++) {
-		qdim	width = 100;
+	// check our columns
+	checkColumns();
 		
-		if (i<mColumnWidths.numberOfElements()) {
-			width = mColumnWidths[i];
-			if (width<10) {
-				// column to small? change it and update it so we can trust it later
-				width = 10;
-				mColumnWidths.setElementAtIndex(i, width);
-			};
-		} else {
-			// missing a width? add it now so we can trust it later...
-			mColumnWidths.push(width);
-		};
-		
-		if (i>=mColumnAligns.numberOfElements()) {
-			// make sure we've got all our aligns as well so we can trust it later..
-			mColumnAligns.push(jstLeft);
-		};
-
-		if (i>=mColumnCalculations.numberOfElements()) {
-			// make sure we've got all our column calculations as well so we can trust it later..
-			mColumnCalculations.push(new qstring(QTEXT("")));
-		};
-		
-		left += width;
-		drawLine(qpoint(left,mClientRect.top), qpoint(left,mClientRect.bottom), 1, GDI_COLOR_QGRAY, patDash); // should make the color and linestyle configurable
-	};
-	qdim	maxScroll = left + mOffsetX - mClientRect.width() + 32;
-	WNDsetScrollRange(mHWnd, SB_HORZ, 0, maxScroll > 0 ? maxScroll : 0, 1, qtrue); // update our horizontal scroll range, this may trigger another redraw..
-	
 	if ( ECOisDesign(mHWnd) ) {
 		// Don't draw anything else..
 	} else {
@@ -257,74 +329,91 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 			qlong		rowCount = dataList->rowCnt();
 			qlong		oldCurRow = dataList->getCurRow();
 
-			// Update our nodes
-			mRootNode.unTouchChildren(); // untouch children
-			
-			if (rowCount!=0) {
-				// loop through our list
+			if (mRebuildNodes) {
+				mUpdatePositions = true; // must do this!
 				
-				for (qlong lineno = 1; lineno <= rowCount; lineno++) {
-					oDLNode *node = &mRootNode;
-					dataList->setCurRow(lineno);
+				// Update our nodes
+				mRootNode.unTouchChildren(); // untouch children
+				
+				if (rowCount!=0) {
+					// loop through our list
+					
+					for (qlong lineno = 1; lineno <= rowCount; lineno++) {
+						oDLNode *node = &mRootNode;
+						dataList->setCurRow(lineno);
 						
-					// need to parse grouping to find child node...
-					for (int group = 0; group < mGroupCalculations.numberOfElements(); group++) {
-						// should fine a relyable way to cache our calculations....
-						// also should move this code into something more central
-						qlong		error1,error2;
-						EXTfldval	calcFld;
-						qstring *	calcstr = mGroupCalculations[group];
-						
-						qret calcret = calcFld.setCalculation(pECI->mLocLocp, ctyCalculation, (qchar *)calcstr->cString(), calcstr->length(), &error1, &error2);
-						if (calcret != 0) {
-							// error1 => error2 will be the substring of the part of the calculation that is wrong. 
+						// need to parse grouping to find child node...
+						for (int group = 0; group < mGroupCalculations.numberOfElements(); group++) {
+							// should fine a relyable way to cache our calculations....
+							// also should move this code into something more central
+							qlong		error1,error2;
+							EXTfldval	calcFld;
+							qstring *	calcstr = mGroupCalculations[group];
 							
-							char errorstr[255];
-							strcpy(errorstr, calcstr->c_str());
-							errorstr[error2+1]=0x00;
-							addToTraceLog("Error in calculation : %s",&errorstr[error1]);
-						} else {
-							EXTfldval	result;
-							calcFld.evalCalculation(result, pECI->mLocLocp, dataList, qtrue);
-							qstring		groupdesc(result);
-														
-							oDLNode *childnode = node->findChildByDescription(groupdesc);
-							if (childnode == NULL) {
-								addToTraceLog("New grouping for line %li: %s", lineno, groupdesc.c_str());
-
-								childnode = new oDLNode(groupdesc, 0);
-								node->addNode(childnode);
+							qret calcret = calcFld.setCalculation(pECI->mLocLocp, ctyCalculation, (qchar *)calcstr->cString(), calcstr->length(), &error1, &error2);
+							if (calcret != 0) {
+								// error1 => error2 will be the substring of the part of the calculation that is wrong. 
+								
+								char errorstr[255];
+								strcpy(errorstr, calcstr->c_str());
+								errorstr[error2+1]=0x00;
+								addToTraceLog("Error in calculation : %s",&errorstr[error1]);
 							} else {
-								childnode->setTouched(true);
+								EXTfldval	result;
+								calcFld.evalCalculation(result, pECI->mLocLocp, dataList, qtrue);
+								qstring		groupdesc(result);
+								
+								oDLNode *childnode = node->findChildByDescription(groupdesc);
+								if (childnode == NULL) {
+									childnode = new oDLNode(groupdesc, 0);
+									node->addNode(childnode);
+								} else {
+									childnode->setTouched(true);
+								};
+								
+								node = childnode;
 							};
-							
-							node = childnode;
 						};
-					};
 						
-					// now add this line to our node
-					node->addLineNo(lineno);
-				};					
-
-				// remove untouched children
-				mRootNode.removeUntouched();		
-
-				// make sure our current row is current again, we need this later!
-				dataList->setCurRow(oldCurRow);
-			} else {
-				mRootNode.clearChildNodes();
+						// now add this row to our node, need to change this to a structure so we can track our positioning...
+						sDLRow	lvRow;
+						lvRow.mLineNo = lineno;
+						lvRow.mTop = 0;
+						lvRow.mBottom = 0;
+						node->addRow(lvRow);
+					};					
+					
+					// remove untouched children
+					mRootNode.removeUntouched();		
+					
+					// make sure our current row is current again, we need this later!
+					dataList->setCurRow(oldCurRow);
+				} else {
+					mRootNode.clearChildNodes();
+				};
+				
+				mRebuildNodes = false;
 			};
 						
 			// Now draw our stuff...		
-			qdim top	= -mOffsetY;
+			qdim	top				= 0;
 			top = drawNode(pECI, mRootNode, dataList, -1, top);
+			
+			qdim	maxVertScroll	= top - mClientRect.height() + 32;
+			WNDsetScrollRange(mHWnd, SB_VERT, 0, maxVertScroll > 0 ? maxVertScroll : 0, 1, qtrue); // update our vertical scroll range, this may trigger another redraw..
+			
+			// Save a bunch of drawing next time round...
+			mUpdatePositions = false;
 			
 			// and we are done 
 			dataList->setCurRow(oldCurRow);
 			delete dataList; // we're done with it!
-
-		};		
-	};	
+		};
+	};
+	
+	// finally draw our divider lines
+	qdim	maxHorzScroll = drawDividers(mClientRect.top, mClientRect.bottom) - mClientRect.width() + 32;
+	WNDsetScrollRange(mHWnd, SB_HORZ, 0, maxHorzScroll > 0 ? maxHorzScroll : 0, 1, qtrue); // update our horizontal scroll range, this may trigger another redraw..	
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -343,8 +432,9 @@ ECOproperty oDataListProperties[] = {
 	oDL_columncalcs,			4111,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columncalcs
 	oDL_columnwidths,			4112,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnwidths
 	oDL_columnaligns,			4113,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnaligns
+	oDL_maxrowheight,			4114,   fftInteger,     EXTD_FLAG_PROPDATA,		0,		0,			0,		// $maxrowheight
 
-	oDL_groupcalcs,				4114,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $groupcalcs	
+	oDL_groupcalcs,				4120,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $groupcalcs	
 };	
 	
 qProperties * oDataList::properties(void) {
@@ -366,9 +456,11 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			mColumnCount = pNewValue.getLong();
 			if (mColumnCount < 1) mColumnCount = 1;
 			
-			ECOupdatePropInsp(mHWnd,oDL_columncalcs);
-			ECOupdatePropInsp(mHWnd,oDL_columnwidths);
-			ECOupdatePropInsp(mHWnd,oDL_columnaligns);
+			ECOupdatePropInsp(mHWnd, oDL_columncalcs);
+			ECOupdatePropInsp(mHWnd, oDL_columnwidths);
+			ECOupdatePropInsp(mHWnd, oDL_columnaligns);
+			
+			mUpdatePositions = true;
 			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
@@ -391,6 +483,8 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			};
 			
 			mColumnCalculations.push(calc);
+			
+			mUpdatePositions = true;
 			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
@@ -415,6 +509,8 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 
 			mColumnWidths.push(width);
 			
+			mUpdatePositions = true;
+			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
 		}; break;
@@ -435,6 +531,19 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 					mColumnAligns.push(jstCenter);
 				};
 			};
+			
+			WNDinvalidateRect(mHWnd, NULL);
+			return qtrue;
+		}; break;
+		case oDL_maxrowheight: {
+			mMaxRowHeight = pNewValue.getLong();
+			if (mMaxRowHeight < 14) {
+				mMaxRowHeight = 14;
+			} else if (mMaxRowHeight > 200) {
+				mMaxRowHeight = 200;
+			};
+			
+			mUpdatePositions = true;
 			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
@@ -461,6 +570,8 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			} else {
 				delete calc;
 			};
+			
+			mRebuildNodes = true;
 			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
@@ -533,6 +644,9 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			
 			pGetValue.setChar((qchar *)aligns.cString(), aligns.length());					
 		}; break;
+		case oDL_maxrowheight: {
+			pGetValue.setLong(mMaxRowHeight);
+		}; break;
 		case oDL_groupcalcs: {
 			qstring	groupcalcs;
 			
@@ -561,6 +675,9 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 // Changes our primary data
 qbool	oDataList::setPrimaryData(EXTfldval &pNewValue) {
 	// we are not keeping a copy of our list
+	
+	mRebuildNodes = true;
+	mUpdatePositions = true;
 
 	WNDinvalidateRect(mHWnd, NULL);	
 	
@@ -585,6 +702,9 @@ qlong	oDataList::getPrimaryDataLen() {
 
 // Omnis is just letting us know our primary data has changed, this is especially handy if we do not keep a copy ourselves and thus ignore the other functions
 void	oDataList::primaryDataHasChanged() {
+	mRebuildNodes = true;
+	mUpdatePositions = true;
+	
 	WNDinvalidateRect(mHWnd, NULL);	
 };
 

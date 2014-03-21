@@ -19,6 +19,12 @@
 class oDLNode;
 typedef qArray<oDLNode *>		oDLNodeArray;							// array of node pointers
 
+struct sDLRow {
+	qlong	mLineNo;
+	qdim	mTop;
+	qdim	mBottom;
+};
+
 //////////
 class oDLNode {
 private:
@@ -26,16 +32,16 @@ private:
 	bool			mExpanded;											// if true our node is expanded
 	qlong			mLineNo;											// line number in our data list this relates to, 0 if just grouping
 	qstring			mDescription;										// our description
-	
-	// These are only set after we've drawn our tree so we can see where nodes are
-	qdim			mTop;												// top position 
-	qdim			mBottom;											// bottom position
-	
+		
 	// nodes
 	oDLNodeArray	mChildNodes;										// child nodes
-	qlongArray		mLineNodes;											// line nodes
+	qArray<sDLRow>	mRowNodes;											// line nodes
 
 public:
+	// These are only set after we've drawn our tree so we can see where nodes are
+	qdim			mTop;												// top position 
+	qdim			mBottom;											// bottom position	
+	
 	oDLNode(void);
 	oDLNode(qstring &pDescription, qlong pLineNo=0);
 	~oDLNode(void);
@@ -57,9 +63,10 @@ public:
 	oDLNode	*		findChildByDescription(qstring & pDescription);		// Find a child node by description
 	oDLNode *		getChildByIndex(unsigned long pIndex);				// Get child at specific index
 	
-	void			addLineNo(qlong pLineNo);							// Add a line
-	unsigned long	lineNodeCount();									// Returns the number of line nodes
-	qlong			getLineNoAtIndex(unsigned long pIndex);				// Get the line number at this index
+	void			addRow(sDLRow pRow);								// Add a row
+	unsigned long	rowCount();											// Returns the number of rows
+	sDLRow			getRowAtIndex(unsigned long pIndex);				// Get the row at this index
+	void			setRowAtIndex(unsigned long pIndex, sDLRow pRow);	// Set the row at this index
 	
 	void			unTouchChildren(void);								// Marks all children as untouched and remove any line nodes
 	void			removeUntouched(void);								// Removes children that are untouched	

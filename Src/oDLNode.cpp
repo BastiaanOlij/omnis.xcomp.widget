@@ -110,24 +110,36 @@ oDLNode *	oDLNode::getChildByIndex(unsigned long pIndex) {
 	};
 };
 
-
-// Add a line
-void	oDLNode::addLineNo(qlong pLineNo) {
-	mLineNodes.push(pLineNo);
+// Add a row
+void	oDLNode::addRow(sDLRow pRow) {
+	mRowNodes.push(pRow);
 };
 
-// Returns the number of line nodes
-unsigned long	oDLNode::lineNodeCount() {
-	return mLineNodes.numberOfElements();
+// Returns the number of lrows
+unsigned long	oDLNode::rowCount() {
+	return mRowNodes.numberOfElements();
 };
 
-// Get the line number at this index
-qlong	oDLNode::getLineNoAtIndex(unsigned long pIndex) {
-	if (pIndex < mLineNodes.numberOfElements()) {
-		return mLineNodes[pIndex];
+// Get the row at this index
+sDLRow	oDLNode::getRowAtIndex(unsigned long pIndex) {
+	if (pIndex < mRowNodes.numberOfElements()) {
+		return mRowNodes[pIndex];
 	} else {
-		return 0;
+		sDLRow	lvEmpty;
+		
+		lvEmpty.mLineNo = 0;
+		lvEmpty.mTop = 0;
+		lvEmpty.mBottom = 0;
+		
+		return lvEmpty;
 	};
+};
+
+// Set the row at this index
+void	oDLNode::setRowAtIndex(unsigned long pIndex, sDLRow pRow) {
+	if (pIndex < mRowNodes.numberOfElements()) {
+		mRowNodes.setElementAtIndex(pIndex, pRow);
+	};		
 };
 
 // Marks all children as untouched and remove any line nodes
@@ -138,7 +150,7 @@ void	oDLNode::unTouchChildren(void) {
 		child->unTouchChildren();
 	};
 	
-	mLineNodes.clear();
+	mRowNodes.clear();
 };
 
 // Removes children that are untouched

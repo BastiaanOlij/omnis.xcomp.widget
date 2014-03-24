@@ -19,6 +19,7 @@ BEGIN
 	4113			"$columnaligns:Our column alignment"
 	4114			"$maxrowheight:Maximum row height"
 	4120			"$groupcalcs:calculations by which we group"
+	4121			"$treeIndent:Number of pixels we indent our nodes in our treelist with"
 	5000			"click:Button has been clicked"
 	7000			"seconds:Seconds"
 	8000			"$addSeconds:$addSeconds() Add seconds to datetime."

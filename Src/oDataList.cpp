@@ -8,7 +8,6 @@
  *  Todos:
  *  - implement resizing columns with mouse
  *  - find out why divider lines disappear when scrolling
- *  - make properties for mIndent, mLineSpacing, mShowSelected, style of drawing divider lines, etc.
  *  - implement expand/collapse groups
  *  - implement selecting lines
  *  - implement drag and drop lines
@@ -141,7 +140,12 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, EXTqlist* pList, qdi
 		};
 
 		// now draw expanded/collapsed icon
-		drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(-mOffsetX + 1, pTop - mOffsetY));
+		pNode.mTreeIcon.left	= pIndent + 1;
+		pNode.mTreeIcon.right	= pNode.mTreeIcon.left + mIndent;
+		pNode.mTreeIcon.top		= pTop;
+		pNode.mTreeIcon.bottom	= pNode.mTreeIcon.top + mIndent;
+		
+		drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(pNode.mTreeIcon.left - mOffsetX, pNode.mTreeIcon.top - mOffsetY));
 		
 		pIndent += mIndent;
 		headerHeight += mLineSpacing;
@@ -243,7 +247,7 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, EXTqlist* pList, qdim 
 				*newdata += QTEXT("???");
 			} else {
 				EXTfldval	result;
-				calcFld.evalCalculation(result, pECI->mLocLocp, pList, qtrue);
+				calcFld.evalCalculation(result, pECI->mLocLocp, pList, qfalse);
 				newdata = new qstring(result);
 			};			
 		};
@@ -263,9 +267,15 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, EXTqlist* pList, qdim 
 	};
 	
 	if ((pTop - mOffsetY < mClientRect.bottom) && (pTop + lineheight - mOffsetY > mClientRect.top)) {
-		if (isSelected) {		
-			// 2) draw our blue background 
-			
+		qrect	rowRect;
+
+		if (isSelected) {
+			// 2) Do highlighted drawing
+			rowRect.left = mClientRect.left;
+			rowRect.top = pTop - mOffsetY;
+			rowRect.right = mClientRect.right;
+			rowRect.bottom = pTop - mOffsetY + lineheight + mLineSpacing;
+			GDIhiliteTextStart(mHDC, &rowRect, mTextColor);
 		};
 		
 		// 3) draw our text
@@ -286,6 +296,11 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, EXTqlist* pList, qdim 
 			drawText(data->cString(), columnRect, mTextColor, mColumnAligns[i], true, true);
 			
 			left += mColumnWidths[i];
+		};
+		
+		if (isSelected) {
+			// 4) unhighlight
+			GDIhiliteTextEnd(mHDC, &rowRect, mTextColor);
 		};
 	};
 
@@ -316,6 +331,8 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 		// Don't draw anything else..
 	} else {
 		// we should get our list..
+//		EXTqlist*	dataList = mPrimaryData.getList(qfalse); // even though we have a copy of our list our calculations still work on the omnis variable
+
 		EXTfldval	listFld;
 		str255		listName;
 		
@@ -323,12 +340,13 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 		listFld.getChar(listName);		
 		EXTfldval	dataField(listName, qfalse, pECI->mLocLocp);
 		EXTqlist*	dataList = dataField.getList(qfalse);
+	
 		if (dataList==0) {
 			return;
 		} else {
 			qlong		rowCount = dataList->rowCnt();
 			qlong		oldCurRow = dataList->getCurRow();
-
+			
 			if (mRebuildNodes) {
 				mUpdatePositions = true; // must do this!
 				
@@ -336,43 +354,51 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 				mRootNode.unTouchChildren(); // untouch children
 				
 				if (rowCount!=0) {
+					// setup our grouping calculations
+					EXTfldvalArray	groupcalcs;
+					unsigned int	group;					
+					
 					// loop through our list
+					for (group = 0; group < mGroupCalculations.numberOfElements(); group++) {
+						qlong		error1,error2;
+						EXTfldval *	calcFld = new EXTfldval();
+						qstring *	calcstr = mGroupCalculations[group];
+						
+						qret calcret = calcFld->setCalculation(pECI->mLocLocp, ctyCalculation, (qchar *)calcstr->cString(), calcstr->length(), &error1, &error2);
+						if (calcret != 0) {
+							// error1 => error2 will be the substring of the part of the calculation that is wrong. 
+							
+							char errorstr[255];
+							strcpy(errorstr, calcstr->c_str());
+							errorstr[error2+1]=0x00;
+							addToTraceLog("Error in calculation : %s",&errorstr[error1]);
+						} else {
+							groupcalcs.push(calcFld);
+						};
+					};
+					
 					
 					for (qlong lineno = 1; lineno <= rowCount; lineno++) {
 						oDLNode *node = &mRootNode;
 						dataList->setCurRow(lineno);
 						
 						// need to parse grouping to find child node...
-						for (int group = 0; group < mGroupCalculations.numberOfElements(); group++) {
-							// should fine a relyable way to cache our calculations....
-							// also should move this code into something more central
-							qlong		error1,error2;
-							EXTfldval	calcFld;
-							qstring *	calcstr = mGroupCalculations[group];
-							
-							qret calcret = calcFld.setCalculation(pECI->mLocLocp, ctyCalculation, (qchar *)calcstr->cString(), calcstr->length(), &error1, &error2);
-							if (calcret != 0) {
-								// error1 => error2 will be the substring of the part of the calculation that is wrong. 
+						for (group = 0; group < groupcalcs.numberOfElements(); group++) {
+							EXTfldval * calcFld = groupcalcs[group];
+							EXTfldval	result;
+
+							calcFld->evalCalculation(result, pECI->mLocLocp, dataList, qfalse);
+							qstring		groupdesc(result);
 								
-								char errorstr[255];
-								strcpy(errorstr, calcstr->c_str());
-								errorstr[error2+1]=0x00;
-								addToTraceLog("Error in calculation : %s",&errorstr[error1]);
+							oDLNode *childnode = node->findChildByDescription(groupdesc);
+							if (childnode == NULL) {
+								childnode = new oDLNode(groupdesc, 0);
+								node->addNode(childnode);
 							} else {
-								EXTfldval	result;
-								calcFld.evalCalculation(result, pECI->mLocLocp, dataList, qtrue);
-								qstring		groupdesc(result);
-								
-								oDLNode *childnode = node->findChildByDescription(groupdesc);
-								if (childnode == NULL) {
-									childnode = new oDLNode(groupdesc, 0);
-									node->addNode(childnode);
-								} else {
-									childnode->setTouched(true);
-								};
-								
-								node = childnode;
+								childnode->setTouched(true);
 							};
+								
+							node = childnode;
 						};
 						
 						// now add this row to our node, need to change this to a structure so we can track our positioning...
@@ -383,12 +409,37 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 						node->addRow(lvRow);
 					};					
 					
+					// cleanup our EXTFlds
+					while (groupcalcs.numberOfElements()) {
+						EXTfldval *	calcFld = groupcalcs.pop();
+						delete calcFld;
+					};
+					
+					// check if our hittest info is still valid
+					if ((mMouseHitTest.mAbove==oDL_node) || (mMouseHitTest.mAbove==oDL_row)) {
+						oDLNode *	childnode = mMouseHitTest.mNode;
+						
+						if (childnode->touched() == false) {
+							// this node was not touched and will be removed, our hittest data is no longer valid
+							clearHitTest();						
+						} else if (mMouseHitTest.mLineNo != 0) {
+							if (childnode->hasRow(mMouseHitTest.mLineNo) == false ) {
+								clearHitTest();														
+							};
+						};
+					};
+					
 					// remove untouched children
 					mRootNode.removeUntouched();		
 					
 					// make sure our current row is current again, we need this later!
 					dataList->setCurRow(oldCurRow);
 				} else {
+					if ((mMouseHitTest.mAbove==oDL_node) || (mMouseHitTest.mAbove==oDL_row)) {
+						// we're about to remove all nodes so this can't be valid anymore
+						clearHitTest();						
+					};
+
 					mRootNode.clearChildNodes();
 				};
 				
@@ -399,8 +450,17 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 			qdim	top				= 0;
 			top = drawNode(pECI, mRootNode, dataList, -1, top);
 			
-			qdim	maxVertScroll	= top - mClientRect.height() + 32;
-			WNDsetScrollRange(mHWnd, SB_VERT, 0, maxVertScroll > 0 ? maxVertScroll : 0, 1, qtrue); // update our vertical scroll range, this may trigger another redraw..
+			// update our vertical scroll range, this may trigger another redraw..
+			qdim	vertPageSize	= mClientRect.height() / 2;
+			qdim	maxVertScroll	= top + 32;
+			vertPageSize			= vertPageSize > 1 ? vertPageSize : 1;
+			maxVertScroll			= maxVertScroll > 0 ? maxVertScroll : 0;
+			if (mOffsetY > maxVertScroll - vertPageSize) {
+				qdim newOffsetY			= maxVertScroll - vertPageSize;
+				newOffsetY				= newOffsetY > 0 ? newOffsetY : 0;
+				WNDsetScrollPos(mHWnd, SB_VERT, newOffsetY, qtrue);
+			};
+			WNDsetScrollRange(mHWnd, SB_VERT, 0, maxVertScroll, vertPageSize, qtrue); 
 			
 			// Save a bunch of drawing next time round...
 			mUpdatePositions = false;
@@ -411,9 +471,18 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 		};
 	};
 	
-	// finally draw our divider lines
-	qdim	maxHorzScroll = drawDividers(mClientRect.top, mClientRect.bottom) - mClientRect.width() + 32;
-	WNDsetScrollRange(mHWnd, SB_HORZ, 0, maxHorzScroll > 0 ? maxHorzScroll : 0, 1, qtrue); // update our horizontal scroll range, this may trigger another redraw..	
+	// finally draw our divider lines and update our horizontal scroll range, this may trigger another redraw..	
+	qdim	horzPageSize	= mClientRect.width() / 2;
+	qdim	maxHorzScroll	= drawDividers(mClientRect.top, mClientRect.bottom);
+	horzPageSize			= horzPageSize > 1 ? horzPageSize : 1;
+	maxHorzScroll			= maxHorzScroll + 32;
+	maxHorzScroll			= maxHorzScroll > 0 ? maxHorzScroll : 0;
+	if (mOffsetX > maxHorzScroll - horzPageSize) {
+		qdim newOffsetX			= maxHorzScroll - horzPageSize;
+		newOffsetX				= newOffsetX > 0 ? newOffsetX : 0;
+		WNDsetScrollPos(mHWnd, SB_HORZ, newOffsetX, qtrue);
+	}
+	WNDsetScrollRange(mHWnd, SB_HORZ, 0, maxHorzScroll, horzPageSize, qtrue);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -432,11 +501,14 @@ ECOproperty oDataListProperties[] = {
 	oDL_columncalcs,			4111,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columncalcs
 	oDL_columnwidths,			4112,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnwidths
 	oDL_columnaligns,			4113,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnaligns
-	oDL_maxrowheight,			4114,   fftInteger,     EXTD_FLAG_PROPDATA,		0,		0,			0,		// $maxrowheight
+	oDL_maxrowheight,			4114,   fftInteger,     EXTD_FLAG_PROPAPP,		0,		0,			0,		// $maxrowheight
 
 	oDL_groupcalcs,				4120,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $groupcalcs	
+	oDL_treeIndent,				4121,	fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $treeIndent
+	anumLineHtExtra,			0,		fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $linespacing
+	anumShowselected,			0,		fftBoolean,		EXTD_FLAG_PROPACT,		0,		0,			0,		// $multiselect
 };	
-	
+
 qProperties * oDataList::properties(void) {
 	qProperties *	lvProperties = oBaseVisComponent::properties();
 	
@@ -572,8 +644,41 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			};
 			
 			mRebuildNodes = true;
+			addToTraceLog("Rebuild nodes, grouping changed");
 			
 			WNDinvalidateRect(mHWnd, NULL);
+			return qtrue;
+		}; break;
+		case oDL_treeIndent:{
+			mIndent = pNewValue.getLong();
+			
+			// limit our value
+			if (mIndent<16){
+				mIndent = 16;
+			} else if (mIndent > 100) {
+				mIndent = 100;
+			};
+			
+			WNDinvalidateRect(mHWnd, NULL);
+			
+			return qtrue;
+		}; break;
+		case anumLineHtExtra: {
+			mLineSpacing = pNewValue.getLong();
+			
+			// limit our value
+			if (mLineSpacing < 1) {
+				mLineSpacing = 1;
+			} else if (mLineSpacing > 100) {
+				mLineSpacing = 100;
+			};
+			
+			WNDinvalidateRect(mHWnd, NULL);
+
+			return qtrue;
+		}; break;
+		case anumShowselected: {
+			mShowSelected = pNewValue.getBool() == 2;
 			return qtrue;
 		}; break;
 		default:
@@ -660,6 +765,16 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			
 			pGetValue.setChar((qchar *)groupcalcs.cString(), groupcalcs.length());
 		}; break;
+		case oDL_treeIndent:{
+			pGetValue.setLong(mIndent);
+		}; break;
+		case anumLineHtExtra: {
+			pGetValue.setLong(mLineSpacing);
+		}; break;
+		case anumShowselected: {
+			pGetValue.setBool(mShowSelected ? 2 : 1);
+		}; break;
+			
 		default:
 			oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
 			
@@ -668,46 +783,51 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 };	
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// list
+// $dataname list
+//
+// We keep a copy of our list because if we do not, when Omnis asks us for our copy, we loose our list. 
+// The documentation states that if you return 0 from ECM_GETPRIMARYDATA Omnis wouldn't but I'm missing something
+// here as I couldn't get this to work.
+//
+// 
+//
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 // Changes our primary data
 qbool	oDataList::setPrimaryData(EXTfldval &pNewValue) {
-	// we are not keeping a copy of our list
-	
-	mRebuildNodes = true;
-	mUpdatePositions = true;
+	addToTraceLog("setPrimaryData"); // just for debugging..
 
+	// Make sure we rebuild our node tree next time we draw..
+	mRebuildNodes			= true;
+	mUpdatePositions		= true;
+	
+	// We keep a copy of this list
+	EXTqlist *	list = pNewValue.getList(qtrue);
+	if (list==NULL) {
+		mPrimaryData.setEmpty(fftList,0);
+	} else {
+		mPrimaryData.setList(list, qtrue);
+		delete list;		
+	};
+	
 	WNDinvalidateRect(mHWnd, NULL);	
 	
-	return 1L;
-};
-
-// Retrieves our primary data
-void	oDataList::getPrimaryData(EXTfldval &pGetValue) {
-	// we are not keeping a copy of our list	
-};
-
-// Compare with our primary data
-qbool	oDataList::cmpPrimaryData(EXTfldval &pWithValue) {
-	// we are not keeping a copy of our list	
 	return qtrue;
 };
 
-// Get our primary data size
-qlong	oDataList::getPrimaryDataLen() {
-	return 0L;
+// Retrieves our primary data, return false if we do not manage a copy
+qbool	oDataList::getPrimaryData(EXTfldval &pGetValue) {
+	addToTraceLog("getPrimaryData"); // just for debugging..
+
+	return oBaseVisComponent::getPrimaryData(pGetValue);
 };
 
-// Omnis is just letting us know our primary data has changed, this is especially handy if we do not keep a copy ourselves and thus ignore the other functions
-void	oDataList::primaryDataHasChanged() {
-	mRebuildNodes = true;
-	mUpdatePositions = true;
-	
-	WNDinvalidateRect(mHWnd, NULL);	
-};
+// Compare with our primary data, return true if same
+qlong	oDataList::cmpPrimaryData(EXTfldval &pWithValue) {
+	addToTraceLog("cmpPrimaryData"); // just for debugging..
 
+	return oBaseVisComponent::cmpPrimaryData(pWithValue);
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // methods
@@ -766,8 +886,223 @@ qEvents *	oDataList::events(void) {
 	return lvEvents;
 };
 
-void	oDataList::evClick(qpoint pAt) {
-	// Need to change this so we select the line we clicked on.
-	ECOsendEvent(mHWnd, oDL_evClick, 0, 0, EEN_EXEC_IMMEDIATE);	
-};	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// mouse
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// clear our hitttest info
+void	oDataList::clearHitTest(void) {
+	// reset this... 
+	mMouseHitTest.mAbove	= oDL_none;
+	mMouseHitTest.mColNo	= 0;
+	mMouseHitTest.mNode		= NULL;
+	mMouseHitTest.mLineNo	= 0;	
+};
+
+// find what we are above
+sDLHitTest	oDataList::doHitTest(qpoint pAt) {
+	sDLHitTest	above;
+	
+	// adjust our point by our scroll position
+	pAt.h += mOffsetX;
+	pAt.v += mOffsetY;
+	
+	// first check if we're above one of our vertical dividers
+	qdim	left = 0;
+	for (unsigned int i = 0; i < mColumnCount; i++) {
+		// as we've drawn our display this should be trustworthy..
+		if (i < mColumnWidths.numberOfElements()) {
+			left += mColumnWidths[i];
+			
+			if ((left - 1 <= pAt.h) && (left + 1 >= pAt.h)) {
+				above.mAbove	= oDL_horzSplitter;
+				above.mColNo	= i;
+				above.mNode		= NULL;
+				above.mLineNo	= 0;
+				
+				return above;
+			};
+		};
+	};
+		
+	// Now check if we're above a node
+	above.mColNo	= 0;
+	above.mNode		= mRootNode.findChildByPoint(pAt);
+	if (above.mNode != NULL) {
+		if (above.mNode->aboveTreeIcon(pAt)) {
+			above.mAbove	= oDL_treeIcon;
+			above.mLineNo	= 0;
+		} else {
+			above.mLineNo	= above.mNode->findRowAtPoint(pAt);
+			above.mAbove	= above.mLineNo==0 ? oDL_node : oDL_row;
+		};
+		return above;
+	};
+	
+	// nothing...
+	above.mAbove	= oDL_none;
+	above.mNode		= NULL;
+	above.mLineNo	= 0;
+	return above;
+};
+
+// return the mouse cursor we should show
+HCURSOR	oDataList::getCursor(qpoint pAt, qword2 pHitTest) {
+	if (pHitTest==HTCLIENT) {
+		sDLHitTest above = this->doHitTest(pAt);
+		switch (above.mAbove) {
+			case oDL_horzSplitter:
+				return WND_CURS_SPLITTER_HORZ;
+			case oDL_treeIcon:
+				return WND_CURS_ARROW;
+			default:
+				// nothing
+				break;
+		};
+	};
+	
+	// return default
+	return WND_CURS_DEFAULT;		
+};
+
+// mouse left button pressed down
+void	oDataList::evMouseLDown(qpoint pDownAt) {
+	mMouseHitTest = this->doHitTest(pDownAt); // where did our mouse come down?
+	mMouseLast = pDownAt; // remember this to calculate deltas
+};
+
+// mouse left button released
+void	oDataList::evMouseLUp(qpoint pDownAt) {
+	clearHitTest();
+};
+
+// mouse moved to this location while mouse button is not down
+void	oDataList::evMouseMoved(qpoint pMovedTo) {
+	if (mMouseHitTest.mAbove == oDL_horzSplitter) {
+		qdim	deltaX = pMovedTo.h - mMouseLast.h;
+		if (deltaX != 0) {
+			qdim newWidth = mColumnWidths[mMouseHitTest.mColNo] + deltaX;
+			if (newWidth<10) {
+				newWidth = 10;
+			};
+			
+			mColumnWidths.setElementAtIndex(mMouseHitTest.mColNo, newWidth);
+			mUpdatePositions = true;
+			WNDinvalidateRect(mHWnd, NULL);
+		};
+		mMouseLast = pMovedTo;
+	};
+};
+
+// Can we drag from this location? Return false if we can't
+bool	oDataList::canDrag(qpoint pFrom) {
+	switch (mMouseHitTest.mAbove) {
+		case oDL_none:
+			return false;
+			break;
+		case oDL_horzSplitter:
+			return false;
+			break;
+		case oDL_treeIcon:
+			return false;
+			break;
+		case oDL_node:
+			return false;
+			break;
+		case oDL_row:
+			return true;
+			break;
+		default:
+			return false;
+			break;
+	};
+};
+
+// mouse click at this location
+void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
+	mMouseHitTest = this->doHitTest(pAt); // redo our hittest just in case
+	
+	switch (mMouseHitTest.mAbove) {
+		case oDL_none:
+			break;
+		case oDL_horzSplitter:
+			break;
+		case oDL_treeIcon: {
+			// toggle our node
+			bool isExpanded = mMouseHitTest.mNode->expanded();
+			mMouseHitTest.mNode->setExpanded(isExpanded==false);
+			mUpdatePositions = true;
+			WNDinvalidateRect(mHWnd, NULL);
+			
+			// maybe send a click event back to Omnis?
+		}; break;
+		case oDL_node:
+			// maybe send a click event back to Omnis?
+			break;
+		case oDL_row: {
+			EXTqlist *	dataList = mPrimaryData.getList(qfalse);
+
+/*			EXTfldval	listFld;
+			str255		listName;
+			
+			ECOgetProperty(mHWnd, anumFieldname, listFld);
+			listFld.getChar(listName);		
+			EXTfldval	dataField(listName, qfalse, pECI->mLocLocp);
+			EXTqlist*	dataList = dataField.getList(qfalse);
+*/
+			
+			if (dataList != NULL) {
+				qlong	currentRow = dataList->getCurRow();
+				qlong	rowCnt = dataList->rowCnt();
+				
+				if (mShowSelected) {
+					if (isShift() && (currentRow!=0)) {
+						// select from the current line to the line we clicked on, then make that line current
+						qlong	isSelected = dataList->isRowSelected(currentRow, qfalse);
+						
+						while (currentRow!=mMouseHitTest.mLineNo) {
+							if (currentRow > mMouseHitTest.mLineNo) {
+								currentRow--;
+							} else {
+								currentRow++;
+							};
+							
+							dataList->selectRow(currentRow, isSelected, qfalse);
+						};
+						
+						// and make this our new current row
+						dataList->setCurRow(mMouseHitTest.mLineNo);
+					} else {
+						if (!isControl()) {
+							// deselect all lines...
+							for (qlong row = 1; row<=rowCnt; row++) {
+								dataList->selectRow(row, qtrue, qfalse);								
+							};
+						};
+						
+						// select the line we clicked on and make it current
+						dataList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
+						dataList->setCurRow(mMouseHitTest.mLineNo);
+					};					
+				} else {
+					// just change the current line
+					dataList->setCurRow(mMouseHitTest.mLineNo);
+				};
+				
+				delete dataList;				
+			};
+			
+			// and redraw
+			WNDinvalidateRect(mHWnd, NULL);
+			ECOupdatePropInsp(mHWnd, anumFieldname);
+
+			// let user know we clicked on a line
+			ECOsendEvent(mHWnd, oDL_evClick, 0, 0, EEN_EXEC_IMMEDIATE);				
+		};	break;
+		default:
+			break;
+	};
+};
+
+
 

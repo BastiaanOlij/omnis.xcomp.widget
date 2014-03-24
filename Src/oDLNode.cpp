@@ -66,6 +66,12 @@ const qchar *	oDLNode::description(void) {
 	return mDescription.cString();
 };
 
+// is this point within our tree icon?
+bool	oDLNode::aboveTreeIcon(qpoint pAt) {
+	return ((mTreeIcon.left <= pAt.h) && (mTreeIcon.right >= pAt.h) && (mTreeIcon.top <= pAt.v) && (mTreeIcon.bottom >= pAt.v));
+};
+
+
 ////////////////////////////////////////////////
 // methods
 ////////////////////////////////////////////////
@@ -100,6 +106,25 @@ oDLNode	*	oDLNode::findChildByDescription(qstring & pDescription) {
 	};
 	return NULL;
 };
+
+// Find a child node by screen location
+oDLNode *	oDLNode::findChildByPoint(qpoint pAt) {
+	for (unsigned long index = 0; index < mChildNodes.numberOfElements(); index++) {
+		oDLNode *child = mChildNodes[index];
+		if ((child->mTop <= pAt.v) && (child->mBottom >= pAt.v)) {
+			// Our point lies within this child, see if it lies within one of its children
+			oDLNode *subchild = child->findChildByPoint(pAt);
+			if (subchild != NULL) {
+				return subchild;
+			};
+			
+			return child;
+		};
+	};
+	
+	return NULL;
+};
+
 
 // Get child at specific index
 oDLNode *	oDLNode::getChildByIndex(unsigned long pIndex) {
@@ -140,6 +165,32 @@ void	oDLNode::setRowAtIndex(unsigned long pIndex, sDLRow pRow) {
 	if (pIndex < mRowNodes.numberOfElements()) {
 		mRowNodes.setElementAtIndex(pIndex, pRow);
 	};		
+};
+
+// Find row by screen location
+qlong	oDLNode::findRowAtPoint(qpoint pAt) {
+	for (unsigned int i = 0; i < mRowNodes.numberOfElements(); i++) {
+		sDLRow row = mRowNodes[i];
+		
+		if ((row.mTop <= pAt.v) && (row.mBottom >= pAt.v)) {
+			return row.mLineNo;
+		};
+	};
+	
+	return 0;
+};
+
+// Check if this row is part of our node?
+bool	oDLNode::hasRow(qlong pLineNo) {
+	for (unsigned int i = 0; i < mRowNodes.numberOfElements(); i++) {
+		sDLRow row = mRowNodes[i];
+		
+		if (row.mLineNo == pLineNo) {
+			return true;
+		};
+	};
+	
+	return false;
 };
 
 // Marks all children as untouched and remove any line nodes

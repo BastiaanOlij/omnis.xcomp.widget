@@ -224,7 +224,7 @@ qEvents *	oCountButton::events(void) {
 	return lvEvents;
 };
 
-void	oCountButton::evClick(qpoint pAt) {
+void	oCountButton::evClick(qpoint pAt, EXTCompInfo* pECI) {
 	// need to find out if Omnis has an internal ID for its standard evClick
 	ECOsendEvent(mHWnd, oCB_evClick, 0, 0, EEN_EXEC_IMMEDIATE);	
 };	

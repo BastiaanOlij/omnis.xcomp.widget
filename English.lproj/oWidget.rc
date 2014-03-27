@@ -4,9 +4,13 @@
 STRINGTABLE DISCARDABLE 
 BEGIN
 	1000			"Widget Library"
+
+// objects
 	2000			"oDateTime"
 	2001			"oCountButton"
 	2002			"oDataList"
+
+// properties
 	4000			"$localtime:our datetime in the local timezone"
 	4001			"$utc:our datetime as UTC"
 	4100			"$counter:counter to display"
@@ -20,9 +24,28 @@ BEGIN
 	4114			"$maxrowheight:Maximum row height"
 	4120			"$groupcalcs:calculations by which we group"
 	4121			"$treeIndent:Number of pixels we indent our nodes in our treelist with"
+	4122			"$filtercalc:calculation by which to filter which lines we show"
+
+// Events
 	5000			"click:Button has been clicked"
+	5001			"clickLine:User clicked on a line"
+// parameters
 	7000			"seconds:Seconds"
+	7001			"lineNo:Line number"
+
+// methods
 	8000			"$addSeconds:$addSeconds() Add seconds to datetime."
+
+// methodtext
+	10000			"on evClick ;; Button has been clicked"
+	10001			"Quit event handler (Pass to next handler)"
+	10002			" "
+
+	10010			"on evClickLine ;; line (pLineNo) has been clicked"
+	10011			"Quit event handler (Pass to next handler)"
+	10012			" "
+
+// Entry point
 	31000			"FrameworkWndProc"
 END
 

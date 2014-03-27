@@ -26,6 +26,7 @@ enum oDataListPropIDs {
 	oDL_maxrowheight    = 104,
 	oDL_groupcalcs		= 120,
 	oDL_treeIndent		= 121,
+	oDL_filtercalc		= 122,
 };
 
 enum oDataListEventIDs {
@@ -59,8 +60,12 @@ private:
 	qdimArray					mColumnWidths;														// Our column widths
 	qArray<qjst>				mColumnAligns;														// Our column aligns
 	qdim						mMaxRowHeight;														// Maximum rowheight
+	
+	qstring						mFilter;															// Our filter
 
 	oDLNode						mRootNode;															// Our root node
+	EXTqlist *					mDataList;															// Our copy of our data list
+	EXTqlist *					mOmnisList;															// Temporary workaround for drawing issue...
 	
 	sDLHitTest					mMouseHitTest;														// Our hittest info when our mouse button was pressed
 	qpoint						mMouseLast;															// Last mouse position to calculate deltas
@@ -70,8 +75,8 @@ private:
 	
 	void						checkColumns(void);													// Check if our column data is complete
 	qdim						drawDividers(qdim pTop, qdim pBottom);								// Draw divider lines
-	qdim						drawNode(EXTCompInfo* pECI, oDLNode &pNode, EXTqlist* pList, qdim pIndent, qdim pTop);	// Draw this node
-	qdim						drawRow(EXTCompInfo* pECI, qlong pLineNo, EXTqlist* pList, qdim pIndent, qdim pTop);	// Draw this row
+	qdim						drawNode(EXTCompInfo* pECI, oDLNode &pNodeqdim, qdim pIndent, qdim pTop);	// Draw this node
+	qdim						drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTop);	// Draw this row
 	
 	void						clearHitTest(void);													// clear our hitttest info
 	sDLHitTest					doHitTest(qpoint pAt);												// find what we are above
@@ -105,9 +110,16 @@ public:
 	virtual void				evMouseLDown(qpoint pDownAt);										// mouse left button pressed down
 	virtual void				evMouseLUp(qpoint pDownAt);											// mouse left button released
 	virtual void				evMouseMoved(qpoint pMovedTo);										// mouse moved to this location while mouse button is not down
-	virtual bool				canDrag(qpoint pFrom);												// Can we drag from this location? Return false if we can't
 	virtual void				evClick(qpoint pAt, EXTCompInfo* pECI);								// mouse click at this location
 	
+	// keyboard
+	virtual bool				evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI);			// let us know a key was pressed. Return true if Omnis should not do anything with this keypress
+
+	// drag and drop
+	virtual bool				canDrag(qpoint pFrom);												// Can we drag from this location? Return false if we can't
+	virtual qlong				evSetDragValue(FLDdragDrop *pDragInfo, EXTCompInfo* pECI);			// Set drag value, update the pDragInfo structure with information about what we are dragging, return -1 if we leave it up to Omnis to handle this
+	virtual qlong				evEndDrag(FLDdragDrop *pDragInfo);									// Ended dragging, return -1 if we leave it up to Omnis to handle this
+
 };
 
 #endif

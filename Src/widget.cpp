@@ -44,7 +44,7 @@ qint mainlib::ecm_connect(void) {
 	lvComponent.newObjectFunction	= (void * (*)()) &(oCountButton::newObject);
 	lvComponent.mProperties			= oCountButton::properties();
 	lvComponent.mMethods			= oCountButton::methods();
-	lvComponent.mEventMethodID		= 0;
+	lvComponent.mEventMethodID		= 10000;
 	lvComponent.mEvents				= oCountButton::events();
 	
 	addComponent(lvComponent);	
@@ -57,7 +57,7 @@ qint mainlib::ecm_connect(void) {
 	lvComponent.newObjectFunction	= (void * (*)()) &(oDataList::newObject);
 	lvComponent.mProperties			= oDataList::properties();
 	lvComponent.mMethods			= oDataList::methods();
-	lvComponent.mEventMethodID		= 0;
+	lvComponent.mEventMethodID		= 10010;
 	lvComponent.mEvents				= oDataList::events();
 	
 	addComponent(lvComponent);	

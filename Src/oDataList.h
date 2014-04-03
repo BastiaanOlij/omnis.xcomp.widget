@@ -65,7 +65,7 @@ private:
 
 	oDLNode						mRootNode;															// Our root node
 	EXTqlist *					mDataList;															// Our copy of our data list
-	EXTqlist *					mOmnisList;															// Temporary workaround for drawing issue...
+//	EXTqlist *					mOmnisList;															// Temporary workaround for drawing issue...
 	
 	sDLHitTest					mMouseHitTest;														// Our hittest info when our mouse button was pressed
 	qpoint						mMouseLast;															// Last mouse position to calculate deltas
@@ -96,7 +96,7 @@ public:
 
 	virtual qbool				setPrimaryData(EXTfldval &pNewValue);								// Changes our primary data
 	virtual qbool				getPrimaryData(EXTfldval &pGetValue);								// Retrieves our primary data, return false if we do not manage a copy
-	virtual qlong				cmpPrimaryData(EXTfldval &pWithValue);								// Compare with our primary data, return true if same
+	virtual qlong				cmpPrimaryData(EXTfldval &pWithValue);								// Compare with our primary data, return DATA_CMPDATA_SAME if same
 	
 	// methods
 	static  qMethods *			methods(void);														// return array of method meta data

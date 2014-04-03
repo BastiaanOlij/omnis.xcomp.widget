@@ -28,7 +28,9 @@ oDataList::oDataList(void) {
 	mLineSpacing		= 4;
 	mDataList			= 0;
 
-//	mOmnisList			= 0;
+#ifdef USEOMNISWORKAROUND
+	mOmnisList			= 0;
+#endif
 };
 
 oDataList::~oDataList(void) {
@@ -220,7 +222,9 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 	bool				isSelected		= ((mShowSelected && mDataList->isRowSelected(pLineNo)) || (!mShowSelected && (pLineNo == oldCurRow)));
 	qArray<qstring *>	columndata;
 	
-//	mOmnisList->setCurRow(pLineNo); // temporary work around
+#ifdef USEOMNISWORKAROUND
+	mOmnisList->setCurRow(pLineNo); // temporary work around
+#endif
 	mDataList->setCurRow(pLineNo);
 
 	// 1) find the line height of each text to find the highest line
@@ -309,7 +313,9 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 	};
 	
 	mDataList->setCurRow(oldCurRow);
-//	mOmnisList->setCurRow(oldCurRow); // temporary work around
+#ifdef USEOMNISWORKAROUND
+	mOmnisList->setCurRow(oldCurRow); // temporary work around
+#endif
 	
 	return pTop + lineheight;
 };
@@ -330,15 +336,20 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 	if ( ECOisDesign(mHWnd) ) {
 		// Don't draw anything else..
 	} else {
+#ifdef USEOMNISWORKAROUND
 		// We also get a link to our instance variable list. This is temporary so we can change the current line on this list
 		// We do this or else we can't get our evalCalculation to work...
-//		mOmnisList = getDataList(pECI);
+		mOmnisList = getDataList(pECI);
 					
-//		if ((mDataList==0) || (mOmnisList==0)) {
+		if ((mDataList==0) || (mOmnisList==0)) {
+#else
 		if (mDataList==0) {
+#endif
 			return;
 		} else {
-//			qlong		omnisRow = mOmnisList->getCurRow(); // temporary workaround
+#ifdef USEOMNISWORKAROUND
+			qlong		omnisRow = mOmnisList->getCurRow(); // temporary workaround
+#endif
 			qlong		rowCount = mDataList->rowCnt();
 			qlong		oldCurRow = mDataList->getCurRow();
 			
@@ -374,7 +385,9 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 						bool		showNode = true;
 						oDLNode *	node = &mRootNode;
 						
-//						mOmnisList->setCurRow(lineno); // temporary work around
+#ifdef USEOMNISWORKAROUND
+						mOmnisList->setCurRow(lineno); // temporary work around
+#endif
 						mDataList->setCurRow(lineno);
 						
 						if (filtercalc != NULL) {
@@ -477,10 +490,12 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 			// and we are done 
 			mDataList->setCurRow(oldCurRow);
 
+#ifdef USEOMNISWORKAROUND
 			// temporary workaround
-//			mOmnisList->setCurRow(omnisRow);
-//			delete mOmnisList;
-//			mOmnisList = 0;
+			mOmnisList->setCurRow(omnisRow);
+			delete mOmnisList;
+			mOmnisList = 0;
+#endif
 		};
 	};
 	
@@ -1046,11 +1061,13 @@ void	oDataList::evMouseMoved(qpoint pMovedTo) {
 void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 	mMouseHitTest = this->doHitTest(pAt); // redo our hittest just in case
 
+#ifdef USEOMNISWORKAROUND
 	// temporary workaround	
 	// we need to find out how to tell Omnis our list has changed and that it needs to update mOmnisList
 	// or find a way to not need a copy of the list internally.
 	// until then we update both lists
-//	mOmnisList = getDataList(pECI);
+	mOmnisList = getDataList(pECI);
+#endif
 	
 	switch (mMouseHitTest.mAbove) {
 		case oDL_none:
@@ -1074,11 +1091,15 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 					
 					for (qlong row = 1; row<=rowCnt; row++) {
 						mDataList->selectRow(row, qfalse, qfalse);								
-//						if (mOmnisList != 0) mOmnisList->selectRow(row, qfalse, qfalse); // temporary workaround
+#ifdef USEOMNISWORKAROUND
+						if (mOmnisList != 0) mOmnisList->selectRow(row, qfalse, qfalse);
+#endif
 					};
 				};
 				mDataList->setCurRow(0);
-//				if (mOmnisList != 0) mOmnisList->setCurRow(0); // temporary workaround
+#ifdef USEOMNISWORKAROUND
+				if (mOmnisList != 0) mOmnisList->setCurRow(0);
+#endif
 			};
 
 			// and redraw
@@ -1108,41 +1129,57 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 							
 							mDataList->selectRow(currentRow, isSelected, qfalse);
 							
-//							if (mOmnisList != 0) mOmnisList->selectRow(currentRow, isSelected, qfalse); // temporary workaround
+#ifdef USEOMNISWORKAROUND
+							if (mOmnisList != 0) mOmnisList->selectRow(currentRow, isSelected, qfalse);
+#endif
 						};
 						
 						// and make this our new current row
 						mDataList->setCurRow(mMouseHitTest.mLineNo);
-//						if (mOmnisList != 0) mOmnisList->setCurRow(mMouseHitTest.mLineNo); // temporary workaround
+#ifdef USEOMNISWORKAROUND
+						if (mOmnisList != 0) mOmnisList->setCurRow(mMouseHitTest.mLineNo);
+#endif
 					} else {
 						if (isControl() == 0) { /* note, control on windows, cmnd on mac */
 							// deselect all lines...
 							for (qlong row = 1; row<=rowCnt; row++) {
 								mDataList->selectRow(row, qfalse, qfalse);	
 								
-//								if (mOmnisList != 0) mOmnisList->selectRow(row, qfalse, qfalse); // temporary workaround
+#ifdef USEOMNISWORKAROUND
+								if (mOmnisList != 0) mOmnisList->selectRow(row, qfalse, qfalse);
+#endif
 							};
 
 							// select the line we clicked on and make it current
 							mDataList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
+#ifdef USEOMNISWORKAROUND
+							if (mOmnisList != 0) mOmnisList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
+#endif
 						} else {
 							// toggle the line we clicked on
 							qlong	isSelected = mDataList->isRowSelected(mMouseHitTest.mLineNo, qfalse);
 							mDataList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
+
+#ifdef USEOMNISWORKAROUND
+							if (mOmnisList != 0) mOmnisList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
+#endif						
 						};
 
 						// do make it the current row
 						mDataList->setCurRow(mMouseHitTest.mLineNo);							
 
+#ifdef USEOMNISWORKAROUND
 						// temporary workaround
-//						if (mOmnisList != 0) mOmnisList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse); 
-//						if (mOmnisList != 0) mOmnisList->setCurRow(mMouseHitTest.mLineNo); 
+						if (mOmnisList != 0) mOmnisList->setCurRow(mMouseHitTest.mLineNo); 
+#endif
 					};					
 				} else {
 					// just change the current line
 					mDataList->setCurRow(mMouseHitTest.mLineNo);
 					
-//					if (mOmnisList != 0) mOmnisList->setCurRow(mMouseHitTest.mLineNo); // temporary workaround
+#ifdef USEOMNISWORKAROUND
+					if (mOmnisList != 0) mOmnisList->setCurRow(mMouseHitTest.mLineNo);
+#endif
 				};
 			};
 			
@@ -1158,10 +1195,12 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 			break;
 	};
 
-//	if (mOmnisList != 0) {
-//		delete mOmnisList;
-//		mOmnisList = 0;
-//	};
+#ifdef USEOMNISWORKAROUND
+	if (mOmnisList != 0) {
+		delete mOmnisList;
+		mOmnisList = 0;
+	};
+#endif
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1173,24 +1212,30 @@ bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
 	pchar	testchar = pKey->getPChar();
 	
 	if ((testchar=='a') && (pKey->isControl()) && mShowSelected && pDown && (mDataList != NULL)) {
+#ifdef USEOMNISWORKAROUND
 		// temporary workaround	
 		// we need to find out how to tell Omnis our list has changed and that it needs to update mOmnisList
 		// or find a way to not need a copy of the list internally.
 		// until then we update both lists
-//		mOmnisList = getDataList(pECI);
+		mOmnisList = getDataList(pECI);
 		
-//		if (mOmnisList != NULL) {
+		if (mOmnisList != NULL) {
+#endif
 			qlong	rowCnt = mDataList->rowCnt();
 		
 			for (qlong row = 1; row<=rowCnt; row++) {
 				mDataList->selectRow(row, qtrue, qfalse);								
-//				mOmnisList->selectRow(row, qtrue, qfalse); // temporary workaround
+#ifdef USEOMNISWORKAROUND
+				mOmnisList->selectRow(row, qtrue, qfalse);
+#endif
 			};				
 			
-//			delete mOmnisList;
-//			mOmnisList = 0;
-//		};
-
+#ifdef USEOMNISWORKAROUND
+			delete mOmnisList;
+			mOmnisList = 0;
+		};
+#endif
+		
 		// and redraw
 		WNDinvalidateRect(mHWnd, NULL);
 

@@ -14,5 +14,6 @@
 #include "omnis.xcomp.framework.h"
 #include "oDateTime.h"
 #include "oCountButton.h"
+#include "oDataList.h"
 
 #endif

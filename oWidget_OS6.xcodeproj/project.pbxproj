@@ -27,6 +27,8 @@
 		AC1FE41C18D07ACD007C0416 /* drawingfunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1FE41718D07ACD007C0416 /* drawingfunctions.cpp */; };
 		AC1FE41D18D07ACD007C0416 /* oBaseNVComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1FE41818D07ACD007C0416 /* oBaseNVComponent.cpp */; };
 		AC1FE41E18D07ACD007C0416 /* oBaseVisComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1FE41A18D07ACD007C0416 /* oBaseVisComponent.cpp */; };
+		AC26287918DBF58100A5BC69 /* oDataList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC26287718DBF58100A5BC69 /* oDataList.cpp */; };
+		AC26287A18DBF58100A5BC69 /* oDLNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC26287818DBF58100A5BC69 /* oDLNode.cpp */; };
 		AC4B180617CC557D00E9447A /* FrameworkWndProc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC4B17FA17CC557D00E9447A /* FrameworkWndProc.cpp */; };
 		AC4B180717CC557D00E9447A /* oBaseComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC4B17FB17CC557D00E9447A /* oBaseComponent.cpp */; };
 		AC4B180817CC557D00E9447A /* oUTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC4B17FE17CC557D00E9447A /* oUTF8.cpp */; };
@@ -73,6 +75,10 @@
 		AC1FE41918D07ACD007C0416 /* oBaseNVComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseNVComponent.h; path = ../omnis.xcomp.framework/oBaseNVComponent.h; sourceTree = SOURCE_ROOT; };
 		AC1FE41A18D07ACD007C0416 /* oBaseVisComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseVisComponent.cpp; path = ../omnis.xcomp.framework/oBaseVisComponent.cpp; sourceTree = SOURCE_ROOT; };
 		AC1FE41B18D07ACD007C0416 /* oBaseVisComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseVisComponent.h; path = ../omnis.xcomp.framework/oBaseVisComponent.h; sourceTree = SOURCE_ROOT; };
+		AC26287518DBF57100A5BC69 /* oDataList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDataList.h; path = Src/oDataList.h; sourceTree = "<group>"; };
+		AC26287618DBF57100A5BC69 /* oDLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDLNode.h; path = Src/oDLNode.h; sourceTree = "<group>"; };
+		AC26287718DBF58100A5BC69 /* oDataList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDataList.cpp; path = Src/oDataList.cpp; sourceTree = "<group>"; };
+		AC26287818DBF58100A5BC69 /* oDLNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDLNode.cpp; path = Src/oDLNode.cpp; sourceTree = "<group>"; };
 		AC4B17FA17CC557D00E9447A /* FrameworkWndProc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameworkWndProc.cpp; path = ../omnis.xcomp.framework/FrameworkWndProc.cpp; sourceTree = SOURCE_ROOT; };
 		AC4B17FB17CC557D00E9447A /* oBaseComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseComponent.cpp; path = ../omnis.xcomp.framework/oBaseComponent.cpp; sourceTree = SOURCE_ROOT; };
 		AC4B17FC17CC557D00E9447A /* oBaseComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseComponent.h; path = ../omnis.xcomp.framework/oBaseComponent.h; sourceTree = SOURCE_ROOT; };
@@ -144,6 +150,8 @@
 			isa = PBXGroup;
 			children = (
 				ACA0A87D18D0817B006F9D3B /* oCountButton.cpp */,
+				AC26287718DBF58100A5BC69 /* oDataList.cpp */,
+				AC26287818DBF58100A5BC69 /* oDLNode.cpp */,
 				ACA0A87E18D0817B006F9D3B /* oDateTime.cpp */,
 				ACA0A87F18D0817B006F9D3B /* widget.cpp */,
 			);
@@ -162,6 +170,8 @@
 			isa = PBXGroup;
 			children = (
 				ACA0A87A18D08160006F9D3B /* oCountButton.h */,
+				AC26287518DBF57100A5BC69 /* oDataList.h */,
+				AC26287618DBF57100A5BC69 /* oDLNode.h */,
 				ACA0A87B18D08160006F9D3B /* oDateTime.h */,
 				ACA0A87C18D08160006F9D3B /* widget.h */,
 			);
@@ -269,6 +279,8 @@
 				ACA0A88018D0817B006F9D3B /* oCountButton.cpp in Sources */,
 				ACA0A88118D0817B006F9D3B /* oDateTime.cpp in Sources */,
 				ACA0A88218D0817B006F9D3B /* widget.cpp in Sources */,
+				AC26287918DBF58100A5BC69 /* oDataList.cpp in Sources */,
+				AC26287A18DBF58100A5BC69 /* oDLNode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

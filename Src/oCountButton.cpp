@@ -8,9 +8,7 @@
  *  Bastiaan Olij
  */
 
-
 #include "oCountButton.h"
-
 
 // we only implement our constructors/destructors to get some logging going to find out if all is well...
 oCountButton::oCountButton(void) {
@@ -34,34 +32,34 @@ oCountButton * oCountButton::newObject(void) {
 };
 
 // Do our drawing in here
-void oCountButton::doPaint(HDC pHDC) {
+void oCountButton::doPaint(EXTCompInfo* pECI) {
 	// call base class to draw background
-	oBaseVisComponent::doPaint(pHDC);
+	oBaseVisComponent::doPaint(pECI);
 	
 	if (mIconID!=0) {
 		EXTBMPref	tmpIcon(mIconID);
 		qrect		tmpRect = mClientRect;
-		tmpIcon.draw (pHDC, &tmpRect, tmpIcon.getBmpSize(mIconID), picNormal, qfalse, colNone, qfalse, jstCenter, jstCenter);
+		tmpIcon.draw (mHDC, &tmpRect, tmpIcon.getBmpSize(mIconID), picNormal, qfalse, colNone, qfalse, jstCenter, jstCenter);
 	};
 	
 	if (mCounter>0) {
 		qstring		tmpCounter;
 
 		if (mCounter>=1000) {
-			tmpCounter = "***";
+			tmpCounter = QTEXT("***");
 		} else {
 			tmpCounter.setFormattedString("%li",mCounter);
 		};
 		
 		int			tmpLeft = mClientRect.right - (mRadius*2);
 		qrect		tmpRect = qrect(tmpLeft - mSpacing, mClientRect.top, mClientRect.right, mClientRect.top + (mRadius*2));
-		drawEllipse(pHDC, tmpRect, mixColors(GDI_COLOR_QWHITE, mCountColour), mCountColour, GDI_COLOR_QWHITE, mSpacing);
+		drawEllipse(tmpRect, mixColors(GDI_COLOR_QWHITE, mCountColour), mCountColour, GDI_COLOR_QWHITE, mSpacing);
 		
 		tmpLeft = tmpRect.left + ((tmpRect.right - tmpRect.left) >> 1);
-		GDIsetTextColor(pHDC, GDI_COLOR_QWHITE);
-		GDIdrawText(pHDC, tmpLeft, 2, (qchar *) tmpCounter.cString(), tmpCounter.length(), jstCenter);
+		GDIsetTextColor(mHDC, GDI_COLOR_QWHITE);
+		GDIdrawText(mHDC, tmpLeft, 2, (qchar *) tmpCounter.cString(), tmpCounter.length(), jstCenter);
 
-		GDIsetTextColor(pHDC, mTextColor);
+		GDIsetTextColor(mHDC, mTextColor);
 	};
 };
 
@@ -226,7 +224,7 @@ qEvents *	oCountButton::events(void) {
 	return lvEvents;
 };
 
-void	oCountButton::evClick(qpoint pAt) {
+void	oCountButton::evClick(qpoint pAt, EXTCompInfo* pECI) {
 	// need to find out if Omnis has an internal ID for its standard evClick
 	ECOsendEvent(mHWnd, oCB_evClick, 0, 0, EEN_EXEC_IMMEDIATE);	
 };	

@@ -227,7 +227,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\oDataList.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\oDateTime.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\oDLNode.cpp"
 				>
 			</File>
 			<File
@@ -297,7 +305,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\oDataList.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\oDateTime.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\oDLNode.h"
 				>
 			</File>
 			<File

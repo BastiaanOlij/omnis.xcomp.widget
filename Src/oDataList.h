@@ -33,6 +33,9 @@ enum oDataListPropIDs {
 
 enum oDataListEventIDs {
 	oDL_evClick			= 100,
+	oDL_evHScrolled		= 101,
+	oDL_evVScrolled		= 102,
+	oDL_evColumnResized	= 103,
 };
 
 enum oDataListHittest {
@@ -108,7 +111,10 @@ public:
 	
 	// events
 	static	qEvents *			events(void);														// return an array of events meta data
-	
+
+	// scrolling
+	virtual void				evWindowScrolled(qdim pNewX, qdim pNewY);							// window was scrolled
+
 	// mouse
 	virtual HCURSOR				getCursor(qpoint pAt, qword2 pHitTest);								// return the mouse cursor we should show
 	virtual void				evMouseLDown(qpoint pDownAt);										// mouse left button pressed down

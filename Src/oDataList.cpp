@@ -341,10 +341,11 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 		// We do this or else we can't get our evalCalculation to work...
 		mOmnisList = getDataList(pECI);
 					
-		if ((mDataList==0) || (mOmnisList==0)) {
+		if ((mDataList==0) || (mOmnisList==0))
 #else
-		if (mDataList==0) {
+		if (mDataList==0)
 #endif
+		{
 			return;
 		} else {
 #ifdef USEOMNISWORKAROUND
@@ -837,7 +838,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 
 // Changes our primary data
 qbool	oDataList::setPrimaryData(EXTfldval &pNewValue) {
-	addToTraceLog("setPrimaryData"); // just for debugging..
+//	addToTraceLog("setPrimaryData"); // just for debugging..
 
 	// Clear our data list.
 	if (mDataList != NULL) {
@@ -846,13 +847,14 @@ qbool	oDataList::setPrimaryData(EXTfldval &pNewValue) {
 	};
 	
 	// testing
-	ffttype		datatype;
+/*	ffttype		datatype;
 	qshort		datasubtype;
 	 
 	pNewValue.getType(datatype, &datasubtype);
 	qstring		msg = QTEXT("Data type pNewValue: ");
 	msg += fldTypeName(datatype);
 	addToTraceLog(msg.c_str());	
+*/
 	
 	// Make sure we rebuild our node tree next time we draw..
 	mRebuildNodes			= true;
@@ -874,14 +876,14 @@ qbool	oDataList::setPrimaryData(EXTfldval &pNewValue) {
 
 // Retrieves our primary data, return false if we do not manage a copy
 qbool	oDataList::getPrimaryData(EXTfldval &pGetValue) {
-	addToTraceLog("getPrimaryData"); // just for debugging..
+//	addToTraceLog("getPrimaryData"); // just for debugging..
 
 	return oBaseVisComponent::getPrimaryData(pGetValue);
 };
 
 // Compare with our primary data, return DATA_CMPDATA_SAME if same
 qlong	oDataList::cmpPrimaryData(EXTfldval &pWithValue) {
-	addToTraceLog("cmpPrimaryData"); // just for debugging..
+//	addToTraceLog("cmpPrimaryData"); // just for debugging..
 
 //	return oBaseVisComponent::cmpPrimaryData(pWithValue);
 	return DATA_CMPDATA_DIFFER; // we need a good list compare, for now just always assume its changed..
@@ -936,7 +938,10 @@ ECOparam oDataListevClickParam[] = {
 
 ECOmethodEvent oDataListEvents[] = {
 	//	ID					Resource	Return type		Paramcount		Params					Flags		ExFlags
-	oDL_evClick,			5001,		0,				1,				oDataListevClickParam,	0,			0,
+	oDL_evClick,			5000,		0,				1,				oDataListevClickParam,	0,			0,
+	oDL_evHScrolled,		5001,		0,				0,				0,						0,			0,
+	oDL_evVScrolled,		5002,		0,				0,				0,						0,			0,
+	oDL_evColumnResized,	5003,		0,				0,				0,						0,			0,
 };	
 
 // return an array of events meta data
@@ -948,6 +953,28 @@ qEvents *	oDataList::events(void) {
 	
 	return lvEvents;
 };
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// mouse
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// window was scrolled
+void oDataList::evWindowScrolled(qdim pNewX, qdim pNewY) {
+	qdim pWasX = mOffsetX;
+	qdim pWasY = mOffsetY;
+	
+	// call base class
+	oBaseVisComponent::evWindowScrolled(pNewX, pNewY);
+	
+	// This should become part of our base class if we can use Omnis' internal values
+	if (mOffsetX!=pWasX) {
+		ECOsendEvent(mHWnd, oDL_evHScrolled, 0, 0, EEN_EXEC_IMMEDIATE);		
+	};
+	if (mOffsetY!=pWasY) {
+		ECOsendEvent(mHWnd, oDL_evVScrolled, 0, 0, EEN_EXEC_IMMEDIATE);				
+	};
+};
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // mouse
@@ -1052,6 +1079,8 @@ void	oDataList::evMouseMoved(qpoint pMovedTo) {
 			mColumnWidths.setElementAtIndex(mMouseHitTest.mColNo, newWidth);
 			mUpdatePositions = true;
 			WNDinvalidateRect(mHWnd, NULL);
+			
+			ECOsendEvent(mHWnd, oDL_evColumnResized, 0, 0, EEN_EXEC_IMMEDIATE);
 		};
 		mMouseLast = pMovedTo;
 	};
@@ -1115,72 +1144,63 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 				qlong	currentRow = mDataList->getCurRow();
 				qlong	rowCnt = mDataList->rowCnt();
 				
-				if (mShowSelected) {
-					if ((isShift() == 1) && (currentRow!=0)) {
-						// select from the current line to the line we clicked on, then make that line current
-						qlong	isSelected = mDataList->isRowSelected(currentRow, qfalse);
-						
-						while (currentRow!=mMouseHitTest.mLineNo) {
-							if (currentRow > mMouseHitTest.mLineNo) {
-								currentRow--;
-							} else {
-								currentRow++;
-							};
-							
-							mDataList->selectRow(currentRow, isSelected, qfalse);
-							
-#ifdef USEOMNISWORKAROUND
-							if (mOmnisList != 0) mOmnisList->selectRow(currentRow, isSelected, qfalse);
-#endif
-						};
-						
-						// and make this our new current row
-						mDataList->setCurRow(mMouseHitTest.mLineNo);
-#ifdef USEOMNISWORKAROUND
-						if (mOmnisList != 0) mOmnisList->setCurRow(mMouseHitTest.mLineNo);
-#endif
-					} else {
-						if (isControl() == 0) { /* note, control on windows, cmnd on mac */
-							// deselect all lines...
-							for (qlong row = 1; row<=rowCnt; row++) {
-								mDataList->selectRow(row, qfalse, qfalse);	
-								
-#ifdef USEOMNISWORKAROUND
-								if (mOmnisList != 0) mOmnisList->selectRow(row, qfalse, qfalse);
-#endif
-							};
-
-							// select the line we clicked on and make it current
-							mDataList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
-#ifdef USEOMNISWORKAROUND
-							if (mOmnisList != 0) mOmnisList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
-#endif
-						} else {
-							// toggle the line we clicked on
-							qlong	isSelected = mDataList->isRowSelected(mMouseHitTest.mLineNo, qfalse);
-							mDataList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
-
-#ifdef USEOMNISWORKAROUND
-							if (mOmnisList != 0) mOmnisList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
-#endif						
-						};
-
-						// do make it the current row
-						mDataList->setCurRow(mMouseHitTest.mLineNo);							
-
-#ifdef USEOMNISWORKAROUND
-						// temporary workaround
-						if (mOmnisList != 0) mOmnisList->setCurRow(mMouseHitTest.mLineNo); 
-#endif
-					};					
-				} else {
-					// just change the current line
-					mDataList->setCurRow(mMouseHitTest.mLineNo);
+				if ((isShift() == 1) && (currentRow!=0) && (mShowSelected)) {
+					// select from the current line to the line we clicked on, then make that line current
+					qlong	isSelected = mDataList->isRowSelected(currentRow, qfalse);
 					
+					while (currentRow!=mMouseHitTest.mLineNo) {
+						if (currentRow > mMouseHitTest.mLineNo) {
+							currentRow--;
+						} else {
+							currentRow++;
+						};
+						
+						mDataList->selectRow(currentRow, isSelected, qfalse);
+						
+#ifdef USEOMNISWORKAROUND
+						if (mOmnisList != 0) mOmnisList->selectRow(currentRow, isSelected, qfalse);
+#endif
+					};
+					
+					// and make this our new current row
+					mDataList->setCurRow(mMouseHitTest.mLineNo);
 #ifdef USEOMNISWORKAROUND
 					if (mOmnisList != 0) mOmnisList->setCurRow(mMouseHitTest.mLineNo);
 #endif
-				};
+				} else {
+					if ((isControl() != 0) && (mShowSelected)) { /* note, control on windows, cmnd on mac */
+						// toggle the line we clicked on
+						qlong	isSelected = mDataList->isRowSelected(mMouseHitTest.mLineNo, qfalse);
+						mDataList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
+						
+#ifdef USEOMNISWORKAROUND
+						if (mOmnisList != 0) mOmnisList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
+#endif						
+					} else {
+						// deselect all lines...
+						for (qlong row = 1; row<=rowCnt; row++) {
+							mDataList->selectRow(row, qfalse, qfalse);	
+							
+#ifdef USEOMNISWORKAROUND
+							if (mOmnisList != 0) mOmnisList->selectRow(row, qfalse, qfalse);
+#endif
+						};
+						
+						// select the line we clicked on and make it current
+						mDataList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
+#ifdef USEOMNISWORKAROUND
+						if (mOmnisList != 0) mOmnisList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
+#endif
+					};
+					
+					// do make it the current row
+					mDataList->setCurRow(mMouseHitTest.mLineNo);							
+					
+#ifdef USEOMNISWORKAROUND
+					// temporary workaround
+					if (mOmnisList != 0) mOmnisList->setCurRow(mMouseHitTest.mLineNo); 
+#endif
+				};				
 			};
 			
 			// and redraw

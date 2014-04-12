@@ -27,8 +27,11 @@ BEGIN
 	4122			"$filtercalc:calculation by which to filter which lines we show"
 
 // Events
-	5000			"click:Button has been clicked"
-	5001			"clickLine:User clicked on a line"
+	5000			"click:User clicked on our field"
+	5001			"HScrolled:Field was horizontally scrolled"
+	5002			"VScrolled:Field was vertically scrolled"
+	5003			"ColumnResized:Column was resized"
+	
 // parameters
 	7000			"seconds:Seconds"
 	7001			"lineNo:Line number"
@@ -41,7 +44,7 @@ BEGIN
 	10001			"Quit event handler (Pass to next handler)"
 	10002			" "
 
-	10010			"on evClickLine ;; line (pLineNo) has been clicked"
+	10010			"on evClick ;; line (pLineNo) has been clicked"
 	10011			"Quit event handler (Pass to next handler)"
 	10012			" "
 

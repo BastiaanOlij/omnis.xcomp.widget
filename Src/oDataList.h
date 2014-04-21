@@ -18,8 +18,6 @@
 #include "omnis.xcomp.framework.h"
 #include "oDLNode.h"
 
-#define		USEOMNISWORKAROUND			// flag to indicate we're using our temporary work around. This makes it easier to test solutions. The downside is that the control does not work with reference variables.
-
 enum oDataListPropIDs {
 	oDL_columncount		= 100,
 	oDL_columncalcs		= 101,
@@ -70,9 +68,7 @@ private:
 
 	oDLNode						mRootNode;															// Our root node
 	EXTqlist *					mDataList;															// Our copy of our data list
-#ifdef USEOMNISWORKAROUND
-	EXTqlist *					mOmnisList;															// Temporary workaround for drawing issue...
-#endif
+	EXTqlist *					mOmnisList;															// List pointed to by $dataname (only set during events)
 	
 	sDLHitTest					mMouseHitTest;														// Our hittest info when our mouse button was pressed
 	qpoint						mMouseLast;															// Last mouse position to calculate deltas

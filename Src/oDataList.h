@@ -35,6 +35,7 @@ enum oDataListEventIDs {
 	oDL_evHScrolled		= 101,
 	oDL_evVScrolled		= 102,
 	oDL_evColumnResized	= 103,
+	oDL_evDoubleClick	= 104,
 };
 
 enum oDataListHittest {
@@ -120,6 +121,7 @@ public:
 	virtual void				evMouseLUp(qpoint pDownAt);											// mouse left button released
 	virtual void				evMouseMoved(qpoint pMovedTo);										// mouse moved to this location while mouse button is not down
 	virtual void				evClick(qpoint pAt, EXTCompInfo* pECI);								// mouse click at this location
+	virtual bool				evDoubleClick(qpoint pAt, EXTCompInfo* pECI);						// mouse left button double clicked (return true if we finished handling this, false if we want Omnis internal logic)
 	virtual bool				evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI);					// mouse right button pressed down (return true if we finished handling this, false if we want Omnis internal logic)
 	
 	// keyboard

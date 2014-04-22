@@ -1004,6 +1004,7 @@ ECOmethodEvent oDataListEvents[] = {
 	oDL_evHScrolled,		5001,		0,				0,				0,						0,			0,
 	oDL_evVScrolled,		5002,		0,				0,				0,						0,			0,
 	oDL_evColumnResized,	5003,		0,				0,				0,						0,			0,
+	oDL_evDoubleClick,		5004,		0,				0,				0,						0,			0,
 };	
 
 // return an array of events meta data
@@ -1276,6 +1277,14 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 		mOmnisList = 0;
 	};
 };
+
+// mouse left button double clicked (return true if we finished handling this, false if we want Omnis internal logic)
+bool	oDataList::evDoubleClick(qpoint pAt, EXTCompInfo* pECI) {
+	ECOsendEvent(mHWnd, oDL_evDoubleClick, 0, 0, EEN_EXEC_IMMEDIATE);				
+	
+	return false; // let omnis do its own thing...
+};
+
 
 // mouse right button pressed down (return true if we finished handling this, false if we want Omnis internal logic)
 bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {

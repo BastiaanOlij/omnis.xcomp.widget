@@ -32,6 +32,7 @@ BEGIN
 	5001			"HScrolled:Field was horizontally scrolled"
 	5002			"VScrolled:Field was vertically scrolled"
 	5003			"ColumnResized:Column was resized"
+	5004			"DoubleClick:User double clicked on our field"
 	
 // parameters
 	7000			"seconds:Seconds"

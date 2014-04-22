@@ -28,6 +28,7 @@ oDataList::oDataList(void) {
 	mLineSpacing		= 4;
 	mDataList			= 0;
 	mOmnisList			= 0;
+	mLastCurrentLineTop	= 0;
 };
 
 oDataList::~oDataList(void) {
@@ -128,7 +129,8 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 		} else {
 			// Draw our description
 			qrect	columnRect;
-			qdim width = mColumnWidths[0] - pIndent - mIndent - 4;
+			qdim	colwidth	= 10000; // No longer using mColumnWidths[0], may make this switchable, allow groupings to go along as far as they like..
+			qdim	width		= colwidth - pIndent - mIndent - 4;
 			
 			headerHeight = 2 + getTextHeight(pNode.description(), width > 10 ? width : 10, true, true);
 			if (headerHeight > mMaxRowHeight) {
@@ -137,7 +139,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 
 			columnRect.left		= pIndent - mOffsetX + mIndent + 2;
 			columnRect.top		= pTop - mOffsetY + 2;
-			columnRect.right	= mColumnWidths[0] - mOffsetX - 2;
+			columnRect.right	= colwidth - mOffsetX - 2;		
 			columnRect.bottom	= columnRect.top + headerHeight;
 			
 			drawText(pNode.description(), columnRect, mTextColor, jstLeft, true, true);
@@ -223,10 +225,26 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 
 	// 1) find the line height of each text to find the highest line
 	for (i = 0; i < mColumnCount; i++) {
-		qstring *		calcstr = mColumnCalculations[i];
+		qstring 		calcstr;
 		qstring *		newdata;
 		
-		if (calcstr->length()==0) {
+		if (mColumnPrefix.length()!=0) {
+			if (mColumnCalculations[i]->length()==0) {
+				EXTfldval	dataNameFld;
+				ECOgetProperty(mHWnd, anumFieldname, dataNameFld);
+				qstring		dataStr(dataNameFld);
+				
+				calcstr.appendFormattedString("con(%qs,%qs.%li)",&mColumnPrefix, &dataStr, i);
+			} else {
+				calcstr.appendFormattedString("con(%qs,%qs)",&mColumnPrefix, mColumnCalculations[i]);
+			};
+		} else {
+			calcstr = *mColumnCalculations[i];
+		};
+		
+		addToTraceLog(calcstr);
+		
+		if (calcstr.length()==0) {
 			EXTfldval colFld;
 			
 			// just get the column...
@@ -235,7 +253,7 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 		} else {
 			// should fine a relyable way to cache our calculations....
 			// also should move this code into something more central
-			EXTfldval	* calcFld = newCalculation(*calcstr, pECI);			
+			EXTfldval	* calcFld = newCalculation(calcstr, pECI);			
 			if (calcFld == NULL) {
 				newdata = new qstring();
 				*newdata += QTEXT("???");
@@ -317,6 +335,8 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 	// The way this is structured is that as long as the contents of the list doesn't change nor the way we display our list, we reuse as much of what we've calculated before
 	// That means the first time we draw our list we calculate the size of all texts and build our nodes
 	// After that we skip as much of the logic as we can and effectively only draw lines that are visible.
+
+	qbool	redraw = false; // if our scroll position changes, we draw twice!
 	
 	// call base class to draw background
 	oBaseVisComponent::doPaint(pECI);
@@ -326,7 +346,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 		
 	if ( ECOisDesign(mHWnd) ) {
 		// Don't draw anything else..
-	} else {
+	} else {		
 		// We ignore our mDataList, we just use our $dataname list directly here...
 		mOmnisList = getDataList(pECI);
 					
@@ -334,12 +354,12 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 			// no list to draw?
 		} else {
 			qlong		rowCount = mOmnisList->rowCnt();
-			qlong		oldCurRow = mOmnisList->getCurRow();
+			qlong		currentRow = mOmnisList->getCurRow();
 			
 			if (mRebuildNodes) {
 				mUpdatePositions = true; // must do this!
 				
-				// Update our nodes
+				// Update our nodes7
 				mRootNode.unTouchChildren(); // untouch children
 				
 				if (rowCount!=0) {
@@ -435,7 +455,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 					mRootNode.removeUntouched();		
 					
 					// make sure our current row is current again, we need this later!
-					mOmnisList->setCurRow(oldCurRow);
+					mOmnisList->setCurRow(currentRow);
 				} else {
 					if ((mMouseHitTest.mAbove==oDL_node) || (mMouseHitTest.mAbove==oDL_row)) {
 						// we're about to remove all nodes so this can't be valid anymore
@@ -460,20 +480,55 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 			if (mOffsetY > maxVertScroll - vertPageSize) {
 				qdim newOffsetY			= maxVertScroll - vertPageSize;
 				newOffsetY				= newOffsetY > 0 ? newOffsetY : 0;
-				WNDsetScrollPos(mHWnd, SB_VERT, newOffsetY, qtrue);
+				
+				if (mOffsetY != newOffsetY) {
+					mOffsetY = newOffsetY;
+					WNDsetScrollPos(mHWnd, SB_VERT, mOffsetY, qtrue);				
+					redraw = true;
+				};
 			};
-			WNDsetScrollRange(mHWnd, SB_VERT, 0, maxVertScroll, vertPageSize, qtrue); 
-			
+			WNDsetScrollRange(mHWnd, SB_VERT, 0, maxVertScroll, vertPageSize, qtrue);
+						
 			// Save a bunch of drawing next time round...
 			mUpdatePositions = false;
 			
-			// and we are done 
-			mOmnisList->setCurRow(oldCurRow);
+			// We are done with our list...
+			mOmnisList->setCurRow(currentRow);
 			delete mOmnisList;
 			mOmnisList = 0;
+
+			// If our current line has changed, check if it is on screen, this may trigger another redraw..
+			if (currentRow!=0) {
+				qdim	currentLineTop = mRootNode.findTopForRow(currentRow);
+				
+				if (currentLineTop==-1) {
+					// line not visible at all? we can ignore this, there is no sensible position to scroll too.
+					mLastCurrentLineTop = 0;
+				} else if (mLastCurrentLineTop == currentLineTop) {
+					// still the same? then we do NOT adjust our positioning, the user may have scrolled down and wants to select another line. Lets not undo this!
+				} else if ((currentLineTop<mOffsetY) || (currentLineTop+32>mOffsetY+mClientRect.bottom-mClientRect.top)) { 
+					// 32 is a bit arbitrary but make sure we had some part of the line visible. May replace this with actual line height + scrollbar size.
+						
+					qdim	newOffsetY = currentLineTop - ((mClientRect.bottom-mClientRect.top) / 2);
+					if (newOffsetY > maxVertScroll - vertPageSize) {
+						newOffsetY	= maxVertScroll - vertPageSize;
+					};
+					newOffsetY = newOffsetY > 0 ? newOffsetY : 0;
+					if (mOffsetY != newOffsetY) {
+						mOffsetY = newOffsetY;
+						WNDsetScrollPos(mHWnd, SB_VERT, mOffsetY, qtrue);
+						redraw = true;
+					};
+
+					mLastCurrentLineTop = currentLineTop;
+				};
+			} else {
+				// no current line? no reason to scroll!
+				mLastCurrentLineTop = 0;
+			};
 		};
-	};
-	
+	};	
+
 	// finally draw our divider lines and update our horizontal scroll range, this may trigger another redraw..	
 	qdim	horzPageSize	= mClientRect.width() / 2;
 	qdim	maxHorzScroll	= drawDividers(mClientRect.top, mClientRect.bottom);
@@ -483,9 +538,18 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 	if (mOffsetX > maxHorzScroll - horzPageSize) {
 		qdim newOffsetX			= maxHorzScroll - horzPageSize;
 		newOffsetX				= newOffsetX > 0 ? newOffsetX : 0;
-		WNDsetScrollPos(mHWnd, SB_HORZ, newOffsetX, qtrue);
+		if (mOffsetX != newOffsetX) {
+			mOffsetX = newOffsetX;
+			WNDsetScrollPos(mHWnd, SB_HORZ, mOffsetX, qtrue);				
+			redraw = true;
+		};
 	}
 	WNDsetScrollRange(mHWnd, SB_HORZ, 0, maxHorzScroll, horzPageSize, qtrue);
+	
+	if (redraw) {
+		// just draw again, may need to protect against recursive calls? I think it'll be alright.
+		doPaint(pECI);
+	};
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -505,6 +569,7 @@ ECOproperty oDataListProperties[] = {
 	oDL_columnwidths,			4112,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnwidths
 	oDL_columnaligns,			4113,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnaligns
 	oDL_maxrowheight,			4114,   fftInteger,     EXTD_FLAG_PROPAPP,		0,		0,			0,		// $maxrowheight
+	oDL_columnprefix,			4115,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnprefix
 
 	oDL_groupcalcs,				4120,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $groupcalcs	
 	oDL_treeIndent,				4121,	fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $treeIndent
@@ -620,6 +685,14 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 				mMaxRowHeight = 200;
 			};
 			
+			mUpdatePositions = true;
+			
+			WNDinvalidateRect(mHWnd, NULL);
+			return qtrue;
+		}; break;
+		case oDL_columnprefix: {
+			mColumnPrefix = pNewValue;
+
 			mUpdatePositions = true;
 			
 			WNDinvalidateRect(mHWnd, NULL);
@@ -765,6 +838,9 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 		case oDL_maxrowheight: {
 			pGetValue.setLong(mMaxRowHeight);
 		}; break;
+		case oDL_columnprefix: {
+			pGetValue.setChar((qchar *) mColumnPrefix.cString(), mColumnPrefix.length());
+		}; break;
 		case oDL_groupcalcs: {
 			qstring	groupcalcs;
 			
@@ -867,37 +943,49 @@ qlong	oDataList::cmpPrimaryData(EXTfldval &pWithValue) {
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+ECOparam oDataListIsVisibleParam[] = {
+	//	Resource	Type		Flags		ExFlags
+	7001,			fftInteger,	0,			0,		// pLineNo
+};
+
 // This is our array of methods we support
-// ECOmethodEvent oDataListMethods[] = {
-//	ID				Resource	Return type		Paramcount		Params					Flags		ExFlags
-//	1,					8000,		fftCharacter,	0,				NULL,					0,			0,			// $testMethod	
-// };
+ECOmethodEvent oDataListMethods[] = {
+//	ID				Resource	Return type		Paramcount		Params						Flags		ExFlags
+	1,				8010,		fftBoolean,		1,				oDataListIsVisibleParam,	0,			0,			// $isVisible
+};
 
 // return an array of method meta data
 qMethods * oDataList::methods(void) {
 	qMethods * lvMethods = oBaseVisComponent::methods();
 	
-	//	lvMethods->addElements(oCountButtonMethods, sizeof(oCountButtonMethods) / sizeof(ECOmethodEvent));		
+	lvMethods->addElements(oDataListMethods, sizeof(oDataListMethods) / sizeof(ECOmethodEvent));		
 	
 	return lvMethods;
 };
 
 // invoke a method
 int	oDataList::invokeMethod(qlong pMethodId, EXTCompInfo* pECI) {
-	/*	switch (pMethodId) {
-	 case 1: {
-	 EXTfldval	lvResult;
-	 str255		lvString(QTEXT("Hello world from our visual object!"));
+	switch (pMethodId) {
+		case 1: {
+			EXTfldval	lvResult;
+			qlong		lvLineNo = getLongFromParam(1, pECI);
+			qdim		lvAt = mRootNode.findTopForRow(lvLineNo);
+			
+			if (lvAt==-1) {
+				// no top position? = not visible
+				lvResult.setBool(1);
+			} else {
+				// visible!
+				lvResult.setBool(2);				
+			};
 	 
-	 lvResult.setChar(lvString);
-	 
-	 ECOaddParam(pECI, &lvResult);
-	 return 1L;							
-	 }; break;
-	 default: {
-	 return oBaseVisComponent::invokeMethod(pMethodId, pECI);
-	 }; break;
-	 }*/
+			ECOaddParam(pECI, &lvResult);
+			return 1L;							
+		}; break;
+		default: {
+			return oBaseVisComponent::invokeMethod(pMethodId, pECI);
+		}; break;
+	};
 	return 1L;
 };
 
@@ -1101,7 +1189,15 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 						mDataList->selectRow(row, qfalse, qfalse);								
 						mOmnisList->selectRow(row, qfalse, qfalse);
 					};
+				} else {
+					// deselect the current row
+					qlong	row = mDataList->getCurRow();
+					if (row != 0) {
+						mDataList->selectRow(row, qfalse, qfalse);
+						mOmnisList->selectRow(row, qfalse, qfalse);						
+					};
 				};
+				
 				mDataList->setCurRow(0);
 				mOmnisList->setCurRow(0);
 			};
@@ -1179,6 +1275,61 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 		delete mOmnisList;
 		mOmnisList = 0;
 	};
+};
+
+// mouse right button pressed down (return true if we finished handling this, false if we want Omnis internal logic)
+bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {
+	// make sure the line we're over is selected!
+	mMouseHitTest = this->doHitTest(pDownAt); // redo our hittest just in case
+	
+	// we must also update our list pointed to by $dataname. Note that if we're dealing with an item reference we'll be updating the same list twice..
+	mOmnisList = getDataList(pECI);
+	
+	qlong	currentLine = mOmnisList->getCurRow();
+	qlong	rowCnt = mDataList->rowCnt();
+	qlong	newCurrentLine = 0;
+	bool	selectionChanged = false;
+	
+	if (mMouseHitTest.mAbove == oDL_row) {
+		newCurrentLine = mMouseHitTest.mLineNo;
+	};
+	
+	for (qlong row = 1; row<=rowCnt; row++) {
+		if (row == newCurrentLine) {
+			if (!mDataList->isRowSelected(row, qfalse)) {
+				selectionChanged = true;
+				mDataList->selectRow(row, qtrue, qfalse);
+				mOmnisList->selectRow(row, qtrue, qfalse);
+			};
+		} else if (mDataList->isRowSelected(row, qfalse)) {
+			selectionChanged = true;
+			mDataList->selectRow(row, qfalse, qfalse);
+			mOmnisList->selectRow(row, qfalse, qfalse);
+		};
+	};		
+	
+	if (newCurrentLine != currentLine) {
+		selectionChanged = true;
+		mOmnisList->setCurRow(newCurrentLine);
+	}
+	
+	if (mOmnisList != NULL) {
+		delete mOmnisList;
+		mOmnisList = 0;
+	};
+
+	if (selectionChanged) {
+		// Redraw
+		WNDinvalidateRect(mHWnd, NULL);
+		
+		// let user know we changed our selection by simulating a click on a line
+		EXTfldval	evParam[1];
+		evParam[0].setLong(newCurrentLine);
+		ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_IMMEDIATE);				
+	};
+	
+	// we still want omnis' internal logic to handle our context menu!
+	return false;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

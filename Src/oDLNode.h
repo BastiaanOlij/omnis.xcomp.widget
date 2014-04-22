@@ -71,6 +71,7 @@ public:
 	sDLRow			getRowAtIndex(unsigned long pIndex);				// Get the row at this index
 	void			setRowAtIndex(unsigned long pIndex, sDLRow pRow);	// Set the row at this index
 	qlong			findRowAtPoint(qpoint pAt);							// Find row by screen location
+	qdim			findTopForRow(qlong pLineNo);						// Find top position for specific line (will check child nodes if applicable)
 	bool			hasRow(qlong pLineNo);								// Check if this row is part of our node?
 	
 	void			unTouchChildren(void);								// Marks all children as untouched and remove any line nodes

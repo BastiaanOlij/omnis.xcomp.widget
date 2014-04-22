@@ -22,6 +22,7 @@ BEGIN
 	4112			"$columnwidths:Our columns widths"
 	4113			"$columnaligns:Our column alignment"
 	4114			"$maxrowheight:Maximum row height"
+	4115			"$columnPrefix:This calculation gets added to every line"
 	4120			"$groupcalcs:calculations by which we group"
 	4121			"$treeIndent:Number of pixels we indent our nodes in our treelist with"
 	4122			"$filtercalc:calculation by which to filter which lines we show"
@@ -38,6 +39,7 @@ BEGIN
 
 // methods
 	8000			"$addSeconds:$addSeconds() Add seconds to datetime."
+	8010			"$isvisible:$isVisible(pvLineNo) Is line visible?"
 
 // methodtext
 	10000			"on evClick ;; Button has been clicked"

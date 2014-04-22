@@ -180,6 +180,35 @@ qlong	oDLNode::findRowAtPoint(qpoint pAt) {
 	return 0;
 };
 
+// Find top position for specific line (will check child nodes if applicable)
+qdim	oDLNode::findTopForRow(qlong pLineNo) {
+	if (mExpanded) {
+		// check our child nodes..
+		for (unsigned long index = 0; index < mChildNodes.numberOfElements(); index++) {
+			oDLNode *child = mChildNodes[index];
+			qdim	top = child->findTopForRow(pLineNo);
+			if (top>=0) {
+				// found it!
+				return top;
+			};
+		};
+		
+		// not found? check our lines
+		for (unsigned int i = 0; i < mRowNodes.numberOfElements(); i++) {
+			sDLRow row = mRowNodes[i];
+			
+			if (row.mLineNo == pLineNo) {
+				// found it!
+				return row.mTop;
+			};
+		};
+	} else {
+		// not expanded? then we're not showing anything..
+	};
+	
+	return -1; // our positions are without scrolling, so we can safely use -1 to indicate our row is not shown
+};
+
 // Check if this row is part of our node?
 bool	oDLNode::hasRow(qlong pLineNo) {
 	for (unsigned int i = 0; i < mRowNodes.numberOfElements(); i++) {

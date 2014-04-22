@@ -24,6 +24,7 @@ enum oDataListPropIDs {
 	oDL_columnwidths	= 102,
 	oDL_columnaligns	= 103,
 	oDL_maxrowheight    = 104,
+	oDL_columnprefix	= 105,
 	oDL_groupcalcs		= 120,
 	oDL_treeIndent		= 121,
 	oDL_filtercalc		= 122,
@@ -55,6 +56,7 @@ private:
 	bool						mShowSelected;														// if true we show selected lines, if false we only show the current line
 	qdim						mIndent;															// Indent for our tree
 	qdim						mLineSpacing;														// Empty space between lines in pixels
+	qdim						mLastCurrentLineTop;												// Top position of current line at the last redraw, if changed we check if this is on screen
 	
 	qArray<qstring *>			mGroupCalculations;													// Calculations by which we're grouping
 	
@@ -62,6 +64,7 @@ private:
 	qArray<qstring *>			mColumnCalculations;												// Calculations for displaying our column data
 	qdimArray					mColumnWidths;														// Our column widths
 	qArray<qjst>				mColumnAligns;														// Our column aligns
+	qstring						mColumnPrefix;														// Column prefix calculation
 	qdim						mMaxRowHeight;														// Maximum rowheight
 	
 	qstring						mFilter;															// Our filter
@@ -117,6 +120,7 @@ public:
 	virtual void				evMouseLUp(qpoint pDownAt);											// mouse left button released
 	virtual void				evMouseMoved(qpoint pMovedTo);										// mouse moved to this location while mouse button is not down
 	virtual void				evClick(qpoint pAt, EXTCompInfo* pECI);								// mouse click at this location
+	virtual bool				evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI);					// mouse right button pressed down (return true if we finished handling this, false if we want Omnis internal logic)
 	
 	// keyboard
 	virtual bool				evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI);			// let us know a key was pressed. Return true if Omnis should not do anything with this keypress

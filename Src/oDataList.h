@@ -28,6 +28,7 @@ enum oDataListPropIDs {
 	oDL_groupcalcs		= 120,
 	oDL_treeIndent		= 121,
 	oDL_filtercalc		= 122,
+	oDL_deselNodeClick	= 123,
 };
 
 enum oDataListEventIDs {
@@ -60,6 +61,7 @@ private:
 	qdim						mLastCurrentLineTop;												// Top position of current line at the last redraw, if changed we check if this is on screen
 	
 	qArray<qstring *>			mGroupCalculations;													// Calculations by which we're grouping
+	bool						mDeselectOnNodeClick;												// Deselect lines when the user clicks on a node
 	
 	qlong						mColumnCount;														// Number of columns we are displaying
 	qArray<qstring *>			mColumnCalculations;												// Calculations for displaying our column data

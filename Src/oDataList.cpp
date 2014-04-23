@@ -19,16 +19,17 @@
 #include "oDataList.h"
 
 oDataList::oDataList(void) {
-	mFilter				= "";
-	mColumnCount		= 1;
-	mShowSelected		= false;
-	mRebuildNodes		= true;
-	mUpdatePositions	= true;
-	mIndent				= 20;
-	mLineSpacing		= 4;
-	mDataList			= 0;
-	mOmnisList			= 0;
-	mLastCurrentLineTop	= 0;
+	mFilter					= "";
+	mColumnCount			= 1;
+	mShowSelected			= false;
+	mRebuildNodes			= true;
+	mUpdatePositions		= true;
+	mDeselectOnNodeClick	= false;
+	mIndent					= 20;
+	mLineSpacing			= 4;
+	mDataList				= 0;
+	mOmnisList				= 0;
+	mLastCurrentLineTop		= 0;
 };
 
 oDataList::~oDataList(void) {
@@ -242,7 +243,7 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 			calcstr = *mColumnCalculations[i];
 		};
 		
-		addToTraceLog(calcstr);
+		// addToTraceLog(calcstr);
 		
 		if (calcstr.length()==0) {
 			EXTfldval colFld;
@@ -571,12 +572,13 @@ ECOproperty oDataListProperties[] = {
 	oDL_maxrowheight,			4114,   fftInteger,     EXTD_FLAG_PROPAPP,		0,		0,			0,		// $maxrowheight
 	oDL_columnprefix,			4115,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnprefix
 
-	oDL_groupcalcs,				4120,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $groupcalcs	
+	oDL_groupcalcs,				4120,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $groupcalcs
 	oDL_treeIndent,				4121,	fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $treeIndent
 	anumLineHtExtra,			0,		fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $linespacing
 	anumShowselected,			0,		fftBoolean,		EXTD_FLAG_PROPACT,		0,		0,			0,		// $multiselect
+	oDL_deselNodeClick,			4123,	fftBoolean,		EXTD_FLAG_PROPACT,		0,		0,			0,		// $deselectOnGroupClick
 
-	oDL_filtercalc,				4122,	fftCharacter,	EXTD_FLAG_PROPAPP,		0,		0,			0,		// $filtercalc
+	oDL_filtercalc,				4122,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $filtercalc
 };	
 
 qProperties * oDataList::properties(void) {
@@ -767,6 +769,10 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			
 			return qtrue;
 		}; break;
+		case oDL_deselNodeClick: {
+			mDeselectOnNodeClick = pNewValue.getBool() == 2;
+			return qtrue;
+		}; break;
 		default:
 			return oBaseVisComponent::setProperty(pPropID, pNewValue, pECI);
 			break;
@@ -865,6 +871,9 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 		}; break;
 		case oDL_filtercalc: {
 			pGetValue.setChar((qchar *)mFilter.cString(), mFilter.length());
+		}; break;
+		case oDL_deselNodeClick: {
+			pGetValue.setBool(mDeselectOnNodeClick ? 2 : 1);
 		}; break;
 		default:
 			oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
@@ -1087,6 +1096,10 @@ sDLHitTest	oDataList::doHitTest(qpoint pAt) {
 			above.mLineNo	= 0;
 		} else {
 			above.mLineNo	= above.mNode->findRowAtPoint(pAt);
+			if (above.mLineNo==0) {
+				// not above a row, see if our node is a row
+				above.mLineNo = above.mNode->lineNo();
+			};
 			above.mAbove	= above.mLineNo==0 ? oDL_node : oDL_row;
 		};
 		return above;
@@ -1180,8 +1193,7 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 			// maybe send a click event back to Omnis?
 		}; break;
 		case oDL_node: {		
-//			addToTraceLog("Clicked on node at %li, %li", pAt.h,pAt.v);
-			if ((mDataList != NULL) && (mOmnisList != NULL)) {
+			if ((mDataList != NULL) && (mOmnisList != NULL) && mDeselectOnNodeClick) {
 				if (mShowSelected) {
 					// deselect all
 					qlong	rowCnt = mDataList->rowCnt();
@@ -1201,10 +1213,10 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 				
 				mDataList->setCurRow(0);
 				mOmnisList->setCurRow(0);
-			};
 
-			// and redraw
-			WNDinvalidateRect(mHWnd, NULL);
+				// and redraw
+				WNDinvalidateRect(mHWnd, NULL);
+			};
 			
 			// let user know we clicked outside of our line
 			EXTfldval	evParam[1];
@@ -1280,7 +1292,27 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 
 // mouse left button double clicked (return true if we finished handling this, false if we want Omnis internal logic)
 bool	oDataList::evDoubleClick(qpoint pAt, EXTCompInfo* pECI) {
-	ECOsendEvent(mHWnd, oDL_evDoubleClick, 0, 0, EEN_EXEC_IMMEDIATE);				
+	mMouseHitTest = this->doHitTest(pAt); // redo our hittest just in case
+
+	switch (mMouseHitTest.mAbove) {
+		case oDL_node: {		
+			// double click on our icon we ignore, but double click on our node we treat like we clicked on our icon
+			
+			// toggle our node
+			bool isExpanded = mMouseHitTest.mNode->expanded();
+			mMouseHitTest.mNode->setExpanded(isExpanded==false);
+			mUpdatePositions = true;
+			WNDinvalidateRect(mHWnd, NULL);
+			
+			// maybe send a click event back to Omnis?
+		};	break;
+		case oDL_row: {
+			ECOsendEvent(mHWnd, oDL_evDoubleClick, 0, 0, EEN_EXEC_IMMEDIATE);				
+		};	break;
+		default:
+			break;
+	};
+	
 	
 	return false; // let omnis do its own thing...
 };

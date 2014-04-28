@@ -522,6 +522,9 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 					};
 
 					mLastCurrentLineTop = currentLineTop;
+				} else {
+					// just copy it...
+					mLastCurrentLineTop = currentLineTop;
 				};
 			} else {
 				// no current line? no reason to scroll!
@@ -1335,24 +1338,29 @@ bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {
 		newCurrentLine = mMouseHitTest.mLineNo;
 	};
 	
-	for (qlong row = 1; row<=rowCnt; row++) {
-		if (row == newCurrentLine) {
-			if (!mDataList->isRowSelected(row, qfalse)) {
+	if (newCurrentLine > 0 && mDataList->isRowSelected(newCurrentLine, qfalse)) {
+		// The line we clicked on is marked as selected? Then we keep the selection as is.
+	} else {
+		for (qlong row = 1; row<=rowCnt; row++) {
+			if (row == newCurrentLine) {
+				if (!mDataList->isRowSelected(row, qfalse)) {
+					selectionChanged = true;
+					mDataList->selectRow(row, qtrue, qfalse);
+					mOmnisList->selectRow(row, qtrue, qfalse);
+				};
+			} else if (mDataList->isRowSelected(row, qfalse)) {
 				selectionChanged = true;
-				mDataList->selectRow(row, qtrue, qfalse);
-				mOmnisList->selectRow(row, qtrue, qfalse);
+				mDataList->selectRow(row, qfalse, qfalse);
+				mOmnisList->selectRow(row, qfalse, qfalse);
 			};
-		} else if (mDataList->isRowSelected(row, qfalse)) {
-			selectionChanged = true;
-			mDataList->selectRow(row, qfalse, qfalse);
-			mOmnisList->selectRow(row, qfalse, qfalse);
-		};
-	};		
-	
+		};		
+	}
+
+	// We do make sure regardless that the line we clicked on is the current line
 	if (newCurrentLine != currentLine) {
 		selectionChanged = true;
 		mOmnisList->setCurRow(newCurrentLine);
-	}
+	}		
 	
 	if (mOmnisList != NULL) {
 		delete mOmnisList;

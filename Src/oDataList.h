@@ -25,6 +25,7 @@ enum oDataListPropIDs {
 	oDL_columnaligns	= 103,
 	oDL_maxrowheight    = 104,
 	oDL_columnprefix	= 105,
+	oDL_verticalExtend	= 106,
 	oDL_groupcalcs		= 120,
 	oDL_treeIndent		= 121,
 	oDL_filtercalc		= 122,
@@ -68,6 +69,7 @@ private:
 	qdimArray					mColumnWidths;														// Our column widths
 	qArray<qjst>				mColumnAligns;														// Our column aligns
 	qstring						mColumnPrefix;														// Column prefix calculation
+	bool						mColumnExtend[256];													// Flags to indicate which columns extend our row height
 	qdim						mMaxRowHeight;														// Maximum rowheight
 	
 	qstring						mFilter;															// Our filter

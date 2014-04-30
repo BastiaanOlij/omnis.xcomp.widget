@@ -23,6 +23,7 @@ BEGIN
 	4113			"$columnaligns:Our column alignment"
 	4114			"$maxrowheight:Maximum row height"
 	4115			"$columnPrefix:This calculation gets added to every line"
+	4116			"$verticalExtends:Limits which columns wrapping text will increase the row height"
 	4120			"$groupcalcs:calculations by which we group"
 	4121			"$treeIndent:Number of pixels we indent our nodes in our treelist with"
 	4122			"$filtercalc:calculation by which to filter which lines we show"

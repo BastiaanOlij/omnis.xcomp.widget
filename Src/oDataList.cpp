@@ -216,7 +216,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 // Draw this line
 qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTop) {
 	qdim				left			= 0;
-	qdim				lineheight		= 14; // minimum line height...
+	qdim				lineheight		= GDIfontHeight(mHDC); // minimum line height...
 	qlong				i;
 	qlong				oldCurRow		= mOmnisList->getCurRow();
 	bool				isSelected		= ((mShowSelected && mOmnisList->isRowSelected(pLineNo)) || (!mShowSelected && (pLineNo == oldCurRow)));
@@ -271,7 +271,7 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 
 		qdim width = mColumnWidths[i] - 4 - (i==0 ? pIndent : 0);
 		qdim columnHeight = getTextHeight(newdata->cString(), width > 10 ? width : 10, true, true);
-		if (columnHeight>lineheight) {				
+		if (columnHeight>lineheight && (i < 256 ? mColumnExtend[i] : false)) {				
 			lineheight = columnHeight;
 		};
 	};
@@ -574,6 +574,7 @@ ECOproperty oDataListProperties[] = {
 	oDL_columnaligns,			4113,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnaligns
 	oDL_maxrowheight,			4114,   fftInteger,     EXTD_FLAG_PROPAPP,		0,		0,			0,		// $maxrowheight
 	oDL_columnprefix,			4115,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnprefix
+	oDL_verticalExtend,			4116,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $verticalExtend
 
 	oDL_groupcalcs,				4120,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $groupcalcs
 	oDL_treeIndent,				4121,	fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $treeIndent
@@ -619,7 +620,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			clearColumnCalcs();
 			
 			for (int i = 0; i < newcalc.length(); i++) {
-				qchar	digit = *newcalc[i];
+				qchar	digit = newcalc[i];
 				
 				if (digit == '\t') {
 					mColumnCalculations.push(calc);
@@ -643,7 +644,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			mColumnWidths.clear();
 			
 			for (int i = 0; i<widths.length(); i++) {
-				qchar	digit = *widths[i];
+				qchar	digit = widths[i];
 				
 				if (digit == ',') {
 					mColumnWidths.push(width);
@@ -668,7 +669,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			mColumnAligns.push(jstLeft); // our first column is ALWAYS left aligned!
 			
 			for (int i = 1; i<aligns.length(); i++) {
-				qchar	digit = *aligns[i];
+				qchar	digit = aligns[i];
 				
 				if ((digit == 'l') || (digit == 'L')) {
 					mColumnAligns.push(jstLeft);
@@ -703,6 +704,29 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
 		}; break;
+		case oDL_verticalExtend: {
+			qstring	bools(pNewValue);
+			qlong	len = bools.length();
+			
+			addToTraceLog("Checking %qs - %li",&bools, len);
+			
+			for (long i = 0; i < 256 ; i++) {
+				if (i>=len) {
+					mColumnExtend[i] = true; // default is true
+				} else if ((bools[i]=='t') || (bools[i]=='T')) {
+					mColumnExtend[i] = true;
+					addToTraceLog("True");
+				} else {
+					mColumnExtend[i] = false;
+					addToTraceLog("False");
+				};
+			};
+
+			mUpdatePositions = true;
+
+			WNDinvalidateRect(mHWnd, NULL);
+			return qtrue;			
+		}; break;
 		case oDL_groupcalcs: {
 			qstring		newcalc(pNewValue);
 			qstring *	calc = new qstring();
@@ -710,7 +734,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			clearGroupCalcs();
 			
 			for (int i = 0; i < newcalc.length(); i++) {
-				qchar	digit = *newcalc[i];
+				qchar	digit = newcalc[i];
 				
 				if (digit == '\t') {
 					mGroupCalculations.push(calc);
@@ -849,6 +873,19 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 		}; break;
 		case oDL_columnprefix: {
 			pGetValue.setChar((qchar *) mColumnPrefix.cString(), mColumnPrefix.length());
+		}; break;
+		case oDL_verticalExtend: {
+			qstring bools;
+			
+			for (int i = 0; i < mColumnCount; i++ ) {
+				if (mColumnExtend[i]) {
+					bools += 'T';
+				} else {
+					bools += 'F';					
+				};
+			}
+
+			pGetValue.setChar((qchar *) bools.cString(), bools.length());
 		}; break;
 		case oDL_groupcalcs: {
 			qstring	groupcalcs;

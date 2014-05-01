@@ -25,6 +25,7 @@ oDataList::oDataList(void) {
 	mRebuildNodes			= true;
 	mUpdatePositions		= true;
 	mDeselectOnNodeClick	= false;
+	mEvenColor				= GDI_COLOR_QDEFAULT;
 	mIndent					= 20;
 	mLineSpacing			= 4;
 	mDataList				= 0;
@@ -45,9 +46,17 @@ oDataList::~oDataList(void) {
 
 // Clear our group calculations
 void	oDataList::clearGroupCalcs(void) {
-	while (mGroupCalculations.numberOfElements()>0) {
-		qstring *calc = mGroupCalculations.pop();
-		delete calc;
+	while (mGroupCalculations.size()>0) {
+		sDLGrouping grouping = mGroupCalculations.back();	// get the last entry
+		mGroupCalculations.pop_back();				// remove the last entry
+		
+		// free memory related to our strings
+		if (grouping.mGroupCalc != NULL) {
+			delete grouping.mGroupCalc;
+		};
+		if (grouping.mParentCalc != NULL) {
+			delete grouping.mParentCalc;
+		};
 	};	
 };
 
@@ -103,7 +112,7 @@ qdim	oDataList::drawDividers(qdim pTop, qdim pBottom) {
 };
 
 // Draw this node
-qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim pTop) {
+qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim pTop, bool *pIsEven) {
 	qdim	headerHeight = 0;
 	
 	// if our top doesn't match we must update further positions.. 
@@ -122,40 +131,57 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 		// our root node, ignore this...
 		pIndent = 0;
 	} else {
-		// Note, we may end up drawing our grouping even if it is off screen but some of the children are onscreen but there shouldn't be too much overhead int hat.
+		bool	needIcon = ((pNode.childNodeCount()>0) || (pNode.rowCount()>0));
+		
+		// Note, we may end up drawing our grouping even if it is off screen but some of the children are onscreen but there shouldn't be too much overhead in that.
 		if (pNode.lineNo()!=0) {
 			// draw as a full line
-			headerHeight = drawRow(pECI, pNode.lineNo(), pIndent + mIndent, pTop + 2);
+			headerHeight = drawRow(pECI, pNode.lineNo(), pIndent + needIcon ? mIndent : 0, pTop + 2, *pIsEven);
 			headerHeight -= pTop;
 		} else {
 			// Draw our description
 			qrect	columnRect;
 			qdim	colwidth	= 10000; // No longer using mColumnWidths[0], may make this switchable, allow groupings to go along as far as they like..
-			qdim	width		= colwidth - pIndent - mIndent - 4;
-			
-			headerHeight = 2 + getTextHeight(pNode.description(), width > 10 ? width : 10, true, true);
+			qdim	width		= colwidth - pIndent - needIcon ? mIndent : 0 - 4;
+						
+			headerHeight = 2 + getTextHeight(pNode.description().cString(), width > 10 ? width : 10, true, true);
 			if (headerHeight > mMaxRowHeight) {
 				headerHeight = mMaxRowHeight;
 			};
+			
+			if (*pIsEven && (mEvenColor!=GDI_COLOR_QDEFAULT)) {
+				// draw even color background...
+				qrect	backGroundRect;
+				backGroundRect.left		= mClientRect.left;
+				backGroundRect.top		= pTop - mOffsetX;
+				backGroundRect.right	= mClientRect.right;
+				backGroundRect.bottom	= backGroundRect.top + headerHeight + mLineSpacing;
+				
+				drawRect(backGroundRect, mEvenColor, mEvenColor);
+			};
 
-			columnRect.left		= pIndent - mOffsetX + mIndent + 2;
+			columnRect.left		= pIndent - mOffsetX + needIcon ? mIndent : 0 + 2;
 			columnRect.top		= pTop - mOffsetY + 2;
-			columnRect.right	= colwidth - mOffsetX - 2;		
+			columnRect.right	= colwidth - mOffsetX - 2;
 			columnRect.bottom	= columnRect.top + headerHeight;
 			
-			drawText(pNode.description(), columnRect, mTextColor, jstLeft, true, true);
+			drawText(pNode.description().cString(), columnRect, mTextColor, jstLeft, true, true);
 		};
 
-		// now draw expanded/collapsed icon
-		pNode.mTreeIcon.left	= pIndent + 1;
-		pNode.mTreeIcon.right	= pNode.mTreeIcon.left + mIndent;
-		pNode.mTreeIcon.top		= pTop;
-		pNode.mTreeIcon.bottom	= pNode.mTreeIcon.top + mIndent;
+		if (needIcon) {
+			// now draw expanded/collapsed icon
+			pNode.mTreeIcon.left	= pIndent + 1;
+			pNode.mTreeIcon.right	= pNode.mTreeIcon.left + mIndent;
+			pNode.mTreeIcon.top		= pTop;
+			pNode.mTreeIcon.bottom	= pNode.mTreeIcon.top + mIndent;
+			
+			drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(pNode.mTreeIcon.left - mOffsetX, pNode.mTreeIcon.top - mOffsetY));
+			
+			pIndent += mIndent;
+		};
 		
-		drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(pNode.mTreeIcon.left - mOffsetX, pNode.mTreeIcon.top - mOffsetY));
-		
-		pIndent += mIndent;
-		headerHeight += mLineSpacing;
+		*pIsEven		= !*pIsEven;		// toggle
+		headerHeight	+= mLineSpacing;	// add some spacing..
 	};
 	
 	if (pNode.expanded()) {
@@ -165,7 +191,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 		// draw child nodes
 		for (i = 0; i<pNode.childNodeCount(); i++) {
 			oDLNode *child = pNode.getChildByIndex(i);
-			pTop = drawNode(pECI, *child, pIndent, pTop);
+			pTop = drawNode(pECI, *child, pIndent, pTop, pIsEven);
 		};
 		
 		// draw line nodes
@@ -183,7 +209,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 				lvRow.mTop = pTop;
 				
 				// draw line
-				pTop = drawRow(pECI, lvRow.mLineNo, pIndent, pTop);
+				pTop = drawRow(pECI, lvRow.mLineNo, pIndent, pTop, *pIsEven);
 				
 				// write top info back into our line..
 				lvRow.mBottom = pTop;
@@ -191,11 +217,14 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 				// store our updated positions...
 				pNode.setRowAtIndex(i, lvRow);
 			} else {
-				pTop = lvRow.mBottom;
+				pTop		= lvRow.mBottom;
 			};
-			
-			// draw a horizontal line?
+
+			// add a little spacing
 			pTop += mLineSpacing;
+
+			// toggle our is even
+			*pIsEven	= !*pIsEven;
 		};
 		
 		// draw totals?
@@ -214,7 +243,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 };
 
 // Draw this line
-qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTop) {
+qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTop, bool pIsEven) {
 	qdim				left			= 0;
 	qdim				lineheight		= GDIfontHeight(mHDC); // minimum line height...
 	qlong				i;
@@ -291,6 +320,13 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 			rowRect.right = mClientRect.right;
 			rowRect.bottom = pTop - mOffsetY + lineheight + mLineSpacing;
 			GDIhiliteTextStart(mHDC, &rowRect, mTextColor);
+		} else if (pIsEven && (mEvenColor!=GDI_COLOR_QDEFAULT)) {
+			rowRect.left = mClientRect.left;
+			rowRect.top = pTop - mOffsetY;
+			rowRect.right = mClientRect.right;
+			rowRect.bottom = pTop - mOffsetY + lineheight + mLineSpacing;
+			
+			drawRect(rowRect, mEvenColor, mEvenColor);
 		};
 		
 		// 3) draw our text
@@ -372,15 +408,23 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 					
 					// setup our grouping calculations
 					EXTfldvalArray	groupcalcs;
+					EXTfldvalArray	parentcalcs;
 					unsigned int	group;					
 					
 					// loop through our list
-					for (group = 0; group < mGroupCalculations.numberOfElements(); group++) {
-						qstring *	calcstr = mGroupCalculations[group];
-						EXTfldval *	calcFld = newCalculation(*calcstr, pECI);
+					for (group = 0; group < mGroupCalculations.size(); group++) {
+						sDLGrouping	grouping	= mGroupCalculations[group];
+						EXTfldval *	calcFld		= newCalculation(*grouping.mGroupCalc, pECI);
 						
 						if (calcFld != NULL) {
-							groupcalcs.push(calcFld);							
+							groupcalcs.push_back(calcFld);
+							
+							// also our parent calculation..
+							EXTfldval * parentFld = NULL;
+							if (grouping.mParentCalc != NULL) {
+								parentFld = newCalculation(*grouping.mParentCalc, pECI);
+							};
+							parentcalcs.push_back(parentFld); // always add even if NULL
 						};
 					};
 					
@@ -400,40 +444,81 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 						};
 						
 						if (showNode) {
-							// need to parse grouping to find child node...
-							for (group = 0; group < groupcalcs.numberOfElements(); group++) {
+							bool	addRow = true;
+							
+							// check our grouping
+							group = 0;
+							while(addRow && (group < groupcalcs.size())) {
 								EXTfldval * calcFld = groupcalcs[group];
 								EXTfldval	result;
 								
 								calcFld->evalCalculation(result, pECI->mLocLocp, mOmnisList, qfalse);
-								qstring		groupdesc(result);
+								qstring		groupdesc(result), value;
 								
-								oDLNode *childnode = node->findChildByDescription(groupdesc);
-								if (childnode == NULL) {
-									childnode = new oDLNode(groupdesc, 0);
-									node->addNode(childnode);
-								} else {
-									childnode->setTouched(true);
+								if (groupdesc.length()>0) {
+									oDLNode *childnode;
+									
+									// we split our description by |. This will allow us to optionally include a unique identifier
+									qlong	pos = groupdesc.pos('|');
+									if (pos > 0) {
+										value		= groupdesc.mid(0,pos-1);
+										groupdesc	= groupdesc.mid(pos+1);
+										childnode	= node->findChildByValue(value);
+									} else {
+										value		= QTEXT("");
+										childnode	= node->findChildByDescription(groupdesc, true);
+									};
+									
+									if (childnode == NULL) {
+										childnode = new oDLNode(value, groupdesc, 0);
+										node->addNode(childnode);
+									} else {
+										childnode->setTouched(true);
+									};
+									
+									EXTfldval * parentFld = parentcalcs[group];
+									if (parentFld != NULL) {
+										EXTfldval	isParent;
+										parentFld->evalCalculation(isParent, pECI->mLocLocp, mOmnisList, qfalse);
+										
+										if (isParent.getBool()==2) {
+											childnode->setLineNo(lineno);
+											addRow = false; // our node is our row, no need to add..
+										};
+									};
+																		
+									node = childnode;									
 								};
 								
-								node = childnode;
+								group++;
 							};
 							
-							// now add this row to our node, need to change this to a structure so we can track our positioning...
-							sDLRow	lvRow;
-							lvRow.mLineNo = lineno;
-							lvRow.mTop = 0;
-							lvRow.mBottom = 0;
-							node->addRow(lvRow);							
+							if (addRow) {
+								// now add this row to our node, need to change this to a structure so we can track our positioning...
+								sDLRow	lvRow;
+								lvRow.mLineNo = lineno;
+								lvRow.mTop = 0;
+								lvRow.mBottom = 0;
+								node->addRow(lvRow);
+							};
 						};
 					};					
 					
 					// cleanup our EXTFlds
-					while (groupcalcs.numberOfElements()) {
-						EXTfldval *	calcFld = groupcalcs.pop();
+					while (parentcalcs.size()) {
+						EXTfldval *	calcFld = parentcalcs.back();
+						parentcalcs.pop_back();
+						
+						if (calcFld != NULL) {
+							delete calcFld;							
+						};
+					};
+					while (groupcalcs.size()) {
+						EXTfldval *	calcFld = groupcalcs.back();
+						groupcalcs.pop_back();
+						
 						delete calcFld;
 					};
-					
 					if (filtercalc != NULL) {
 						delete filtercalc;
 					};
@@ -471,7 +556,8 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 						
 			// Now draw our stuff...		
 			qdim	top				= 0;
-			top = drawNode(pECI, mRootNode, -1, top);
+			bool	isEven			= false;
+			top = drawNode(pECI, mRootNode, -1, top, &isEven);
 			
 			// update our vertical scroll range, this may trigger another redraw..
 			qdim	vertPageSize	= mClientRect.height() / 2;
@@ -575,12 +661,14 @@ ECOproperty oDataListProperties[] = {
 	oDL_maxrowheight,			4114,   fftInteger,     EXTD_FLAG_PROPAPP,		0,		0,			0,		// $maxrowheight
 	oDL_columnprefix,			4115,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnprefix
 	oDL_verticalExtend,			4116,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $verticalExtend
+	oDL_evenColor,				4117,	fftInteger,		EXTD_FLAG_PROPAPP + EXTD_FLAG_PWINDCOL,	0,		0,			0,		// $evencolor
 
 	oDL_groupcalcs,				4120,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $groupcalcs
 	oDL_treeIndent,				4121,	fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $treeIndent
 	anumLineHtExtra,			0,		fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $linespacing
 	anumShowselected,			0,		fftBoolean,		EXTD_FLAG_PROPACT,		0,		0,			0,		// $multiselect
 	oDL_deselNodeClick,			4123,	fftBoolean,		EXTD_FLAG_PROPACT,		0,		0,			0,		// $deselectOnGroupClick
+	oDL_parentCalcs,			4124,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $parentCalcs
 
 	oDL_filtercalc,				4122,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $filtercalc
 };	
@@ -617,12 +705,17 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			qstring		newcalc(pNewValue);
 			qstring *	calc = new qstring();
 			
+			// fix our newlines
+			newcalc.replace("\r\n", "\n");
+			newcalc.replace("\r", "\n");
+			
+			// clear our column definitions
 			clearColumnCalcs();
 			
 			for (int i = 0; i < newcalc.length(); i++) {
 				qchar	digit = newcalc[i];
 				
-				if (digit == '\t') {
+				if ((digit == '\t') || (digit == DL_DELIMIT_CHAR)) { // we use to use tabs as delimiters, left that here for backwards compatibility
 					mColumnCalculations.push(calc);
 					calc = new qstring();
 				} else {
@@ -708,17 +801,13 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			qstring	bools(pNewValue);
 			qlong	len = bools.length();
 			
-			addToTraceLog("Checking %qs - %li",&bools, len);
-			
 			for (long i = 0; i < 256 ; i++) {
 				if (i>=len) {
 					mColumnExtend[i] = true; // default is true
 				} else if ((bools[i]=='t') || (bools[i]=='T')) {
 					mColumnExtend[i] = true;
-					addToTraceLog("True");
 				} else {
 					mColumnExtend[i] = false;
-					addToTraceLog("False");
 				};
 			};
 
@@ -727,27 +816,43 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;			
 		}; break;
+		case oDL_evenColor: {
+			mEvenColor = pNewValue.getLong();
+
+			WNDinvalidateRect(mHWnd, NULL);
+			return qtrue;
+		}; break;
 		case oDL_groupcalcs: {
 			qstring		newcalc(pNewValue);
-			qstring *	calc = new qstring();
+			sDLGrouping	grouping;
+
+			// prepare our grouping
+			grouping.mGroupCalc		= new qstring();
+			grouping.mParentCalc	= NULL;
+
+			// fix our newlines
+			newcalc.replace("\r\n", "\n");
+			newcalc.replace("\r", "\n");
 			
+			// clear our grouping array
 			clearGroupCalcs();
 			
 			for (int i = 0; i < newcalc.length(); i++) {
 				qchar	digit = newcalc[i];
 				
-				if (digit == '\t') {
-					mGroupCalculations.push(calc);
-					calc = new qstring();
+				if ((digit == '\t') || (digit == DL_DELIMIT_CHAR)) {
+					mGroupCalculations.push_back(grouping);
+					
+					grouping.mGroupCalc = new qstring();
 				} else {
-					*calc += digit;
+					*grouping.mGroupCalc += digit;
 				};
 			};
 			
-			if (calc->length()>0) {
-				mGroupCalculations.push(calc);
+			if (grouping.mGroupCalc->length()>0) {
+				mGroupCalculations.push_back(grouping);
 			} else {
-				delete calc;
+				delete grouping.mGroupCalc;
 			};
 			
 			mRebuildNodes = true;
@@ -800,6 +905,57 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			mDeselectOnNodeClick = pNewValue.getBool() == 2;
 			return qtrue;
 		}; break;
+		case oDL_parentCalcs: {
+			/* !BAS! Our parent calculations share an array with our grouping calculations. We assume the grouping calculations are always set before our parent calculations and our array is thus defined */
+
+			qstring		newcalc(pNewValue);
+			qstring *	calc = new qstring();
+			int			group;
+			
+			// fix our newlines
+			newcalc.replace("\r\n", "\n");
+			newcalc.replace("\r", "\n");
+			
+			// Clear our parent calculations
+			for (group = 0; group < mGroupCalculations.size(); group++) {
+				if (mGroupCalculations[group].mParentCalc != NULL) {
+					delete mGroupCalculations[group].mParentCalc;
+					mGroupCalculations[group].mParentCalc = NULL;
+				};
+			};
+			
+			// now process our new string
+			group = 0;
+			for (int i = 0; i < newcalc.length(); i++) {
+				qchar	digit = newcalc[i];
+				
+				if ((digit == '\t') || (digit == DL_DELIMIT_CHAR)) {
+					if ((calc->length()>0) && (group < mGroupCalculations.size())) {
+						mGroupCalculations[group].mParentCalc = calc;
+					} else {
+						delete calc;
+					};
+					
+					// next!
+					group++;
+					calc = new qstring();
+				} else {
+					*calc += digit;
+				};
+			};
+			
+			if ((calc->length()>0) && (group < mGroupCalculations.size())) {
+				mGroupCalculations[group].mParentCalc = calc;
+			} else {
+				delete calc;
+			};
+			
+			mRebuildNodes = true;
+			// addToTraceLog("Rebuild nodes, grouping changed");
+			
+			WNDinvalidateRect(mHWnd, NULL);
+			return qtrue;
+		}; break;
 		default:
 			return oBaseVisComponent::setProperty(pPropID, pNewValue, pECI);
 			break;
@@ -819,7 +975,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			
 			for (qlong i = 0; i<mColumnCount; i++) {
 				if (i!=0) {
-					columncalcs += QTEXT("\t");
+					columncalcs += QTEXT(DL_DELIMIT_STR);
 				};
 				if (i<mColumnCalculations.numberOfElements()) {
 					qstring *	calcstr = mColumnCalculations[i];
@@ -887,15 +1043,21 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 
 			pGetValue.setChar((qchar *) bools.cString(), bools.length());
 		}; break;
+		case oDL_evenColor: {
+			pGetValue.setLong(mEvenColor);
+		}; break;
 		case oDL_groupcalcs: {
 			qstring	groupcalcs;
 			
-			for (int i = 0; i < mGroupCalculations.numberOfElements(); i++) {
+			for (int i = 0; i < mGroupCalculations.size(); i++) {
+				qstring * calc = mGroupCalculations[i].mGroupCalc;
 				if (i!=0) {
-					groupcalcs += QTEXT(",");
+					groupcalcs += QTEXT(DL_DELIMIT_STR);
 				};
-				
-				groupcalcs += *mGroupCalculations[i];
+					
+				if (calc != NULL) {
+					groupcalcs += *calc;
+				};
 			};
 			
 			pGetValue.setChar((qchar *)groupcalcs.cString(), groupcalcs.length());
@@ -914,6 +1076,23 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 		}; break;
 		case oDL_deselNodeClick: {
 			pGetValue.setBool(mDeselectOnNodeClick ? 2 : 1);
+		}; break;
+		case oDL_parentCalcs: {
+			qstring	parentcalcs;
+			
+			for (int i = 0; i < mGroupCalculations.size(); i++) {
+				qstring * calc = mGroupCalculations[i].mParentCalc;
+				if (i!=0) {
+					parentcalcs += QTEXT(DL_DELIMIT_STR);
+				};
+					
+				if (calc != NULL) {
+					parentcalcs += *calc;
+				};
+			};
+			
+			pGetValue.setChar((qchar *)parentcalcs.cString(), parentcalcs.length());
+			
 		}; break;
 		default:
 			oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);

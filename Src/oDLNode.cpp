@@ -14,18 +14,21 @@ oDLNode::oDLNode(void) {
 	mTouched		= true;
 	mExpanded		= true;
 	mLineNo			= 0;
+	mValue			= QTEXT("");
 	mDescription	= QTEXT("");
 	mTop			= 0;
 	mBottom			= 0;
 };
 
-oDLNode::oDLNode(qstring &pDescription, qlong pLineNo) {
+oDLNode::oDLNode(const qstring & pValue, const qstring & pDescription, qlong pLineNo) {
 	mTouched		= true;
 	mExpanded		= true;
 	mLineNo			= pLineNo;
-	mDescription	= pDescription;
 	mTop			= 0;
 	mBottom			= 0;	
+
+	mValue			= pValue;
+	mDescription	= pDescription;
 };
 
 oDLNode::~oDLNode(void) {
@@ -61,9 +64,19 @@ qlong	oDLNode::lineNo(void) {
 	return mLineNo;
 };
 
+// update the related line number
+void	oDLNode::setLineNo(qlong pLineNo) {
+	mLineNo = pLineNo;
+};
+
+// value
+const qstring &	oDLNode::value(void) {
+	return mValue;
+};
+
 // description
-const qchar *	oDLNode::description(void) {
-	return mDescription.cString();
+const qstring &	oDLNode::description(void) {
+	return mDescription;
 };
 
 // is this point within our tree icon?
@@ -95,12 +108,24 @@ unsigned long	oDLNode::childNodeCount() {
 	return mChildNodes.numberOfElements();
 };
 
+// Find a child node by value
+oDLNode	*	oDLNode::findChildByValue(const qstring & pValue) {
+	for (unsigned long index = 0; index < mChildNodes.numberOfElements(); index++) {
+		oDLNode *child = mChildNodes[index];
+		
+		if (pValue == child->value()) {
+			return child;
+		};
+	};
+	return NULL;
+};
+
 // Find a child node by description
-oDLNode	*	oDLNode::findChildByDescription(qstring & pDescription) {
+oDLNode	*	oDLNode::findChildByDescription(const qstring & pDesc, bool pNoValue) {
 	for (unsigned long index = 0; index < mChildNodes.numberOfElements(); index++) {
 		oDLNode *child = mChildNodes[index];
 	
-		if (pDescription == child->description()) {
+		if ((pDesc == child->description()) && (!pNoValue || (child->value().length()==0))) {
 			return child;
 		};
 	};
@@ -211,6 +236,10 @@ qdim	oDLNode::findTopForRow(qlong pLineNo) {
 
 // Check if this row is part of our node?
 bool	oDLNode::hasRow(qlong pLineNo) {
+	if (mLineNo == pLineNo) {
+		return true;
+	};
+	
 	for (unsigned int i = 0; i < mRowNodes.numberOfElements(); i++) {
 		sDLRow row = mRowNodes[i];
 		
@@ -230,6 +259,7 @@ void	oDLNode::unTouchChildren(void) {
 		child->unTouchChildren();
 	};
 	
+	mLineNo = 0; // clear that we are related to this line, this may have changed.
 	mRowNodes.clear();
 };
 

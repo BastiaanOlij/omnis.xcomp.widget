@@ -24,10 +24,12 @@ BEGIN
 	4114			"$maxrowheight:Maximum row height"
 	4115			"$columnPrefix:This calculation gets added to every line"
 	4116			"$verticalExtends:Limits which columns wrapping text will increase the row height"
+	4117			"$evenColor:Alternative background color for even lines (default color = ignore)"
 	4120			"$groupcalcs:calculations by which we group"
 	4121			"$treeIndent:Number of pixels we indent our nodes in our treelist with"
 	4122			"$filtercalc:calculation by which to filter which lines we show"
 	4123			"$deselectOnGroupClick:Deselect lines when we click on a node"
+	4124			"$parentCalcs:calculations that identify a group as a parent group"
 
 // Events
 	5000			"click:User clicked on our field"

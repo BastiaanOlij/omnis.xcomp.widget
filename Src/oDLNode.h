@@ -31,6 +31,7 @@ private:
 	bool			mTouched;											// if true this node is still part of our data list
 	bool			mExpanded;											// if true our node is expanded
 	qlong			mLineNo;											// line number in our data list this relates to, 0 if just grouping
+	qstring			mValue;												// our value
 	qstring			mDescription;										// our description
 		
 	// nodes
@@ -44,7 +45,7 @@ public:
 	qrect			mTreeIcon;											// Rectangle for our tree icon
 	
 	oDLNode(void);
-	oDLNode(qstring &pDescription, qlong pLineNo=0);
+	oDLNode(const qstring &pValue, const qstring &pDescription, qlong pLineNo=0);
 	~oDLNode(void);
 	
 	// properties
@@ -52,17 +53,21 @@ public:
 	void			setTouched(bool pTouched);							// set value of touched
 	bool			expanded(void);										// expanded?
 	void			setExpanded(bool pExpanded);						// set expanded
+	qlong			lineNo(void);										// related line number
+	void			setLineNo(qlong pLineNo);							// update the related line number
+	
 
 	// read only
-	qlong			lineNo(void);										// related line number
-	const qchar *	description(void);									// description
+	const qstring &	value(void);										// value
+	const qstring &	description(void);									// description
 	bool			aboveTreeIcon(qpoint pAt);							// is this point within our tree icon?
 	
 	// methods
 	void			clearChildNodes();									// Clear all the child nodes
 	void			addNode(oDLNode * pNewNode);						// Add this node
 	unsigned long	childNodeCount();									// Returns the number of child nodes
-	oDLNode	*		findChildByDescription(qstring & pDescription);		// Find a child node by description
+	oDLNode	*		findChildByValue(const qstring & pValue);			// Find a child node by value
+	oDLNode	*		findChildByDescription(const qstring & pDesc, bool pNoValue=false);	// Find a child node by description
 	oDLNode *		findChildByPoint(qpoint pAt);						// Find a child node by screen location
 	oDLNode *		getChildByIndex(unsigned long pIndex);				// Get child at specific index
 	

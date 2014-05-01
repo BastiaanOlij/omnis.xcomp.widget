@@ -18,6 +18,10 @@
 #include "omnis.xcomp.framework.h"
 #include "oDLNode.h"
 
+#define		DL_DELIMIT_CHAR		'\n'						// use newline as delimiter. 
+#define		DL_DELIMIT_STR		"\n"						// use newline as delimiter. 
+
+
 enum oDataListPropIDs {
 	oDL_columncount		= 100,
 	oDL_columncalcs		= 101,
@@ -26,10 +30,12 @@ enum oDataListPropIDs {
 	oDL_maxrowheight    = 104,
 	oDL_columnprefix	= 105,
 	oDL_verticalExtend	= 106,
+	oDL_evenColor		= 107,
 	oDL_groupcalcs		= 120,
 	oDL_treeIndent		= 121,
 	oDL_filtercalc		= 122,
 	oDL_deselNodeClick	= 123,
+	oDL_parentCalcs		= 124,
 };
 
 enum oDataListEventIDs {
@@ -44,12 +50,17 @@ enum oDataListHittest {
 	oDL_none, oDL_horzSplitter, oDL_treeIcon, oDL_node, oDL_row
 };
 
-struct sDLHitTest {
+typedef struct sDLHitTest {
 	oDataListHittest	mAbove;
 	unsigned int		mColNo;
 	oDLNode *			mNode;
 	qlong				mLineNo;
-};
+} sDLHitTest;
+
+typedef struct sDLGrouping {
+	qstring *			mGroupCalc;		// group calculation
+	qstring *			mParentCalc;	// parent calculation
+} sDLGrouping;
 
 class oDataList : public oBaseVisComponent {
 private:
@@ -61,8 +72,10 @@ private:
 	qdim						mLineSpacing;														// Empty space between lines in pixels
 	qdim						mLastCurrentLineTop;												// Top position of current line at the last redraw, if changed we check if this is on screen
 	
-	qArray<qstring *>			mGroupCalculations;													// Calculations by which we're grouping
+	std::vector<sDLGrouping>	mGroupCalculations;													// Calculations by which we're grouping
 	bool						mDeselectOnNodeClick;												// Deselect lines when the user clicks on a node
+	qlong						mParentGrouping;													// Group that can also be a line
+	qstring						mParentCalculation;													// If this calculation returns true, the line is our parent line
 	
 	qlong						mColumnCount;														// Number of columns we are displaying
 	qArray<qstring *>			mColumnCalculations;												// Calculations for displaying our column data
@@ -71,6 +84,7 @@ private:
 	qstring						mColumnPrefix;														// Column prefix calculation
 	bool						mColumnExtend[256];													// Flags to indicate which columns extend our row height
 	qdim						mMaxRowHeight;														// Maximum rowheight
+	qcol						mEvenColor;															// Background color for even lines
 	
 	qstring						mFilter;															// Our filter
 
@@ -86,8 +100,8 @@ private:
 	
 	void						checkColumns(void);													// Check if our column data is complete
 	qdim						drawDividers(qdim pTop, qdim pBottom);								// Draw divider lines
-	qdim						drawNode(EXTCompInfo* pECI, oDLNode &pNodeqdim, qdim pIndent, qdim pTop);	// Draw this node
-	qdim						drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTop);	// Draw this row
+	qdim						drawNode(EXTCompInfo* pECI, oDLNode &pNodeqdim, qdim pIndent, qdim pTop, bool *pIsEven);	// Draw this node
+	qdim						drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTop, bool pIsEven);	// Draw this row
 	
 	void						clearHitTest(void);													// clear our hitttest info
 	sDLHitTest					doHitTest(qpoint pAt);												// find what we are above

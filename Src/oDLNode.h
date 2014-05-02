@@ -33,6 +33,7 @@ private:
 	bool			mTouched;											// if true this node is still part of our data list
 	bool			mExpanded;											// if true our node is expanded
 	qlong			mLineNo;											// line number in our data list this relates to, 0 if just grouping
+	bool			mLastEven;											// cache whether at the end we've drawn an even or odd line
 	qlong			mSortOrder;											// numeric field to sort our node by
 	qstring			mValue;												// our value, used to find related records
 	qstring			mDescription;										// our description, only used if mLineNo=0
@@ -56,6 +57,8 @@ public:
 	void			setTouched(bool pTouched);							// set value of touched
 	bool			expanded(void);										// expanded?
 	void			setExpanded(bool pExpanded);						// set expanded
+	bool			lastEven(void);										// last even value
+	void			setLastEven(bool pEven);							// set our last even value
 	qlong			lineNo(void);										// related line number
 	void			setLineNo(qlong pLineNo);							// update the related line number
 	qlong			sortOrder(void);									// our sort order

@@ -13,6 +13,7 @@
 oDLNode::oDLNode(void) {
 	mTouched		= true;
 	mExpanded		= true;
+	mLastEven		= false;
 	mLineNo			= 0;
 	mValue			= QTEXT("");
 	mDescription	= QTEXT("");
@@ -24,6 +25,7 @@ oDLNode::oDLNode(void) {
 oDLNode::oDLNode(const qstring & pValue, const qstring & pDescription, qlong pLineNo) {
 	mTouched		= true;
 	mExpanded		= true;
+	mLastEven		= false;
 	mLineNo			= pLineNo;
 	mValue			= pValue;
 	mDescription	= pDescription;
@@ -59,6 +61,17 @@ bool	oDLNode::expanded(void) {
 void	oDLNode::setExpanded(bool pExpanded) {
 	mExpanded = pExpanded;
 };
+
+// last even value
+bool	oDLNode::lastEven(void) {
+	return mLastEven;
+};
+
+// set our last even value
+void	oDLNode::setLastEven(bool pEven) {
+	mLastEven = pEven;
+};
+
 
 // related line number
 qlong	oDLNode::lineNo(void) {

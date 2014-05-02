@@ -121,6 +121,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 		mUpdatePositions = true;
 	} else if ((!mUpdatePositions) && ((pNode.mTop - mOffsetY > mClientRect.bottom) || (pNode.mBottom - mOffsetY < mClientRect.top))) {
 		// fully offscreen? no point in drawing!
+		*pIsEven = pNode.lastEven();
 		return pNode.mBottom;
 	};
 	
@@ -236,7 +237,8 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 		pTop += headerHeight;
 	};
 	
-	// write bottom info back into our node..
+	// write bottom and even info back into our node..
+	pNode.setLastEven(*pIsEven);
 	pNode.mBottom = pTop;
 	
 	return pTop;

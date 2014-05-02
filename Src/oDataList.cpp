@@ -142,8 +142,8 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 			// Draw our description
 			qrect	columnRect;
 			qdim	colwidth	= 10000; // No longer using mColumnWidths[0], may make this switchable, allow groupings to go along as far as they like..
-			qdim	width		= colwidth - pIndent - needIcon ? mIndent : 0 - 4;
-						
+			qdim	width		= colwidth - pIndent - (needIcon ? mIndent : 0) - 4;
+			
 			headerHeight = 2 + getTextHeight(pNode.description().cString(), width > 10 ? width : 10, true, true);
 			if (headerHeight > mMaxRowHeight) {
 				headerHeight = mMaxRowHeight;
@@ -160,7 +160,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 				drawRect(backGroundRect, mEvenColor, mEvenColor);
 			};
 
-			columnRect.left		= pIndent - mOffsetX + needIcon ? mIndent : 0 + 2;
+			columnRect.left		= pIndent - mOffsetX + (needIcon ? mIndent : 0) + 2;
 			columnRect.top		= pTop - mOffsetY + 2;
 			columnRect.right	= colwidth - mOffsetX - 2;
 			columnRect.bottom	= columnRect.top + headerHeight;
@@ -461,11 +461,11 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 									// we split our description by |. This will allow us to optionally include a unique identifier
 									qlong	pos = groupdesc.pos('|');
 									if (pos > 0) {
-										value		= groupdesc.mid(0,pos-1);
+										value		= groupdesc.mid(0,pos);
 										groupdesc	= groupdesc.mid(pos+1);
 										childnode	= node->findChildByValue(value);
 									} else {
-										value		= QTEXT("");
+										value		= "";
 										childnode	= node->findChildByDescription(groupdesc, true);
 									};
 									
@@ -474,6 +474,11 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 										node->addNode(childnode);
 									} else {
 										childnode->setTouched(true);
+									};
+									
+									if (childnode->sortOrder()==0) {
+										// set the sort order to the first line related to our node
+										childnode->setSortOrder(lineno);
 									};
 									
 									EXTfldval * parentFld = parentcalcs[group];
@@ -538,7 +543,10 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 					};
 					
 					// remove untouched children
-					mRootNode.removeUntouched();		
+					mRootNode.removeUntouched();
+					
+					// sort our nodes
+					mRootNode.sortChildren();
 					
 					// make sure our current row is current again, we need this later!
 					mOmnisList->setCurRow(currentRow);
@@ -648,29 +656,39 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 
 ECOproperty oDataListProperties[] = { 
 	//	ID						ResID	Type			Flags					ExFlags	EnumStart	EnumEnd
-	anumFieldname,				0,		fftList,		EXTD_FLAG_PRIMEDATA+EXTD_FLAG_FAR_SRCH+EXTD_FLAG_PROPGENERAL,	0,		0,			0,		// $dataname
+	anumFieldname,				0,		fftList,		EXTD_FLAG_PRIMEDATA
+														+EXTD_FLAG_FAR_SRCH
+														+EXTD_FLAG_PROPGENERAL,	0,		0,			0,		// $dataname
 	anumHScroll,				0,		fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $hscroll
 	anumVScroll,				0,		fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $vscroll
 	anumHorzscroll,				0,		fftBoolean,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $horzscroll
 	anumVertscroll,				0,		fftBoolean,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $vortscroll
 	
 	oDL_columncount,			4110,	fftInteger,		EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columncount
-	oDL_columncalcs,			4111,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columncalcs
+	oDL_columncalcs,			4111,	fftCharacter,	EXTD_FLAG_PROPDATA
+														+EXTD_FLAG_PWINDMLINE
+														+EXTD_FLAG_FAR_SRCH,	0,		0,			0,		// $columncalcs
 	oDL_columnwidths,			4112,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnwidths
 	oDL_columnaligns,			4113,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnaligns
 	oDL_maxrowheight,			4114,   fftInteger,     EXTD_FLAG_PROPAPP,		0,		0,			0,		// $maxrowheight
 	oDL_columnprefix,			4115,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $columnprefix
 	oDL_verticalExtend,			4116,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $verticalExtend
-	oDL_evenColor,				4117,	fftInteger,		EXTD_FLAG_PROPAPP + EXTD_FLAG_PWINDCOL,	0,		0,			0,		// $evencolor
+	oDL_evenColor,				4117,	fftInteger,		EXTD_FLAG_PROPAPP
+														+EXTD_FLAG_PWINDCOL,	0,		0,			0,		// $evencolor
 
-	oDL_groupcalcs,				4120,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $groupcalcs
+	oDL_groupcalcs,				4120,	fftCharacter,	EXTD_FLAG_PROPDATA
+														+EXTD_FLAG_PWINDMLINE
+														+EXTD_FLAG_FAR_SRCH,	0,		0,			0,		// $groupcalcs
 	oDL_treeIndent,				4121,	fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $treeIndent
 	anumLineHtExtra,			0,		fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $linespacing
 	anumShowselected,			0,		fftBoolean,		EXTD_FLAG_PROPACT,		0,		0,			0,		// $multiselect
 	oDL_deselNodeClick,			4123,	fftBoolean,		EXTD_FLAG_PROPACT,		0,		0,			0,		// $deselectOnGroupClick
-	oDL_parentCalcs,			4124,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $parentCalcs
+	oDL_parentCalcs,			4124,	fftCharacter,	EXTD_FLAG_PROPDATA
+														+EXTD_FLAG_PWINDMLINE
+														+EXTD_FLAG_FAR_SRCH,	0,		0,			0,		// $parentCalcs
 
-	oDL_filtercalc,				4122,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $filtercalc
+	oDL_filtercalc,				4122,	fftCharacter,	EXTD_FLAG_PROPDATA
+														+EXTD_FLAG_FAR_SRCH,	0,		0,			0,		// $filtercalc
 };	
 
 qProperties * oDataList::properties(void) {
@@ -705,7 +723,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			qstring		newcalc(pNewValue);
 			qstring *	calc = new qstring();
 			
-			// fix our newlines
+			// Change any newlines to \n for easy recognition
 			newcalc.replace("\r\n", "\n");
 			newcalc.replace("\r", "\n");
 			
@@ -715,7 +733,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			for (int i = 0; i < newcalc.length(); i++) {
 				qchar	digit = newcalc[i];
 				
-				if ((digit == '\t') || (digit == DL_DELIMIT_CHAR)) { // we use to use tabs as delimiters, left that here for backwards compatibility
+				if ((digit == '\t') || (digit == '\n')) { // we use to use tabs as delimiters, left that here for backwards compatibility
 					mColumnCalculations.push(calc);
 					calc = new qstring();
 				} else {
@@ -830,7 +848,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			grouping.mGroupCalc		= new qstring();
 			grouping.mParentCalc	= NULL;
 
-			// fix our newlines
+			// Change any newlines to \n for easy recognition
 			newcalc.replace("\r\n", "\n");
 			newcalc.replace("\r", "\n");
 			
@@ -840,7 +858,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			for (int i = 0; i < newcalc.length(); i++) {
 				qchar	digit = newcalc[i];
 				
-				if ((digit == '\t') || (digit == DL_DELIMIT_CHAR)) {
+				if ((digit == '\t') || (digit == '\n')) {
 					mGroupCalculations.push_back(grouping);
 					
 					grouping.mGroupCalc = new qstring();
@@ -856,7 +874,6 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			};
 			
 			mRebuildNodes = true;
-			// addToTraceLog("Rebuild nodes, grouping changed");
 			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
@@ -912,7 +929,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			qstring *	calc = new qstring();
 			int			group;
 			
-			// fix our newlines
+			// Change any newlines to \n for easy recognition
 			newcalc.replace("\r\n", "\n");
 			newcalc.replace("\r", "\n");
 			
@@ -929,7 +946,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			for (int i = 0; i < newcalc.length(); i++) {
 				qchar	digit = newcalc[i];
 				
-				if ((digit == '\t') || (digit == DL_DELIMIT_CHAR)) {
+				if ((digit == '\t') || (digit == '\n')) {
 					if ((calc->length()>0) && (group < mGroupCalculations.size())) {
 						mGroupCalculations[group].mParentCalc = calc;
 					} else {
@@ -951,7 +968,6 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			};
 			
 			mRebuildNodes = true;
-			// addToTraceLog("Rebuild nodes, grouping changed");
 			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
@@ -975,7 +991,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			
 			for (qlong i = 0; i<mColumnCount; i++) {
 				if (i!=0) {
-					columncalcs += QTEXT(DL_DELIMIT_STR);
+					columncalcs += QTEXT("\r\n");
 				};
 				if (i<mColumnCalculations.numberOfElements()) {
 					qstring *	calcstr = mColumnCalculations[i];
@@ -1052,7 +1068,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			for (int i = 0; i < mGroupCalculations.size(); i++) {
 				qstring * calc = mGroupCalculations[i].mGroupCalc;
 				if (i!=0) {
-					groupcalcs += QTEXT(DL_DELIMIT_STR);
+					groupcalcs += QTEXT("\r\n");
 				};
 					
 				if (calc != NULL) {
@@ -1079,16 +1095,23 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 		}; break;
 		case oDL_parentCalcs: {
 			qstring	parentcalcs;
+			bool	hascalcs = false;
 			
 			for (int i = 0; i < mGroupCalculations.size(); i++) {
 				qstring * calc = mGroupCalculations[i].mParentCalc;
 				if (i!=0) {
-					parentcalcs += QTEXT(DL_DELIMIT_STR);
+					parentcalcs += QTEXT("\r\n");
 				};
 					
 				if (calc != NULL) {
 					parentcalcs += *calc;
+					hascalcs = true;
 				};
+			};
+			
+			// if we have no calculations, clear it, we don't even want our delimiters
+			if (!hascalcs) {
+				parentcalcs = "";
 			};
 			
 			pGetValue.setChar((qchar *)parentcalcs.cString(), parentcalcs.length());
@@ -1605,7 +1628,7 @@ bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {
 bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
 	pchar	testchar = pKey->getPChar();
 	
-	if ((testchar=='a') && (pKey->isControl()) && mShowSelected && pDown && (mDataList != NULL)) {
+	if ((testchar=='a') && (pKey->isControl()) && (!pKey->isShift()) && (!pKey->isAlt()) && mShowSelected && pDown && (mDataList != NULL)) {
 		// we must make selection changes to both our internal and the external list!
 		mOmnisList = getDataList(pECI);
 		

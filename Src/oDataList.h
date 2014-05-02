@@ -18,10 +18,6 @@
 #include "omnis.xcomp.framework.h"
 #include "oDLNode.h"
 
-#define		DL_DELIMIT_CHAR		'\n'						// use newline as delimiter. 
-#define		DL_DELIMIT_STR		"\n"						// use newline as delimiter. 
-
-
 enum oDataListPropIDs {
 	oDL_columncount		= 100,
 	oDL_columncalcs		= 101,

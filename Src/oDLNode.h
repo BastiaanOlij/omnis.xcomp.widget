@@ -17,13 +17,15 @@
 
 // Forward defines
 class oDLNode;
-typedef qArray<oDLNode *>		oDLNodeArray;							// array of node pointers
+typedef std::vector<oDLNode *>		oDLNodeArray;						// array of node pointers
 
-struct sDLRow {
+typedef struct sDLRow {
 	qlong	mLineNo;
 	qdim	mTop;
 	qdim	mBottom;
-};
+} sDLRow;
+
+typedef std::vector<sDLRow>			sDLRowArray;						// array of datanode rows
 
 //////////
 class oDLNode {
@@ -31,12 +33,13 @@ private:
 	bool			mTouched;											// if true this node is still part of our data list
 	bool			mExpanded;											// if true our node is expanded
 	qlong			mLineNo;											// line number in our data list this relates to, 0 if just grouping
-	qstring			mValue;												// our value
-	qstring			mDescription;										// our description
-		
+	qlong			mSortOrder;											// numeric field to sort our node by
+	qstring			mValue;												// our value, used to find related records
+	qstring			mDescription;										// our description, only used if mLineNo=0
+	
 	// nodes
 	oDLNodeArray	mChildNodes;										// child nodes
-	qArray<sDLRow>	mRowNodes;											// line nodes
+	sDLRowArray		mRowNodes;											// line nodes
 
 public:
 	// These are only set after we've drawn our tree so we can see where nodes are
@@ -55,8 +58,9 @@ public:
 	void			setExpanded(bool pExpanded);						// set expanded
 	qlong			lineNo(void);										// related line number
 	void			setLineNo(qlong pLineNo);							// update the related line number
+	qlong			sortOrder(void);									// our sort order
+	void			setSortOrder(qlong pSortOrder);						// set our sort order 
 	
-
 	// read only
 	const qstring &	value(void);										// value
 	const qstring &	description(void);									// description
@@ -79,6 +83,8 @@ public:
 	qdim			findTopForRow(qlong pLineNo);						// Find top position for specific line (will check child nodes if applicable)
 	bool			hasRow(qlong pLineNo);								// Check if this row is part of our node?
 	
+	static bool		order(oDLNode * pA, oDLNode * pB);					// Static function that returns whether true if the sort order of A is smaller then B
+	void			sortChildren(void);									// Sort our child nodes
 	void			unTouchChildren(void);								// Marks all children as untouched and remove any line nodes
 	void			removeUntouched(void);								// Removes children that are untouched	
 };

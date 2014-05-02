@@ -18,17 +18,18 @@ oDLNode::oDLNode(void) {
 	mDescription	= QTEXT("");
 	mTop			= 0;
 	mBottom			= 0;
+	mSortOrder		= 0;
 };
 
 oDLNode::oDLNode(const qstring & pValue, const qstring & pDescription, qlong pLineNo) {
 	mTouched		= true;
 	mExpanded		= true;
 	mLineNo			= pLineNo;
-	mTop			= 0;
-	mBottom			= 0;	
-
 	mValue			= pValue;
 	mDescription	= pDescription;
+	mTop			= 0;
+	mBottom			= 0;	
+	mSortOrder		= 0;
 };
 
 oDLNode::~oDLNode(void) {
@@ -69,6 +70,16 @@ void	oDLNode::setLineNo(qlong pLineNo) {
 	mLineNo = pLineNo;
 };
 
+// our sort order
+qlong	oDLNode::sortOrder(void) {
+	return mSortOrder;
+};
+
+// set our sort order 
+void	oDLNode::setSortOrder(qlong pSortOrder) {
+	mSortOrder = pSortOrder;
+};
+
 // value
 const qstring &	oDLNode::value(void) {
 	return mValue;
@@ -92,25 +103,27 @@ bool	oDLNode::aboveTreeIcon(qpoint pAt) {
 // Clear all the child nodes
 void	oDLNode::clearChildNodes() {
 	// free all the children!
-	while (mChildNodes.numberOfElements()>0) {
-		oDLNode *child = mChildNodes.pop();
+	while (mChildNodes.size()>0) {
+		oDLNode *child = mChildNodes.back(); // get the last on our stack
+		mChildNodes.pop_back(); // and remove it from our stack
+		
 		delete child;
 	};	
 };
 
 // Add this node
 void	oDLNode::addNode(oDLNode * pNewNode) {
-	mChildNodes.push(pNewNode);
+	mChildNodes.push_back(pNewNode);
 };
 
 // Returns the number of child nodes
 unsigned long	oDLNode::childNodeCount() {
-	return mChildNodes.numberOfElements();
+	return mChildNodes.size();
 };
 
 // Find a child node by value
 oDLNode	*	oDLNode::findChildByValue(const qstring & pValue) {
-	for (unsigned long index = 0; index < mChildNodes.numberOfElements(); index++) {
+	for (unsigned long index = 0; index < mChildNodes.size(); index++) {
 		oDLNode *child = mChildNodes[index];
 		
 		if (pValue == child->value()) {
@@ -122,7 +135,7 @@ oDLNode	*	oDLNode::findChildByValue(const qstring & pValue) {
 
 // Find a child node by description
 oDLNode	*	oDLNode::findChildByDescription(const qstring & pDesc, bool pNoValue) {
-	for (unsigned long index = 0; index < mChildNodes.numberOfElements(); index++) {
+	for (unsigned long index = 0; index < mChildNodes.size(); index++) {
 		oDLNode *child = mChildNodes[index];
 	
 		if ((pDesc == child->description()) && (!pNoValue || (child->value().length()==0))) {
@@ -134,7 +147,7 @@ oDLNode	*	oDLNode::findChildByDescription(const qstring & pDesc, bool pNoValue) 
 
 // Find a child node by screen location
 oDLNode *	oDLNode::findChildByPoint(qpoint pAt) {
-	for (unsigned long index = 0; index < mChildNodes.numberOfElements(); index++) {
+	for (unsigned long index = 0; index < mChildNodes.size(); index++) {
 		oDLNode *child = mChildNodes[index];
 		if ((child->mTop <= pAt.v) && (child->mBottom >= pAt.v)) {
 			// Our point lies within this child, see if it lies within one of its children
@@ -153,7 +166,7 @@ oDLNode *	oDLNode::findChildByPoint(qpoint pAt) {
 
 // Get child at specific index
 oDLNode *	oDLNode::getChildByIndex(unsigned long pIndex) {
-	if (pIndex < mChildNodes.numberOfElements()) {
+	if (pIndex < mChildNodes.size()) {
 		return mChildNodes[pIndex];
 	} else {
 		return NULL;
@@ -162,17 +175,17 @@ oDLNode *	oDLNode::getChildByIndex(unsigned long pIndex) {
 
 // Add a row
 void	oDLNode::addRow(sDLRow pRow) {
-	mRowNodes.push(pRow);
+	mRowNodes.push_back(pRow);
 };
 
 // Returns the number of lrows
 unsigned long	oDLNode::rowCount() {
-	return mRowNodes.numberOfElements();
+	return mRowNodes.size();
 };
 
 // Get the row at this index
 sDLRow	oDLNode::getRowAtIndex(unsigned long pIndex) {
-	if (pIndex < mRowNodes.numberOfElements()) {
+	if (pIndex < mRowNodes.size()) {
 		return mRowNodes[pIndex];
 	} else {
 		sDLRow	lvEmpty;
@@ -187,14 +200,14 @@ sDLRow	oDLNode::getRowAtIndex(unsigned long pIndex) {
 
 // Set the row at this index
 void	oDLNode::setRowAtIndex(unsigned long pIndex, sDLRow pRow) {
-	if (pIndex < mRowNodes.numberOfElements()) {
-		mRowNodes.setElementAtIndex(pIndex, pRow);
+	if (pIndex < mRowNodes.size()) {
+		mRowNodes[pIndex] = pRow;
 	};		
 };
 
 // Find row by screen location
 qlong	oDLNode::findRowAtPoint(qpoint pAt) {
-	for (unsigned int i = 0; i < mRowNodes.numberOfElements(); i++) {
+	for (unsigned int i = 0; i < mRowNodes.size(); i++) {
 		sDLRow row = mRowNodes[i];
 		
 		if ((row.mTop <= pAt.v) && (row.mBottom >= pAt.v)) {
@@ -209,7 +222,7 @@ qlong	oDLNode::findRowAtPoint(qpoint pAt) {
 qdim	oDLNode::findTopForRow(qlong pLineNo) {
 	if (mExpanded) {
 		// check our child nodes..
-		for (unsigned long index = 0; index < mChildNodes.numberOfElements(); index++) {
+		for (unsigned long index = 0; index < mChildNodes.size(); index++) {
 			oDLNode *child = mChildNodes[index];
 			qdim	top = child->findTopForRow(pLineNo);
 			if (top>=0) {
@@ -219,7 +232,7 @@ qdim	oDLNode::findTopForRow(qlong pLineNo) {
 		};
 		
 		// not found? check our lines
-		for (unsigned int i = 0; i < mRowNodes.numberOfElements(); i++) {
+		for (unsigned int i = 0; i < mRowNodes.size(); i++) {
 			sDLRow row = mRowNodes[i];
 			
 			if (row.mLineNo == pLineNo) {
@@ -240,7 +253,7 @@ bool	oDLNode::hasRow(qlong pLineNo) {
 		return true;
 	};
 	
-	for (unsigned int i = 0; i < mRowNodes.numberOfElements(); i++) {
+	for (unsigned int i = 0; i < mRowNodes.size(); i++) {
 		sDLRow row = mRowNodes[i];
 		
 		if (row.mLineNo == pLineNo) {
@@ -251,15 +264,40 @@ bool	oDLNode::hasRow(qlong pLineNo) {
 	return false;
 };
 
+// Static function that returns whether true if the sort order of A is smaller then B
+bool	oDLNode::order(oDLNode * pA, oDLNode * pB) {
+	if (pB == NULL) {
+		return false;
+	} else if (pA == NULL) {
+		return true;
+	};
+	
+	return pA->mSortOrder < pB->mSortOrder;
+};
+
+// Sort our child nodes
+void	oDLNode::sortChildren(void) {
+	// sort our children
+	std::sort(mChildNodes.begin(), mChildNodes.end(), oDLNode::order);
+	
+	// now tell our children to also sort
+	for (unsigned long index = 0; index < mChildNodes.size(); index++) {
+		oDLNode *child = mChildNodes[index];
+		
+		child->sortChildren();
+	};
+};
+
 // Marks all children as untouched and remove any line nodes
 void	oDLNode::unTouchChildren(void) {
-	for (unsigned long index = 0; index < mChildNodes.numberOfElements(); index++) {
+	for (unsigned long index = 0; index < mChildNodes.size(); index++) {
 		oDLNode *child = mChildNodes[index];
 		child->setTouched(false);
 		child->unTouchChildren();
 	};
 	
-	mLineNo = 0; // clear that we are related to this line, this may have changed.
+	mLineNo		= 0; // clear that we are related to this line, this may have changed.
+	mSortOrder	= 0; // reset our sort
 	mRowNodes.clear();
 };
 
@@ -267,13 +305,13 @@ void	oDLNode::unTouchChildren(void) {
 void	oDLNode::removeUntouched(void) {
 	unsigned long index = 0;
 	
-	while (index < mChildNodes.numberOfElements()) {
+	while (index < mChildNodes.size()) {
 		oDLNode * child = mChildNodes[index];
 		if (child->touched()) {
 			child->removeUntouched();
 			index++;
 		} else {
-			mChildNodes.remElementAtIndex(index);
+			mChildNodes.erase(mChildNodes.begin() + index);
 			delete child;
 		};
 	};

@@ -18,6 +18,7 @@
 
 #include "oDataList.h"
 
+// Constructor to initialize object
 oDataList::oDataList(void) {
 	mFilter					= "";
 	mColumnCount			= 1;
@@ -33,6 +34,7 @@ oDataList::oDataList(void) {
 	mLastCurrentLineTop		= 0;
 };
 
+// Destructor to clean up
 oDataList::~oDataList(void) {
 	// clean up!
 	if (mDataList != NULL) {
@@ -1383,15 +1385,19 @@ HCURSOR	oDataList::getCursor(qpoint pAt, qword2 pHitTest) {
 	return WND_CURS_DEFAULT;		
 };
 
-// mouse left button pressed down
-void	oDataList::evMouseLDown(qpoint pDownAt) {
+// mouse left button pressed down (return true if we finished handling this, false if we want Omnis internal logic)
+bool	oDataList::evMouseLDown(qpoint pDownAt) {
 	mMouseHitTest = this->doHitTest(pDownAt); // where did our mouse come down?
 	mMouseLast = pDownAt; // remember this to calculate deltas
+	
+	return true;
 };
 
-// mouse left button released
-void	oDataList::evMouseLUp(qpoint pDownAt) {
+// mouse left button released (return true if we finished handling this, false if we want Omnis internal logic)
+bool	oDataList::evMouseLUp(qpoint pDownAt) {
 	clearHitTest();
+
+	return true;
 };
 
 // mouse moved to this location while mouse button is not down

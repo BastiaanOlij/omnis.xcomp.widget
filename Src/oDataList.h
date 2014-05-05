@@ -131,8 +131,8 @@ public:
 
 	// mouse
 	virtual HCURSOR				getCursor(qpoint pAt, qword2 pHitTest);								// return the mouse cursor we should show
-	virtual void				evMouseLDown(qpoint pDownAt);										// mouse left button pressed down
-	virtual void				evMouseLUp(qpoint pDownAt);											// mouse left button released
+	virtual bool				evMouseLDown(qpoint pDownAt);										// mouse left button pressed down (return true if we finished handling this, false if we want Omnis internal logic)
+	virtual bool				evMouseLUp(qpoint pDownAt);											// mouse left button released (return true if we finished handling this, false if we want Omnis internal logic)
 	virtual void				evMouseMoved(qpoint pMovedTo);										// mouse moved to this location while mouse button is not down
 	virtual void				evClick(qpoint pAt, EXTCompInfo* pECI);								// mouse click at this location
 	virtual bool				evDoubleClick(qpoint pAt, EXTCompInfo* pECI);						// mouse left button double clicked (return true if we finished handling this, false if we want Omnis internal logic)

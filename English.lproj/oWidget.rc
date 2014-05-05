@@ -9,6 +9,7 @@ BEGIN
 	2000			"oDateTime"
 	2001			"oCountButton"
 	2002			"oDataList"
+	2003			"oDropDown"
 
 // properties
 	4000			"$localtime:our datetime in the local timezone"
@@ -30,6 +31,7 @@ BEGIN
 	4122			"$filtercalc:calculation by which to filter which lines we show"
 	4123			"$deselectOnGroupClick:Deselect lines when we click on a node"
 	4124			"$parentCalcs:calculations that identify a group as a parent group"
+	4200			"$displaycalc:If set, alternative display calculation"
 
 // Events
 	5000			"click:User clicked on our field"
@@ -54,6 +56,10 @@ BEGIN
 	10010			"on evClick ;; line (pLineNo) has been clicked"
 	10011			"Quit event handler (Pass to next handler)"
 	10012			" "
+
+	10020			"on evClick ;; Line has been clicked"
+	10021			"Quit event handler (Pass to next handler)"
+	10022			" "
 
 // Entry point
 	31000			"FrameworkWndProc"

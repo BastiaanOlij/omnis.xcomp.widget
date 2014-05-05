@@ -15,7 +15,7 @@ qshort	mainlib::major() {
 };
 
 qshort	mainlib::minor() {
-	return 3;
+	return 4;
 };
 
 /* see omnis.xcomp.framework\oXCompLib.h for methods to implement here */ 
@@ -59,6 +59,19 @@ qint mainlib::ecm_connect(void) {
 	lvComponent.mMethods			= oDataList::methods();
 	lvComponent.mEventMethodID		= 10010;
 	lvComponent.mEvents				= oDataList::events();
+	
+	addComponent(lvComponent);	
+
+	lvComponent.componentType		= cObjType_DropList;
+	lvComponent.componentID			= 2003;
+	lvComponent.bitmapID			= 1;
+	lvComponent.flags				= 0;
+	lvComponent.groupResID			= 0;
+	lvComponent.newObjectFunction	= (void * (*)()) &(oDropDown::newObject);
+	lvComponent.mProperties			= oDropDown::properties();
+	lvComponent.mMethods			= oDropDown::methods();
+	lvComponent.mEventMethodID		= 10020;
+	lvComponent.mEvents				= oDropDown::events();
 	
 	addComponent(lvComponent);	
 	

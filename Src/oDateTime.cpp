@@ -11,7 +11,7 @@
 
 #include "oDateTime.h"
 
-// we only implement our constructors/destructors to get some logging going to find out if all is well...
+// Constructor to initialize object
 oDateTime::oDateTime(void) {
 //	addToTraceLog("Constructing oDateTime %li",(uint)this);
 	
@@ -19,6 +19,7 @@ oDateTime::oDateTime(void) {
 	time(&mTimestamp);
 };
 
+// Destructor to clean up
 oDateTime::~oDateTime(void) {
 //	addToTraceLog("Destructing oDateTime %li",(uint)this);	
 };

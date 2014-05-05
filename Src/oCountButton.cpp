@@ -10,7 +10,7 @@
 
 #include "oCountButton.h"
 
-// we only implement our constructors/destructors to get some logging going to find out if all is well...
+// Constructor to initialize object
 oCountButton::oCountButton(void) {
 	mBKTheme		= WND_BK_PARENT;
 	mCounter		= 0;
@@ -20,6 +20,7 @@ oCountButton::oCountButton(void) {
 	mCountColour	= GDI_COLOR_QBLUE; 
 };
 
+// Destructor to clean up
 oCountButton::~oCountButton(void) {
 
 };

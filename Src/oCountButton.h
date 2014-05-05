@@ -22,7 +22,7 @@ enum oCountButtonPropIDs {
 	oCB_countColour		= 103,
 };
 
-enum oCountBUttonEventIDs {
+enum oCountButtonEventIDs {
 	oCB_evClick			= 100,
 };
 

@@ -34,6 +34,7 @@
 		AC4B180817CC557D00E9447A /* oUTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC4B17FE17CC557D00E9447A /* oUTF8.cpp */; };
 		AC4B180917CC557D00E9447A /* oXCompLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC4B180017CC557D00E9447A /* oXCompLib.cpp */; };
 		AC4B180A17CC557D00E9447A /* qString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC4B180317CC557D00E9447A /* qString.cpp */; };
+		AC50A5221916FB59009F8C74 /* oDropDown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC50A5211916FB59009F8C74 /* oDropDown.cpp */; };
 		ACA0A88018D0817B006F9D3B /* oCountButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACA0A87D18D0817B006F9D3B /* oCountButton.cpp */; };
 		ACA0A88118D0817B006F9D3B /* oDateTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACA0A87E18D0817B006F9D3B /* oDateTime.cpp */; };
 		ACA0A88218D0817B006F9D3B /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACA0A87F18D0817B006F9D3B /* widget.cpp */; };
@@ -91,6 +92,8 @@
 		AC4B180317CC557D00E9447A /* qString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qString.cpp; path = ../omnis.xcomp.framework/qString.cpp; sourceTree = SOURCE_ROOT; };
 		AC4B180417CC557D00E9447A /* qString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qString.h; path = ../omnis.xcomp.framework/qString.h; sourceTree = SOURCE_ROOT; };
 		AC4B180517CC557D00E9447A /* xCompStandardIncludes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xCompStandardIncludes.h; path = ../omnis.xcomp.framework/xCompStandardIncludes.h; sourceTree = SOURCE_ROOT; };
+		AC50A5201916FB48009F8C74 /* oDropDown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDropDown.h; path = Src/oDropDown.h; sourceTree = "<group>"; };
+		AC50A5211916FB59009F8C74 /* oDropDown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDropDown.cpp; path = Src/oDropDown.cpp; sourceTree = "<group>"; };
 		ACA0A87A18D08160006F9D3B /* oCountButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oCountButton.h; path = Src/oCountButton.h; sourceTree = "<group>"; };
 		ACA0A87B18D08160006F9D3B /* oDateTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDateTime.h; path = Src/oDateTime.h; sourceTree = "<group>"; };
 		ACA0A87C18D08160006F9D3B /* widget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = widget.h; path = Src/widget.h; sourceTree = "<group>"; };
@@ -153,6 +156,7 @@
 				AC26287718DBF58100A5BC69 /* oDataList.cpp */,
 				AC26287818DBF58100A5BC69 /* oDLNode.cpp */,
 				ACA0A87E18D0817B006F9D3B /* oDateTime.cpp */,
+				AC50A5211916FB59009F8C74 /* oDropDown.cpp */,
 				ACA0A87F18D0817B006F9D3B /* widget.cpp */,
 			);
 			name = Source;
@@ -173,6 +177,7 @@
 				AC26287518DBF57100A5BC69 /* oDataList.h */,
 				AC26287618DBF57100A5BC69 /* oDLNode.h */,
 				ACA0A87B18D08160006F9D3B /* oDateTime.h */,
+				AC50A5201916FB48009F8C74 /* oDropDown.h */,
 				ACA0A87C18D08160006F9D3B /* widget.h */,
 			);
 			name = Headers;
@@ -281,6 +286,7 @@
 				ACA0A88218D0817B006F9D3B /* widget.cpp in Sources */,
 				AC26287918DBF58100A5BC69 /* oDataList.cpp in Sources */,
 				AC26287A18DBF58100A5BC69 /* oDLNode.cpp in Sources */,
+				AC50A5221916FB59009F8C74 /* oDropDown.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

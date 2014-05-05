@@ -62,6 +62,8 @@ bool	oDropDown::drawListContents(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 		
 		delete calcFld;
 	};
+
+	return true;
 };
 
 // Do our list line drawing here (for cObjType_List or cObjType_DropList)

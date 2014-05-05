@@ -239,6 +239,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\oDropDown.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\widget.cpp"
 				>
 			</File>
@@ -314,6 +318,10 @@
 			</File>
 			<File
 				RelativePath=".\Src\oDLNode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\oDropDown.h"
 				>
 			</File>
 			<File

@@ -71,7 +71,7 @@ bool	oDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 	// Omnis seems to already have put a tick infront of our current line. grmbl grmbl grmbl
 	// Whenever selecting a line to toggle you'll need to react appropriately
 	
-	bool	isSelected = pInfo->mListPtr->isRowSelected(pInfo->mLine,qfalse);
+	qbool	isSelected = pInfo->mListPtr->isRowSelected(pInfo->mLine,qfalse);
 	
 	if (isSelected && mShowSelected) {
 		mCanvas->drawIcon(1655+cBMPicon16x16, qpoint(pInfo->mLineRect.left, pInfo->mLineRect.top));

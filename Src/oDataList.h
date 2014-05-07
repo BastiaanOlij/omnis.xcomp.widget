@@ -72,7 +72,7 @@ private:
 	qlong						mParentGrouping;													// Group that can also be a line
 	qstring						mParentCalculation;													// If this calculation returns true, the line is our parent line
 	
-	qlong						mColumnCount;														// Number of columns we are displaying
+	qulong						mColumnCount;														// Number of columns we are displaying
 	qArray<qstring *>			mColumnCalculations;												// Calculations for displaying our column data
 	qdimArray					mColumnWidths;														// Our column widths
 	qArray<qjst>				mColumnAligns;														// Our column aligns

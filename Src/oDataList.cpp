@@ -78,7 +78,7 @@ oDataList * oDataList::newObject(void) {
 
 // Check if our column data is complete	and we do not have widths that don't make sense..
 void	oDataList::checkColumns(void) {
-	for (qlong i = 0; i<mColumnCount; i++) {
+	for (qulong i = 0; i<mColumnCount; i++) {
 		if (i>=mColumnWidths.numberOfElements()) {
 			// missing a width? add it now so we can trust it later...
 			mColumnWidths.push(100);
@@ -101,7 +101,7 @@ void	oDataList::checkColumns(void) {
 // Draw divider lines
 qdim	oDataList::drawDividers(qdim pTop, qdim pBottom) {
 	qdim	left = 0;
-	for (qlong i = 0; i<mColumnCount; i++) {
+	for (qulong i = 0; i<mColumnCount; i++) {
 		left += mColumnWidths[i];
 		mCanvas->drawLine(qpoint(left-mHorzScollPos,mClientRect.top), qpoint(left-mHorzScollPos,mClientRect.bottom), 1, GDI_COLOR_QGRAY, patStd0); // should make the color and linestyle configurable
 	};
@@ -187,7 +187,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 	};
 	
 	if (pNode.expanded()) {
-		qlong i;
+		qulong i;
 		pTop += headerHeight;
 		
 		// draw child nodes
@@ -215,7 +215,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTop, bool pIsEven) {
 	qdim				left			= 0;
 	qdim				lineheight		= mCanvas->getFontHeight(); // minimum line height...
-	qlong				i;
+	qulong				i;
 	qlong				oldCurRow		= mOmnisList->getCurRow();
 	bool				isSelected		= ((mShowSelected && mOmnisList->isRowSelected(pLineNo)) || (!mShowSelected && (pLineNo == oldCurRow)));
 	qArray<qstring *>	columndata;
@@ -704,7 +704,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			// clear our column definitions
 			clearColumnCalcs();
 			
-			for (int i = 0; i < newcalc.length(); i++) {
+			for (qulong i = 0; i < newcalc.length(); i++) {
 				qchar	digit = newcalc[i];
 				
 				if ((digit == '\t') || (digit == '\n')) { // we use to use tabs as delimiters, left that here for backwards compatibility
@@ -726,7 +726,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			
 			mColumnWidths.clear();
 			
-			for (int i = 0; i<widths.length(); i++) {
+			for (qulong i = 0; i<widths.length(); i++) {
 				qchar	digit = widths[i];
 				
 				if (digit == ',') {
@@ -749,7 +749,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			mColumnAligns.clear();
 			mColumnAligns.push(jstLeft); // our first column is ALWAYS left aligned!
 			
-			for (int i = 1; i<aligns.length(); i++) {
+			for (qulong i = 1; i<aligns.length(); i++) {
 				qchar	digit = aligns[i];
 				
 				if ((digit == 'l') || (digit == 'L')) {
@@ -819,7 +819,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			// clear our grouping array
 			clearGroupCalcs();
 			
-			for (int i = 0; i < newcalc.length(); i++) {
+			for (qulong i = 0; i < newcalc.length(); i++) {
 				qchar	digit = newcalc[i];
 				
 				if ((digit == '\t') || (digit == '\n')) {
@@ -891,7 +891,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 
 			qstring		newcalc(pNewValue);
 			qstring *	calc = new qstring();
-			int			group;
+			qulong		group;
 			
 			// Change any newlines to \n for easy recognition
 			newcalc.replace("\r\n", "\n");
@@ -907,7 +907,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			
 			// now process our new string
 			group = 0;
-			for (int i = 0; i < newcalc.length(); i++) {
+			for (qulong i = 0; i < newcalc.length(); i++) {
 				qchar	digit = newcalc[i];
 				
 				if ((digit == '\t') || (digit == '\n')) {
@@ -953,7 +953,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 		case oDL_columncalcs: {
 			qstring	columncalcs;
 			
-			for (qlong i = 0; i<mColumnCount; i++) {
+			for (qulong i = 0; i<mColumnCount; i++) {
 				if (i!=0) {
 					columncalcs += QTEXT("\r\n");
 				};
@@ -968,7 +968,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 		}; break;
 		case oDL_columnwidths: {
 			qstring		widths = QTEXT("");;
-			for (qlong i = 0; i<mColumnCount; i++) {
+			for (qulong i = 0; i<mColumnCount; i++) {
 				if (i!=0) {
 					widths += QTEXT(",");
 				};
@@ -984,7 +984,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 		}; break;
 		case oDL_columnaligns: {
 			qstring		aligns = QTEXT("");
-			for (qlong i = 0; i<mColumnCount; i++) {				
+			for (qulong i = 0; i<mColumnCount; i++) {				
 				if (i<mColumnWidths.numberOfElements()) {
 					switch (mColumnAligns[i]) {
 						case jstRight:
@@ -1013,7 +1013,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 		case oDL_verticalExtend: {
 			qstring bools;
 			
-			for (int i = 0; i < mColumnCount; i++ ) {
+			for (qulong i = 0; i < mColumnCount; i++ ) {
 				if (mColumnExtend[i]) {
 					bools += 'T';
 				} else {
@@ -1029,7 +1029,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 		case oDL_groupcalcs: {
 			qstring	groupcalcs;
 			
-			for (int i = 0; i < mGroupCalculations.size(); i++) {
+			for (qulong i = 0; i < mGroupCalculations.size(); i++) {
 				qstring * calc = mGroupCalculations[i].mGroupCalc;
 				if (i!=0) {
 					groupcalcs += QTEXT("\r\n");
@@ -1061,7 +1061,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			qstring	parentcalcs;
 			bool	hascalcs = false;
 			
-			for (int i = 0; i < mGroupCalculations.size(); i++) {
+			for (qulong i = 0; i < mGroupCalculations.size(); i++) {
 				qstring * calc = mGroupCalculations[i].mParentCalc;
 				if (i!=0) {
 					parentcalcs += QTEXT("\r\n");

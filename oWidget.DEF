@@ -1,4 +1,4 @@
-LIBRARY         widget
+LIBRARY         oWidget
 EXPORTS
     FrameworkWndProc	@1
  

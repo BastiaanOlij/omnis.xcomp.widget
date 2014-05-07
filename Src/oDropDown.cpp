@@ -58,7 +58,7 @@ bool	oDropDown::drawListContents(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 		where.left	+= 10;
 		where.top	+= 3;
 		
-		drawText(text.cString(), where, mTextColor);
+		mCanvas->drawText(text.cString(), where, mTextColor);
 		
 		delete calcFld;
 	};
@@ -72,7 +72,7 @@ bool	oDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 	bool	isSelected = pInfo->mListPtr->isRowSelected(pInfo->mLine,qfalse);
 	
 	if (isSelected && mShowSelected) {
-		drawIcon(1655+cBMPicon16x16, qpoint(pInfo->mLineRect.left, pInfo->mLineRect.top));
+		mCanvas->drawIcon(1655+cBMPicon16x16, qpoint(pInfo->mLineRect.left, pInfo->mLineRect.top));
 	};
 	
 	// draw our text
@@ -82,7 +82,7 @@ bool	oDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 		where.left	+= 20;
 		where.top	+= 3;
 		
-		drawText(text->cString(), where, mTextColor);
+		mCanvas->drawText(text->cString(), where, mTextColor);
 		
 		delete text;
 	};

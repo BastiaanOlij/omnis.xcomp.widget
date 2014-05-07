@@ -38,9 +38,7 @@ void oCountButton::doPaint(EXTCompInfo* pECI) {
 	oBaseVisComponent::doPaint(pECI);
 	
 	if (mIconID!=0) {
-		EXTBMPref	tmpIcon(mIconID);
-		qrect		tmpRect = mClientRect;
-		tmpIcon.draw (mHDC, &tmpRect, tmpIcon.getBmpSize(mIconID), picNormal, qfalse, colNone, qfalse, jstCenter, jstCenter);
+		mCanvas->drawIcon(mIconID, qpoint(mClientRect.left, mClientRect.top));
 	};
 	
 	if (mCounter>0) {
@@ -54,13 +52,12 @@ void oCountButton::doPaint(EXTCompInfo* pECI) {
 		
 		int			tmpLeft = mClientRect.right - (mRadius*2);
 		qrect		tmpRect = qrect(tmpLeft - mSpacing, mClientRect.top, mClientRect.right, mClientRect.top + (mRadius*2));
-		drawEllipse(tmpRect, mixColors(GDI_COLOR_QWHITE, mCountColour), mCountColour, GDI_COLOR_QWHITE, mSpacing);
+		mCanvas->drawEllipse(tmpRect, mCanvas->mixColors(GDI_COLOR_QWHITE, mCountColour), mCountColour, GDI_COLOR_QWHITE, mSpacing);
 		
-		tmpLeft = tmpRect.left + ((tmpRect.right - tmpRect.left) >> 1);
-		GDIsetTextColor(mHDC, GDI_COLOR_QWHITE);
-		GDIdrawText(mHDC, tmpLeft, 2, (qchar *) tmpCounter.cString(), tmpCounter.length(), jstCenter);
-
-		GDIsetTextColor(mHDC, mTextColor);
+		tmpRect.left +=2;
+		tmpRect.top +=2;
+		tmpRect.bottom = mClientRect.bottom;
+		mCanvas->drawText(tmpCounter.cString(), tmpRect, GDI_COLOR_QWHITE, jstCenter, false, false);
 	};
 };
 

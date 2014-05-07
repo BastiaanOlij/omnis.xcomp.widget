@@ -107,7 +107,7 @@ qdim	oDataList::drawDividers(qdim pTop, qdim pBottom) {
 	qdim	left = 0;
 	for (qlong i = 0; i<mColumnCount; i++) {
 		left += mColumnWidths[i];
-		drawLine(qpoint(left-mOffsetX,mClientRect.top), qpoint(left-mOffsetX,mClientRect.bottom), 1, GDI_COLOR_QGRAY, patStd0); // should make the color and linestyle configurable
+		mCanvas->drawLine(qpoint(left-mOffsetX,mClientRect.top), qpoint(left-mOffsetX,mClientRect.bottom), 1, GDI_COLOR_QGRAY, patStd0); // should make the color and linestyle configurable
 	};
 	
 	return left;
@@ -147,7 +147,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 			qdim	colwidth	= 10000; // No longer using mColumnWidths[0], may make this switchable, allow groupings to go along as far as they like..
 			qdim	width		= colwidth - pIndent - (needIcon ? mIndent : 0) - 4;
 			
-			headerHeight = 2 + getTextHeight(pNode.description().cString(), width > 10 ? width : 10, true, true);
+			headerHeight = 2 + mCanvas->getTextHeight(pNode.description().cString(), width > 10 ? width : 10, true, true);
 			if (headerHeight > mMaxRowHeight) {
 				headerHeight = mMaxRowHeight;
 			};
@@ -160,7 +160,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 				backGroundRect.right	= mClientRect.right;
 				backGroundRect.bottom	= backGroundRect.top + headerHeight + mLineSpacing;
 				
-				drawRect(backGroundRect, mEvenColor, mEvenColor);
+				mCanvas->drawRect(backGroundRect, mEvenColor, mEvenColor);
 			};
 
 			columnRect.left		= pIndent - mOffsetX + (needIcon ? mIndent : 0) + 2;
@@ -168,7 +168,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 			columnRect.right	= colwidth - mOffsetX - 2;
 			columnRect.bottom	= columnRect.top + headerHeight;
 			
-			drawText(pNode.description().cString(), columnRect, mTextColor, jstLeft, true, true);
+			mCanvas->drawText(pNode.description().cString(), columnRect, mTextColor, jstLeft, true, true);
 		};
 
 		if (needIcon) {
@@ -178,7 +178,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 			pNode.mTreeIcon.top		= pTop;
 			pNode.mTreeIcon.bottom	= pNode.mTreeIcon.top + mIndent;
 			
-			drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(pNode.mTreeIcon.left - mOffsetX, pNode.mTreeIcon.top - mOffsetY));
+			mCanvas->drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(pNode.mTreeIcon.left - mOffsetX, pNode.mTreeIcon.top - mOffsetY));
 			
 			pIndent += mIndent;
 		};
@@ -249,7 +249,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 // Draw this line
 qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTop, bool pIsEven) {
 	qdim				left			= 0;
-	qdim				lineheight		= GDIfontHeight(mHDC); // minimum line height...
+	qdim				lineheight		= mCanvas->getFontHeight(); // minimum line height...
 	qlong				i;
 	qlong				oldCurRow		= mOmnisList->getCurRow();
 	bool				isSelected		= ((mShowSelected && mOmnisList->isRowSelected(pLineNo)) || (!mShowSelected && (pLineNo == oldCurRow)));
@@ -303,13 +303,13 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 		columndata.push(newdata);
 
 		qdim width = mColumnWidths[i] - 4 - (i==0 ? pIndent : 0);
-		qdim columnHeight = getTextHeight(newdata->cString(), width > 10 ? width : 10, true, true);
+		qdim columnHeight = mCanvas->getTextHeight(newdata->cString(), width > 10 ? width : 10, true, true);
 		if (columnHeight>lineheight && (i < 256 ? mColumnExtend[i] : false)) {				
 			lineheight = columnHeight;
 		};
 	};
 	
-	// Too heigh?
+	// Too high?
 	if (lineheight > mMaxRowHeight) {
 		lineheight = mMaxRowHeight;
 	};
@@ -323,14 +323,14 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 			rowRect.top = pTop - mOffsetY;
 			rowRect.right = mClientRect.right;
 			rowRect.bottom = pTop - mOffsetY + lineheight + mLineSpacing;
-			GDIhiliteTextStart(mHDC, &rowRect, mTextColor);
+			GDIhiliteTextStart(mCanvas->hdc(), &rowRect, mTextColor);	// !BAS! Move into canvas!
 		} else if (pIsEven && (mEvenColor!=GDI_COLOR_QDEFAULT)) {
 			rowRect.left = mClientRect.left;
 			rowRect.top = pTop - mOffsetY;
 			rowRect.right = mClientRect.right;
 			rowRect.bottom = pTop - mOffsetY + lineheight + mLineSpacing;
 			
-			drawRect(rowRect, mEvenColor, mEvenColor);
+			mCanvas->drawRect(rowRect, mEvenColor, mEvenColor);
 		};
 		
 		// 3) draw our text
@@ -348,14 +348,14 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 			columnRect.top		= pTop - mOffsetY;
 			columnRect.bottom	= pTop - mOffsetY + lineheight;
 			
-			drawText(data->cString(), columnRect, mTextColor, mColumnAligns[i], true, true);
+			mCanvas->drawText(data->cString(), columnRect, mTextColor, mColumnAligns[i], true, true);
 			
 			left += mColumnWidths[i];
 		};
 		
 		if (isSelected) {
 			// 4) unhighlight
-			GDIhiliteTextEnd(mHDC, &rowRect, mTextColor);
+			GDIhiliteTextEnd(mCanvas->hdc(), &rowRect, mTextColor);	// !BAS! Move into canvas!
 		};
 	};
 
@@ -378,6 +378,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 	// After that we skip as much of the logic as we can and effectively only draw lines that are visible.
 
 	qbool	redraw = false; // if our scroll position changes, we draw twice!
+	clock_t	t = clock();
 	
 	// call base class to draw background
 	oBaseVisComponent::doPaint(pECI);
@@ -588,6 +589,8 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 			};
 			WNDsetScrollRange(mHWnd, SB_VERT, 0, maxVertScroll, vertPageSize, qtrue);
 						
+//			addToTraceLog("cleanup");
+
 			// Save a bunch of drawing next time round...
 			mUpdatePositions = false;
 			
@@ -647,6 +650,8 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 		};
 	}
 	WNDsetScrollRange(mHWnd, SB_HORZ, 0, maxHorzScroll, horzPageSize, qtrue);
+
+	addToTraceLog("finished drawing in %li ms",((clock()-t) * 1000)/CLOCKS_PER_SEC);
 	
 	if (redraw) {
 		// just draw again, may need to protect against recursive calls? I think it'll be alright.

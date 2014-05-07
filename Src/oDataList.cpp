@@ -107,7 +107,7 @@ qdim	oDataList::drawDividers(qdim pTop, qdim pBottom) {
 	qdim	left = 0;
 	for (qlong i = 0; i<mColumnCount; i++) {
 		left += mColumnWidths[i];
-		mCanvas->drawLine(qpoint(left-mOffsetX,mClientRect.top), qpoint(left-mOffsetX,mClientRect.bottom), 1, GDI_COLOR_QGRAY, patStd0); // should make the color and linestyle configurable
+		mCanvas->drawLine(qpoint(left-mHorzScollPos,mClientRect.top), qpoint(left-mHorzScollPos,mClientRect.bottom), 1, GDI_COLOR_QGRAY, patStd0); // should make the color and linestyle configurable
 	};
 	
 	return left;
@@ -121,7 +121,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 	if ((pNode.mTop != pTop) && (!mUpdatePositions)) {
 		addToTraceLog("Top positions do not match while we're reusing positions?");
 		mUpdatePositions = true;
-	} else if ((!mUpdatePositions) && ((pNode.mTop - mOffsetY > mClientRect.bottom) || (pNode.mBottom - mOffsetY < mClientRect.top))) {
+	} else if ((!mUpdatePositions) && ((pNode.mTop - mVertScollPos > mClientRect.bottom) || (pNode.mBottom - mVertScollPos < mClientRect.top))) {
 		// fully offscreen? no point in drawing!
 		*pIsEven = pNode.lastEven();
 		return pNode.mBottom;
@@ -156,16 +156,16 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 				// draw even color background...
 				qrect	backGroundRect;
 				backGroundRect.left		= mClientRect.left;
-				backGroundRect.top		= pTop - mOffsetX;
+				backGroundRect.top		= pTop - mHorzScollPos;
 				backGroundRect.right	= mClientRect.right;
 				backGroundRect.bottom	= backGroundRect.top + headerHeight + mLineSpacing;
 				
 				mCanvas->drawRect(backGroundRect, mEvenColor, mEvenColor);
 			};
 
-			columnRect.left		= pIndent - mOffsetX + (needIcon ? mIndent : 0) + 2;
-			columnRect.top		= pTop - mOffsetY + 2;
-			columnRect.right	= colwidth - mOffsetX - 2;
+			columnRect.left		= pIndent - mHorzScollPos + (needIcon ? mIndent : 0) + 2;
+			columnRect.top		= pTop - mVertScollPos + 2;
+			columnRect.right	= colwidth - mHorzScollPos - 2;
 			columnRect.bottom	= columnRect.top + headerHeight;
 			
 			mCanvas->drawText(pNode.description().cString(), columnRect, mTextColor, jstLeft, true, true);
@@ -178,7 +178,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 			pNode.mTreeIcon.top		= pTop;
 			pNode.mTreeIcon.bottom	= pNode.mTreeIcon.top + mIndent;
 			
-			mCanvas->drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(pNode.mTreeIcon.left - mOffsetX, pNode.mTreeIcon.top - mOffsetY));
+			mCanvas->drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(pNode.mTreeIcon.left - mHorzScollPos, pNode.mTreeIcon.top - mVertScollPos));
 			
 			pIndent += mIndent;
 		};
@@ -207,7 +207,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 				mUpdatePositions = true;				
 			};
 			
-			if (mUpdatePositions || ((lvRow.mTop - mOffsetY < mClientRect.bottom) && (lvRow.mBottom - mOffsetY > mClientRect.top))) {
+			if (mUpdatePositions || ((lvRow.mTop - mVertScollPos < mClientRect.bottom) && (lvRow.mBottom - mVertScollPos > mClientRect.top))) {
 				// write top info back into our line..
 				lvRow.mTop = pTop;
 				
@@ -314,27 +314,27 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 		lineheight = mMaxRowHeight;
 	};
 	
-	if ((pTop - mOffsetY < mClientRect.bottom) && (pTop + lineheight - mOffsetY > mClientRect.top)) {
+	if ((pTop - mVertScollPos < mClientRect.bottom) && (pTop + lineheight - mVertScollPos > mClientRect.top)) {
 		qrect	rowRect;
 
 		if (isSelected) {
 			// 2) Do highlighted drawing
 			rowRect.left = mClientRect.left;
-			rowRect.top = pTop - mOffsetY;
+			rowRect.top = pTop - mVertScollPos;
 			rowRect.right = mClientRect.right;
-			rowRect.bottom = pTop - mOffsetY + lineheight + mLineSpacing;
+			rowRect.bottom = pTop - mVertScollPos + lineheight + mLineSpacing;
 			GDIhiliteTextStart(mCanvas->hdc(), &rowRect, mTextColor);	// !BAS! Move into canvas!
 		} else if (pIsEven && (mEvenColor!=GDI_COLOR_QDEFAULT)) {
 			rowRect.left = mClientRect.left;
-			rowRect.top = pTop - mOffsetY;
+			rowRect.top = pTop - mVertScollPos;
 			rowRect.right = mClientRect.right;
-			rowRect.bottom = pTop - mOffsetY + lineheight + mLineSpacing;
+			rowRect.bottom = pTop - mVertScollPos + lineheight + mLineSpacing;
 			
 			mCanvas->drawRect(rowRect, mEvenColor, mEvenColor);
 		};
 		
 		// 3) draw our text
-		left = -mOffsetX;
+		left = -mHorzScollPos;
 		for (i = 0; i < mColumnCount; i++) {
 			qstring *	data = columndata[i];
 			qrect		columnRect;
@@ -345,8 +345,8 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 				columnRect.left	= left + 2;
 			}
 			columnRect.right	= left + mColumnWidths[i] - 2;
-			columnRect.top		= pTop - mOffsetY;
-			columnRect.bottom	= pTop - mOffsetY + lineheight;
+			columnRect.top		= pTop - mVertScollPos;
+			columnRect.bottom	= pTop - mVertScollPos + lineheight;
 			
 			mCanvas->drawText(data->cString(), columnRect, mTextColor, mColumnAligns[i], true, true);
 			
@@ -577,13 +577,13 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 			qdim	maxVertScroll	= top + 32;
 			vertPageSize			= vertPageSize > 1 ? vertPageSize : 1;
 			maxVertScroll			= maxVertScroll > 0 ? maxVertScroll : 0;
-			if (mOffsetY > maxVertScroll - vertPageSize) {
+			if (mVertScollPos > maxVertScroll - vertPageSize) {
 				qdim newOffsetY			= maxVertScroll - vertPageSize;
 				newOffsetY				= newOffsetY > 0 ? newOffsetY : 0;
 				
-				if (mOffsetY != newOffsetY) {
-					mOffsetY = newOffsetY;
-					WNDsetScrollPos(mHWnd, SB_VERT, mOffsetY, qtrue);				
+				if (mVertScollPos != newOffsetY) {
+					mVertScollPos = newOffsetY;
+					WNDsetScrollPos(mHWnd, SB_VERT, mVertScollPos, qtrue);				
 					redraw = true;
 				};
 			};
@@ -608,7 +608,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 					mLastCurrentLineTop = 0;
 				} else if (mLastCurrentLineTop == currentLineTop) {
 					// still the same? then we do NOT adjust our positioning, the user may have scrolled down and wants to select another line. Lets not undo this!
-				} else if ((currentLineTop<mOffsetY) || (currentLineTop+32>mOffsetY+mClientRect.bottom-mClientRect.top)) { 
+				} else if ((currentLineTop<mVertScollPos) || (currentLineTop+32>mVertScollPos+mClientRect.bottom-mClientRect.top)) { 
 					// 32 is a bit arbitrary but make sure we had some part of the line visible. May replace this with actual line height + scrollbar size.
 						
 					qdim	newOffsetY = currentLineTop - ((mClientRect.bottom-mClientRect.top) / 2);
@@ -616,9 +616,9 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 						newOffsetY	= maxVertScroll - vertPageSize;
 					};
 					newOffsetY = newOffsetY > 0 ? newOffsetY : 0;
-					if (mOffsetY != newOffsetY) {
-						mOffsetY = newOffsetY;
-						WNDsetScrollPos(mHWnd, SB_VERT, mOffsetY, qtrue);
+					if (mVertScollPos != newOffsetY) {
+						mVertScollPos = newOffsetY;
+						WNDsetScrollPos(mHWnd, SB_VERT, mVertScollPos, qtrue);
 						redraw = true;
 					};
 
@@ -640,12 +640,12 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 	horzPageSize			= horzPageSize > 1 ? horzPageSize : 1;
 	maxHorzScroll			= maxHorzScroll + 32;
 	maxHorzScroll			= maxHorzScroll > 0 ? maxHorzScroll : 0;
-	if (mOffsetX > maxHorzScroll - horzPageSize) {
+	if (mHorzScollPos > maxHorzScroll - horzPageSize) {
 		qdim newOffsetX			= maxHorzScroll - horzPageSize;
 		newOffsetX				= newOffsetX > 0 ? newOffsetX : 0;
-		if (mOffsetX != newOffsetX) {
-			mOffsetX = newOffsetX;
-			WNDsetScrollPos(mHWnd, SB_HORZ, mOffsetX, qtrue);				
+		if (mHorzScollPos != newOffsetX) {
+			mHorzScollPos = newOffsetX;
+			WNDsetScrollPos(mHWnd, SB_HORZ, mHorzScollPos, qtrue);				
 			redraw = true;
 		};
 	}
@@ -1283,17 +1283,17 @@ qEvents *	oDataList::events(void) {
 
 // window was scrolled
 void oDataList::evWindowScrolled(qdim pNewX, qdim pNewY) {
-	qdim pWasX = mOffsetX;
-	qdim pWasY = mOffsetY;
+	qdim pWasX = mHorzScollPos;
+	qdim pWasY = mVertScollPos;
 	
 	// call base class
 	oBaseVisComponent::evWindowScrolled(pNewX, pNewY);
 	
 	// This should become part of our base class if we can use Omnis' internal values
-	if (mOffsetX!=pWasX) {
+	if (mHorzScollPos!=pWasX) {
 		ECOsendEvent(mHWnd, oDL_evHScrolled, 0, 0, EEN_EXEC_IMMEDIATE);		
 	};
-	if (mOffsetY!=pWasY) {
+	if (mVertScollPos!=pWasY) {
 		ECOsendEvent(mHWnd, oDL_evVScrolled, 0, 0, EEN_EXEC_IMMEDIATE);				
 	};
 };
@@ -1317,8 +1317,8 @@ sDLHitTest	oDataList::doHitTest(qpoint pAt) {
 	sDLHitTest	above;
 	
 	// adjust our point by our scroll position
-	pAt.h += mOffsetX;
-	pAt.v += mOffsetY;
+	pAt.h += mHorzScollPos;
+	pAt.v += mVertScollPos;
 	
 	// first check if we're above one of our vertical dividers
 	qdim	left = 0;

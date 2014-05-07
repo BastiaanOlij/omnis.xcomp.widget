@@ -24,7 +24,6 @@ oDataList::oDataList(void) {
 	mColumnCount			= 1;
 	mShowSelected			= false;
 	mRebuildNodes			= true;
-	mUpdatePositions		= true;
 	mDeselectOnNodeClick	= false;
 	mEvenColor				= GDI_COLOR_QDEFAULT;
 	mIndent					= 20;
@@ -82,10 +81,8 @@ void	oDataList::checkColumns(void) {
 	for (qlong i = 0; i<mColumnCount; i++) {
 		if (i>=mColumnWidths.numberOfElements()) {
 			// missing a width? add it now so we can trust it later...
-			mUpdatePositions = true;
 			mColumnWidths.push(100);
 		} else if (mColumnWidths[i]<10) {
-			mUpdatePositions = true;
 			mColumnWidths.setElementAtIndex(i, 10);
 		};
 		
@@ -96,7 +93,6 @@ void	oDataList::checkColumns(void) {
 		
 		if (i>=mColumnCalculations.numberOfElements()) {
 			// make sure we've got all our column calculations as well so we can trust it later..
-			mUpdatePositions = true;
 			mColumnCalculations.push(new qstring(QTEXT("")));
 		};		
 	};
@@ -114,77 +110,80 @@ qdim	oDataList::drawDividers(qdim pTop, qdim pBottom) {
 };
 
 // Draw this node
-qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim pTop, bool *pIsEven) {
+qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim pTop, qlong & pListLineNo, bool & pIsEven) {
 	qdim	headerHeight = 0;
-	
-	// if our top doesn't match we must update further positions.. 
-	if ((pNode.mTop != pTop) && (!mUpdatePositions)) {
-		addToTraceLog("Top positions do not match while we're reusing positions?");
-		mUpdatePositions = true;
-	} else if ((!mUpdatePositions) && ((pNode.mTop - mVertScollPos > mClientRect.bottom) || (pNode.mBottom - mVertScollPos < mClientRect.top))) {
-		// fully offscreen? no point in drawing!
-		*pIsEven = pNode.lastEven();
-		return pNode.mBottom;
-	};
+
+	// increase our list line number and write it back into our node
+	pListLineNo++;
+	pNode.setListLineNo(pListLineNo);
 	
 	// write top info back into our node..
-	pNode.mTop = pTop;
+	pNode.setTop(pTop);
 	
 	if (pIndent == -1) {
 		// our root node, ignore this...
 		pIndent = 0;
 	} else {
-		bool	needIcon = ((pNode.childNodeCount()>0) || (pNode.rowCount()>0));
+		bool	needIcon = pNode.childNodeCount()>0;
 		
-		// Note, we may end up drawing our grouping even if it is off screen but some of the children are onscreen but there shouldn't be too much overhead in that.
-		if (pNode.lineNo()!=0) {
-			// draw as a full line
-			headerHeight = drawRow(pECI, pNode.lineNo(), pIndent + needIcon ? mIndent : 0, pTop + 2, *pIsEven);
-			headerHeight -= pTop;
+		if ((pListLineNo <= mVertScollPos) || (pTop > mClientRect.bottom)) {
+			// off screen, no need to draw but we do continue..
 		} else {
-			// Draw our description
-			qrect	columnRect;
-			qdim	colwidth	= 10000; // No longer using mColumnWidths[0], may make this switchable, allow groupings to go along as far as they like..
-			qdim	width		= colwidth - pIndent - (needIcon ? mIndent : 0) - 4;
+			mLastVisListNo = pListLineNo;
 			
-			headerHeight = 2 + mCanvas->getTextHeight(pNode.description().cString(), width > 10 ? width : 10, true, true);
-			if (headerHeight > mMaxRowHeight) {
-				headerHeight = mMaxRowHeight;
-			};
-			
-			if (*pIsEven && (mEvenColor!=GDI_COLOR_QDEFAULT)) {
-				// draw even color background...
-				qrect	backGroundRect;
-				backGroundRect.left		= mClientRect.left;
-				backGroundRect.top		= pTop - mHorzScollPos;
-				backGroundRect.right	= mClientRect.right;
-				backGroundRect.bottom	= backGroundRect.top + headerHeight + mLineSpacing;
+			if (pNode.lineNo()!=0) {
+				// draw as a full line
+				headerHeight = drawRow(pECI, pNode.lineNo(), pIndent + needIcon ? mIndent : 0, pTop + 2, pIsEven);
+				headerHeight -= pTop;
+			} else {
+				// Draw our description
+				qrect	columnRect;
+				qdim	colwidth	= 10000; // No longer using mColumnWidths[0], may make this switchable, allow groupings to go along as far as they like..
+				qdim	width		= colwidth - pIndent - (needIcon ? mIndent : 0) - 4;
 				
-				mCanvas->drawRect(backGroundRect, mEvenColor, mEvenColor);
+				headerHeight = 2 + mCanvas->getTextHeight(pNode.description().cString(), width > 10 ? width : 10, true, true);
+				if (headerHeight > mMaxRowHeight) {
+					headerHeight = mMaxRowHeight;
+				};
+				
+				if (pIsEven && (mEvenColor!=GDI_COLOR_QDEFAULT)) {
+					// draw even color background...
+					qrect	backGroundRect;
+					backGroundRect.left		= mClientRect.left;
+					backGroundRect.top		= pTop - mHorzScollPos;
+					backGroundRect.right	= mClientRect.right;
+					backGroundRect.bottom	= backGroundRect.top + headerHeight + mLineSpacing;
+					
+					mCanvas->drawRect(backGroundRect, mEvenColor, mEvenColor);
+				};
+				
+				columnRect.left		= pIndent - mHorzScollPos + (needIcon ? mIndent : 0) + 2;
+				columnRect.top		= pTop + 2;
+				columnRect.right	= colwidth - mHorzScollPos - 2;
+				columnRect.bottom	= columnRect.top + headerHeight;
+				
+				mCanvas->drawText(pNode.description().cString(), columnRect, mTextColor, jstLeft, true, true);
 			};
-
-			columnRect.left		= pIndent - mHorzScollPos + (needIcon ? mIndent : 0) + 2;
-			columnRect.top		= pTop - mVertScollPos + 2;
-			columnRect.right	= colwidth - mHorzScollPos - 2;
-			columnRect.bottom	= columnRect.top + headerHeight;
 			
-			mCanvas->drawText(pNode.description().cString(), columnRect, mTextColor, jstLeft, true, true);
-		};
-
-		if (needIcon) {
-			// now draw expanded/collapsed icon
-			pNode.mTreeIcon.left	= pIndent + 1;
-			pNode.mTreeIcon.right	= pNode.mTreeIcon.left + mIndent;
-			pNode.mTreeIcon.top		= pTop;
-			pNode.mTreeIcon.bottom	= pNode.mTreeIcon.top + mIndent;
+			if (needIcon) {
+				// now draw expanded/collapsed icon
+				qrect treeRect;
+				
+				treeRect.left	= pIndent + 1;
+				treeRect.right	= treeRect.left + mIndent;
+				treeRect.top	= pTop;
+				treeRect.bottom	= treeRect.top + mIndent;
+				
+				pNode.setTreeIconRect(treeRect);
+				
+				mCanvas->drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(treeRect.left - mHorzScollPos, treeRect.top));
+			};
 			
-			mCanvas->drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(pNode.mTreeIcon.left - mHorzScollPos, pNode.mTreeIcon.top - mVertScollPos));
-			
-			pIndent += mIndent;
-		};
+			headerHeight	+= mLineSpacing;	// add some spacing..
+		} 
 		
-		*pIsEven		= !*pIsEven;		// toggle
-		headerHeight	+= mLineSpacing;	// add some spacing..
+		pIndent		+= mIndent;
+		pIsEven		= !pIsEven;			// toggle
 	};
 	
 	if (pNode.expanded()) {
@@ -194,40 +193,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 		// draw child nodes
 		for (i = 0; i<pNode.childNodeCount(); i++) {
 			oDLNode *child = pNode.getChildByIndex(i);
-			pTop = drawNode(pECI, *child, pIndent, pTop, pIsEven);
-		};
-		
-		// draw line nodes
-		for (i = 0; i<pNode.rowCount(); i++) {
-			sDLRow	lvRow = pNode.getRowAtIndex(i);
-
-			// check if our top position is valid..
-			if ((lvRow.mTop!=pTop) && (!mUpdatePositions)) {
-				addToTraceLog("Top positions do not match while we're reusing positions?");
-				mUpdatePositions = true;				
-			};
-			
-			if (mUpdatePositions || ((lvRow.mTop - mVertScollPos < mClientRect.bottom) && (lvRow.mBottom - mVertScollPos > mClientRect.top))) {
-				// write top info back into our line..
-				lvRow.mTop = pTop;
-				
-				// draw line
-				pTop = drawRow(pECI, lvRow.mLineNo, pIndent, pTop, *pIsEven);
-				
-				// write top info back into our line..
-				lvRow.mBottom = pTop;
-
-				// store our updated positions...
-				pNode.setRowAtIndex(i, lvRow);
-			} else {
-				pTop		= lvRow.mBottom;
-			};
-
-			// add a little spacing
-			pTop += mLineSpacing;
-
-			// toggle our is even
-			*pIsEven	= !*pIsEven;
+			pTop = drawNode(pECI, *child, pIndent, pTop, pListLineNo, pIsEven);
 		};
 		
 		// draw totals?
@@ -239,9 +205,8 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 		pTop += headerHeight;
 	};
 	
-	// write bottom and even info back into our node..
-	pNode.setLastEven(*pIsEven);
-	pNode.mBottom = pTop;
+	// write bottom  back into our node..
+	pNode.setBottom(pTop);
 	
 	return pTop;
 };
@@ -256,6 +221,9 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 	qArray<qstring *>	columndata;
 	
 	mOmnisList->setCurRow(pLineNo);
+	
+	// !BAS! This is now no longer called unless the line is visible.
+	// We should be able to optimise this code by storing the wrapped text in columndata and save us some overhead.
 
 	// 1) find the line height of each text to find the highest line
 	for (i = 0; i < mColumnCount; i++) {
@@ -314,49 +282,47 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 		lineheight = mMaxRowHeight;
 	};
 	
-	if ((pTop - mVertScollPos < mClientRect.bottom) && (pTop + lineheight - mVertScollPos > mClientRect.top)) {
-		qrect	rowRect;
+	qrect	rowRect;
 
-		if (isSelected) {
-			// 2) Do highlighted drawing
-			rowRect.left = mClientRect.left;
-			rowRect.top = pTop - mVertScollPos;
-			rowRect.right = mClientRect.right;
-			rowRect.bottom = pTop - mVertScollPos + lineheight + mLineSpacing;
-			GDIhiliteTextStart(mCanvas->hdc(), &rowRect, mTextColor);	// !BAS! Move into canvas!
-		} else if (pIsEven && (mEvenColor!=GDI_COLOR_QDEFAULT)) {
-			rowRect.left = mClientRect.left;
-			rowRect.top = pTop - mVertScollPos;
-			rowRect.right = mClientRect.right;
-			rowRect.bottom = pTop - mVertScollPos + lineheight + mLineSpacing;
+	if (isSelected) {
+		// 2) Do highlighted drawing
+		rowRect.left = mClientRect.left;
+		rowRect.top = pTop;
+		rowRect.right = mClientRect.right;
+		rowRect.bottom = pTop + lineheight + mLineSpacing;
+		GDIhiliteTextStart(mCanvas->hdc(), &rowRect, mTextColor);	// !BAS! Move into canvas!
+	} else if (pIsEven && (mEvenColor!=GDI_COLOR_QDEFAULT)) {
+		rowRect.left = mClientRect.left;
+		rowRect.top = pTop;
+		rowRect.right = mClientRect.right;
+		rowRect.bottom = pTop + lineheight + mLineSpacing;
 			
-			mCanvas->drawRect(rowRect, mEvenColor, mEvenColor);
-		};
+		mCanvas->drawRect(rowRect, mEvenColor, mEvenColor);
+	};
 		
-		// 3) draw our text
-		left = -mHorzScollPos;
-		for (i = 0; i < mColumnCount; i++) {
-			qstring *	data = columndata[i];
-			qrect		columnRect;
+	// 3) draw our text
+	left = -mHorzScollPos;
+	for (i = 0; i < mColumnCount; i++) {
+		qstring *	data = columndata[i];
+		qrect		columnRect;
 			
-			if (i==0) {
-				columnRect.left	= left + pIndent + 2;
-			} else {
-				columnRect.left	= left + 2;
-			}
-			columnRect.right	= left + mColumnWidths[i] - 2;
-			columnRect.top		= pTop - mVertScollPos;
-			columnRect.bottom	= pTop - mVertScollPos + lineheight;
+		if (i==0) {
+			columnRect.left	= left + pIndent + 2;
+		} else {
+			columnRect.left	= left + 2;
+		}
+		columnRect.right	= left + mColumnWidths[i] - 2;
+		columnRect.top		= pTop;
+		columnRect.bottom	= pTop + lineheight;
 			
-			mCanvas->drawText(data->cString(), columnRect, mTextColor, mColumnAligns[i], true, true);
+		mCanvas->drawText(data->cString(), columnRect, mTextColor, mColumnAligns[i], true, true);
 			
-			left += mColumnWidths[i];
-		};
+		left += mColumnWidths[i];
+	};
 		
-		if (isSelected) {
-			// 4) unhighlight
-			GDIhiliteTextEnd(mCanvas->hdc(), &rowRect, mTextColor);	// !BAS! Move into canvas!
-		};
+	if (isSelected) {
+		// 4) unhighlight
+		GDIhiliteTextEnd(mCanvas->hdc(), &rowRect, mTextColor);	// !BAS! Move into canvas!
 	};
 
 	// cleanup...
@@ -399,12 +365,12 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 			qlong		currentRow = mOmnisList->getCurRow();
 			
 			if (mRebuildNodes) {
-				mUpdatePositions = true; // must do this!
-				
 				// Update our nodes7
 				mRootNode.unTouchChildren(); // untouch children
 				
 				if (rowCount!=0) {
+					// !BAS! need to investigate if we can cache these calculations and reuse them....
+					
 					// setup our filter calculation
 					EXTfldval *		filtercalc = NULL;
 					if (mFilter.length() > 0) {
@@ -449,11 +415,11 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 						};
 						
 						if (showNode) {
-							bool	addRow = true;
+							bool	addFinalNode = true;
 							
 							// check our grouping
 							group = 0;
-							while(addRow && (group < groupcalcs.size())) {
+							while(addFinalNode && (group < groupcalcs.size())) {
 								EXTfldval * calcFld = groupcalcs[group];
 								EXTfldval	result;
 								
@@ -471,6 +437,9 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 										childnode	= node->findChildByValue(value);
 									} else {
 										value		= "";
+										if (pos == 0) {
+											groupdesc	= groupdesc.mid(pos+1);
+										};
 										childnode	= node->findChildByDescription(groupdesc, true);
 									};
 									
@@ -493,7 +462,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 										
 										if (isParent.getBool()==2) {
 											childnode->setLineNo(lineno);
-											addRow = false; // our node is our row, no need to add..
+											addFinalNode = false; // we've already found it
 										};
 									};
 																		
@@ -503,13 +472,16 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 								group++;
 							};
 							
-							if (addRow) {
-								// now add this row to our node, need to change this to a structure so we can track our positioning...
-								sDLRow	lvRow;
-								lvRow.mLineNo = lineno;
-								lvRow.mTop = 0;
-								lvRow.mBottom = 0;
-								node->addRow(lvRow);
+							if (addFinalNode) {
+								// now add our final node, if this is a self reference node it would already have been added
+								oDLNode * finalNode = node->findChildByLineNo(lineno);
+								if (finalNode!=NULL) {
+									finalNode->setTouched(true);
+								} else {
+									finalNode = new oDLNode(qstring(""), qstring(""), lineno);
+									finalNode->setSortOrder(lineno);
+									node->addNode(finalNode);									
+								};
 							};
 						};
 					};					
@@ -541,7 +513,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 							// this node was not touched and will be removed, our hittest data is no longer valid
 							clearHitTest();						
 						} else if (mMouseHitTest.mLineNo != 0) {
-							if (childnode->hasRow(mMouseHitTest.mLineNo) == false ) {
+							if (childnode->lineNo()!=mMouseHitTest.mLineNo) {
 								clearHitTest();														
 							};
 						};
@@ -569,31 +541,26 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 						
 			// Now draw our stuff...		
 			qdim	top				= 0;
+			qlong	listLineNo		= 0;
 			bool	isEven			= false;
-			top = drawNode(pECI, mRootNode, -1, top, &isEven);
+			mLastVisListNo			= 0;
+			top = drawNode(pECI, mRootNode, -1, top, listLineNo, isEven);
 			
-			// update our vertical scroll range, this may trigger another redraw..
-			qdim	vertPageSize	= mClientRect.height() / 2;
-			qdim	maxVertScroll	= top + 32;
-			vertPageSize			= vertPageSize > 1 ? vertPageSize : 1;
-			maxVertScroll			= maxVertScroll > 0 ? maxVertScroll : 0;
-			if (mVertScollPos > maxVertScroll - vertPageSize) {
-				qdim newOffsetY			= maxVertScroll - vertPageSize;
-				newOffsetY				= newOffsetY > 0 ? newOffsetY : 0;
+			addToTraceLog("First vis: %li, Last vis: %li, Total lines: %li", mVertScollPos+1, mLastVisListNo, listLineNo);
+			
+			// update our vertical scroll range which we now do in line numbers, this may trigger another redraw..
+			if (mVertScollPos >= listLineNo) {
+				qdim newScrollPos		= listLineNo - 1;
+				newScrollPos			= newScrollPos > 0 ? newScrollPos : 0;
 				
-				if (mVertScollPos != newOffsetY) {
-					mVertScollPos = newOffsetY;
+				if (mVertScollPos != newScrollPos) {
+					mVertScollPos = newScrollPos;
 					WNDsetScrollPos(mHWnd, SB_VERT, mVertScollPos, qtrue);				
 					redraw = true;
 				};
 			};
-			WNDsetScrollRange(mHWnd, SB_VERT, 0, maxVertScroll, vertPageSize, qtrue);
-						
-//			addToTraceLog("cleanup");
-
-			// Save a bunch of drawing next time round...
-			mUpdatePositions = false;
-			
+			WNDsetScrollRange(mHWnd, SB_VERT, 0, listLineNo, 1, qtrue);
+									
 			// We are done with our list...
 			mOmnisList->setCurRow(currentRow);
 			delete mOmnisList;
@@ -601,37 +568,37 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 
 			// If our current line has changed, check if it is on screen, this may trigger another redraw..
 			if (currentRow!=0) {
-				qdim	currentLineTop = mRootNode.findTopForRow(currentRow);
+				// !BAS! Need to redo this now that we use line numbers, we should find our node by list line number and scroll accordingly
 				
-				if (currentLineTop==-1) {
+				qdim	currentListLine = mRootNode.findListLineNo(currentRow);
+				
+				addToTraceLog("Current list line: %li, was: %li", currentListLine, mLastCurrentLineTop);
+				
+				if (currentListLine==-1) {
 					// line not visible at all? we can ignore this, there is no sensible position to scroll too.
 					mLastCurrentLineTop = 0;
-				} else if (mLastCurrentLineTop == currentLineTop) {
+				} else if (mLastCurrentLineTop == currentListLine) {
 					// still the same? then we do NOT adjust our positioning, the user may have scrolled down and wants to select another line. Lets not undo this!
-				} else if ((currentLineTop<mVertScollPos) || (currentLineTop+32>mVertScollPos+mClientRect.bottom-mClientRect.top)) { 
-					// 32 is a bit arbitrary but make sure we had some part of the line visible. May replace this with actual line height + scrollbar size.
-						
-					qdim	newOffsetY = currentLineTop - ((mClientRect.bottom-mClientRect.top) / 2);
-					if (newOffsetY > maxVertScroll - vertPageSize) {
-						newOffsetY	= maxVertScroll - vertPageSize;
-					};
-					newOffsetY = newOffsetY > 0 ? newOffsetY : 0;
-					if (mVertScollPos != newOffsetY) {
-						mVertScollPos = newOffsetY;
+				} else if ((currentListLine<mVertScollPos) || (currentListLine>mLastVisListNo)) { 
+					qdim	newScrollPos = currentListLine - ((mLastVisListNo-mVertScollPos+1) / 2);
+					newScrollPos = newScrollPos < listLineNo ? newScrollPos : listLineNo-1;
+					newScrollPos = newScrollPos > 0 ? newScrollPos : 0;
+					if (mVertScollPos != newScrollPos) {
+						mVertScollPos = newScrollPos;
 						WNDsetScrollPos(mHWnd, SB_VERT, mVertScollPos, qtrue);
 						redraw = true;
 					};
 
-					mLastCurrentLineTop = currentLineTop;
+					mLastCurrentLineTop = currentListLine;
 				} else {
 					// just copy it...
-					mLastCurrentLineTop = currentLineTop;
+					mLastCurrentLineTop = currentListLine;
 				};
 			} else {
 				// no current line? no reason to scroll!
 				mLastCurrentLineTop = 0;
 			};
-		};
+		}; 
 	};	
 
 	// finally draw our divider lines and update our horizontal scroll range, this may trigger another redraw..	
@@ -723,8 +690,6 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			ECOupdatePropInsp(mHWnd, oDL_columnwidths);
 			ECOupdatePropInsp(mHWnd, oDL_columnaligns);
 			
-			mUpdatePositions = true;
-			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
 		}; break;
@@ -752,8 +717,6 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			
 			mColumnCalculations.push(calc);
 			
-			mUpdatePositions = true;
-			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
 		}; break;
@@ -776,8 +739,6 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			};
 
 			mColumnWidths.push(width);
-			
-			mUpdatePositions = true;
 			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
@@ -810,17 +771,13 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			} else if (mMaxRowHeight > 200) {
 				mMaxRowHeight = 200;
 			};
-			
-			mUpdatePositions = true;
-			
+						
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
 		}; break;
 		case oDL_columnprefix: {
 			mColumnPrefix = pNewValue;
 
-			mUpdatePositions = true;
-			
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
 		}; break;
@@ -837,8 +794,6 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 					mColumnExtend[i] = false;
 				};
 			};
-
-			mUpdatePositions = true;
 
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;			
@@ -1168,7 +1123,6 @@ qbool	oDataList::setPrimaryData(EXTfldval &pNewValue) {
 	
 	// Make sure we rebuild our node tree next time we draw..
 	mRebuildNodes			= true;
-	mUpdatePositions		= true;
 	
 	// Copy our variable as per usual
 	qbool retval = oBaseVisComponent::setPrimaryData(pNewValue);
@@ -1229,7 +1183,7 @@ int	oDataList::invokeMethod(qlong pMethodId, EXTCompInfo* pECI) {
 		case 1: {
 			EXTfldval	lvResult;
 			qlong		lvLineNo = getLongFromParam(1, pECI);
-			qdim		lvAt = mRootNode.findTopForRow(lvLineNo);
+			qdim		lvAt = mRootNode.findTopForLine(lvLineNo);
 			
 			if (lvAt==-1) {
 				// no top position? = not visible
@@ -1316,9 +1270,8 @@ void	oDataList::clearHitTest(void) {
 sDLHitTest	oDataList::doHitTest(qpoint pAt) {
 	sDLHitTest	above;
 	
-	// adjust our point by our scroll position
+	// adjust our point by our horizontal scroll position
 	pAt.h += mHorzScollPos;
-	pAt.v += mVertScollPos;
 	
 	// first check if we're above one of our vertical dividers
 	qdim	left = 0;
@@ -1346,21 +1299,9 @@ sDLHitTest	oDataList::doHitTest(qpoint pAt) {
 			above.mAbove	= oDL_treeIcon;
 			above.mLineNo	= 0;
 		} else {
-			above.mLineNo	= above.mNode->findRowAtPoint(pAt);
-			if (above.mLineNo==0) {
-				// not above a row, see if our node is a row
-				above.mLineNo = above.mNode->lineNo();
-			};
+			above.mLineNo	= above.mNode->lineNo();
 			above.mAbove	= above.mLineNo==0 ? oDL_node : oDL_row;
 		};
-		return above;
-	};
-	
-	// check if we're above a line on our root node
-	above.mLineNo = mRootNode.findRowAtPoint(pAt);
-	if (above.mLineNo != 0) {
-		above.mNode = &mRootNode;
-		above.mAbove = oDL_row;
 		return above;
 	};
 	
@@ -1416,7 +1357,6 @@ void	oDataList::evMouseMoved(qpoint pMovedTo) {
 			};
 			
 			mColumnWidths.setElementAtIndex(mMouseHitTest.mColNo, newWidth);
-			mUpdatePositions = true;
 			WNDinvalidateRect(mHWnd, NULL);
 			
 			ECOsendEvent(mHWnd, oDL_evColumnResized, 0, 0, EEN_EXEC_IMMEDIATE);
@@ -1442,7 +1382,6 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 			// toggle our node
 			bool isExpanded = mMouseHitTest.mNode->expanded();
 			mMouseHitTest.mNode->setExpanded(isExpanded==false);
-			mUpdatePositions = true;
 			WNDinvalidateRect(mHWnd, NULL);
 			
 			// maybe send a click event back to Omnis?
@@ -1556,7 +1495,6 @@ bool	oDataList::evDoubleClick(qpoint pAt, EXTCompInfo* pECI) {
 			// toggle our node
 			bool isExpanded = mMouseHitTest.mNode->expanded();
 			mMouseHitTest.mNode->setExpanded(isExpanded==false);
-			mUpdatePositions = true;
 			WNDinvalidateRect(mHWnd, NULL);
 			
 			// maybe send a click event back to Omnis?

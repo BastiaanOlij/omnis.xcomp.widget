@@ -13,25 +13,25 @@
 oDLNode::oDLNode(void) {
 	mTouched		= true;
 	mExpanded		= true;
-	mLastEven		= false;
 	mLineNo			= 0;
 	mValue			= QTEXT("");
 	mDescription	= QTEXT("");
 	mTop			= 0;
 	mBottom			= 0;
 	mSortOrder		= 0;
+	mListLineNo		= -1;
 };
 
 oDLNode::oDLNode(const qstring & pValue, const qstring & pDescription, qlong pLineNo) {
 	mTouched		= true;
 	mExpanded		= true;
-	mLastEven		= false;
 	mLineNo			= pLineNo;
 	mValue			= pValue;
 	mDescription	= pDescription;
 	mTop			= 0;
 	mBottom			= 0;	
 	mSortOrder		= 0;
+	mListLineNo		= -1;
 };
 
 oDLNode::~oDLNode(void) {
@@ -62,17 +62,6 @@ void	oDLNode::setExpanded(bool pExpanded) {
 	mExpanded = pExpanded;
 };
 
-// last even value
-bool	oDLNode::lastEven(void) {
-	return mLastEven;
-};
-
-// set our last even value
-void	oDLNode::setLastEven(bool pEven) {
-	mLastEven = pEven;
-};
-
-
 // related line number
 qlong	oDLNode::lineNo(void) {
 	return mLineNo;
@@ -93,6 +82,54 @@ void	oDLNode::setSortOrder(qlong pSortOrder) {
 	mSortOrder = pSortOrder;
 };
 
+////////////////////////////////////////////////
+// for our drawing
+////////////////////////////////////////////////
+
+// drawn as visible line no
+qlong	oDLNode::listLineNo(void) {
+	return mListLineNo;
+};
+
+// set visible line no
+void	oDLNode::setListLineNo(qlong pLineNo) {
+	mListLineNo=pLineNo;
+};
+
+// top of our node
+qdim	oDLNode::top(void) {
+	return mTop;
+};
+
+// set the top of our node
+void	oDLNode::setTop(qdim pTop) {
+	mTop = pTop;
+};
+
+// bottom of our node
+qdim	oDLNode::bottom(void) {
+	return mBottom;
+};
+
+// set bottom of our node
+void	oDLNode::setBottom(qdim pBottom) {
+	mBottom = pBottom;
+};
+
+// our tree icon rectangle
+qrect	oDLNode::treeIconRect(void) {
+	return mTreeIconRect;
+};
+
+// set our tree icon rectangle
+void	oDLNode::setTreeIconRect(qrect pRect) {
+	mTreeIconRect = pRect;
+};
+
+////////////////////////////////////////////////
+// read only info
+////////////////////////////////////////////////
+
 // value
 const qstring &	oDLNode::value(void) {
 	return mValue;
@@ -105,9 +142,12 @@ const qstring &	oDLNode::description(void) {
 
 // is this point within our tree icon?
 bool	oDLNode::aboveTreeIcon(qpoint pAt) {
-	return ((mTreeIcon.left <= pAt.h) && (mTreeIcon.right >= pAt.h) && (mTreeIcon.top <= pAt.v) && (mTreeIcon.bottom >= pAt.v));
+	if (mChildNodes.size()==0) {
+		return false;
+	} else {
+		return ((mTreeIconRect.left <= pAt.h) && (mTreeIconRect.right >= pAt.h) && (mTreeIconRect.top <= pAt.v) && (mTreeIconRect.bottom >= pAt.v));		
+	};
 };
-
 
 ////////////////////////////////////////////////
 // methods
@@ -158,11 +198,23 @@ oDLNode	*	oDLNode::findChildByDescription(const qstring & pDesc, bool pNoValue) 
 	return NULL;
 };
 
+// Find a child node by description
+oDLNode	*	oDLNode::findChildByLineNo(qlong pLineNo, bool pNoValue) {
+	for (unsigned long index = 0; index < mChildNodes.size(); index++) {
+		oDLNode *child = mChildNodes[index];
+		
+		if ((child->lineNo() == pLineNo) && (!pNoValue || (child->value().length()==0))) {
+			return child;
+		};
+	};
+	return NULL;
+};
+
 // Find a child node by screen location
 oDLNode *	oDLNode::findChildByPoint(qpoint pAt) {
 	for (unsigned long index = 0; index < mChildNodes.size(); index++) {
 		oDLNode *child = mChildNodes[index];
-		if ((child->mTop <= pAt.v) && (child->mBottom >= pAt.v)) {
+		if ((child->mTop <= pAt.v) && (child->mBottom > pAt.v)) {
 			// Our point lies within this child, see if it lies within one of its children
 			oDLNode *subchild = child->findChildByPoint(pAt);
 			if (subchild != NULL) {
@@ -176,7 +228,6 @@ oDLNode *	oDLNode::findChildByPoint(qpoint pAt) {
 	return NULL;
 };
 
-
 // Get child at specific index
 oDLNode *	oDLNode::getChildByIndex(unsigned long pIndex) {
 	if (pIndex < mChildNodes.size()) {
@@ -186,95 +237,50 @@ oDLNode *	oDLNode::getChildByIndex(unsigned long pIndex) {
 	};
 };
 
-// Add a row
-void	oDLNode::addRow(sDLRow pRow) {
-	mRowNodes.push_back(pRow);
-};
-
-// Returns the number of lrows
-unsigned long	oDLNode::rowCount() {
-	return mRowNodes.size();
-};
-
-// Get the row at this index
-sDLRow	oDLNode::getRowAtIndex(unsigned long pIndex) {
-	if (pIndex < mRowNodes.size()) {
-		return mRowNodes[pIndex];
-	} else {
-		sDLRow	lvEmpty;
-		
-		lvEmpty.mLineNo = 0;
-		lvEmpty.mTop = 0;
-		lvEmpty.mBottom = 0;
-		
-		return lvEmpty;
-	};
-};
-
-// Set the row at this index
-void	oDLNode::setRowAtIndex(unsigned long pIndex, sDLRow pRow) {
-	if (pIndex < mRowNodes.size()) {
-		mRowNodes[pIndex] = pRow;
-	};		
-};
-
-// Find row by screen location
-qlong	oDLNode::findRowAtPoint(qpoint pAt) {
-	for (unsigned int i = 0; i < mRowNodes.size(); i++) {
-		sDLRow row = mRowNodes[i];
-		
-		if ((row.mTop <= pAt.v) && (row.mBottom >= pAt.v)) {
-			return row.mLineNo;
-		};
+// Get our list line no for a line in our source list
+qlong	oDLNode::findListLineNo(qlong pLineNo) {
+	if (mLineNo == pLineNo) {
+		return mListLineNo;
 	};
 	
-	return 0;
-};
-
-// Find top position for specific line (will check child nodes if applicable)
-qdim	oDLNode::findTopForRow(qlong pLineNo) {
 	if (mExpanded) {
 		// check our child nodes..
 		for (unsigned long index = 0; index < mChildNodes.size(); index++) {
 			oDLNode *child = mChildNodes[index];
-			qdim	top = child->findTopForRow(pLineNo);
-			if (top>=0) {
+			qlong	listLineNo = child->findListLineNo(pLineNo);
+			if (listLineNo>=0) {
 				// found it!
-				return top;
-			};
-		};
-		
-		// not found? check our lines
-		for (unsigned int i = 0; i < mRowNodes.size(); i++) {
-			sDLRow row = mRowNodes[i];
-			
-			if (row.mLineNo == pLineNo) {
-				// found it!
-				return row.mTop;
+				return listLineNo;
 			};
 		};
 	} else {
 		// not expanded? then we're not showing anything..
 	};
 	
-	return -1; // our positions are without scrolling, so we can safely use -1 to indicate our row is not shown
+	return -1;
 };
 
-// Check if this row is part of our node?
-bool	oDLNode::hasRow(qlong pLineNo) {
+// Find top position for specific line (will check child nodes if applicable)
+qdim	oDLNode::findTopForLine(qlong pLineNo) {
 	if (mLineNo == pLineNo) {
-		return true;
+		return mTop;
 	};
 	
-	for (unsigned int i = 0; i < mRowNodes.size(); i++) {
-		sDLRow row = mRowNodes[i];
-		
-		if (row.mLineNo == pLineNo) {
-			return true;
+	if (mExpanded) {
+		// check our child nodes..
+		for (unsigned long index = 0; index < mChildNodes.size(); index++) {
+			oDLNode *child = mChildNodes[index];
+			qdim	top = child->findTopForLine(pLineNo);
+			if (top>=0) {
+				// found it!
+				return top;
+			};
 		};
+	} else {
+		// not expanded? then we're not showing anything..
 	};
 	
-	return false;
+	return -1; // our positions start at the top..
 };
 
 // Static function that returns whether true if the sort order of A is smaller then B
@@ -309,9 +315,13 @@ void	oDLNode::unTouchChildren(void) {
 		child->unTouchChildren();
 	};
 	
-	mLineNo		= 0; // clear that we are related to this line, this may have changed.
-	mSortOrder	= 0; // reset our sort
-	mRowNodes.clear();
+	mListLineNo = -1; // reset this
+	
+	// if this is a node created by our grouping, clear our related line and sort
+	if (mValue.length()!=0 || mDescription.length()!=0) {
+		mLineNo		= 0;
+		mSortOrder	= 0;
+	};
 };
 
 // Removes children that are untouched

@@ -61,7 +61,6 @@ typedef struct sDLGrouping {
 class oDataList : public oBaseVisComponent {
 private:
 	bool						mRebuildNodes;														// if true we need to rebuild our nodes
-	bool						mUpdatePositions;													// update our position data
 
 	bool						mShowSelected;														// if true we show selected lines, if false we only show the current line
 	qdim						mIndent;															// Indent for our tree
@@ -88,6 +87,7 @@ private:
 	EXTqlist *					mDataList;															// Our copy of our data list
 	EXTqlist *					mOmnisList;															// List pointed to by $dataname (only set during events)
 	
+	qlong						mLastVisListNo;														// Last list line no we actually drew..
 	sDLHitTest					mMouseHitTest;														// Our hittest info when our mouse button was pressed
 	qpoint						mMouseLast;															// Last mouse position to calculate deltas
 	
@@ -96,7 +96,7 @@ private:
 	
 	void						checkColumns(void);													// Check if our column data is complete
 	qdim						drawDividers(qdim pTop, qdim pBottom);								// Draw divider lines
-	qdim						drawNode(EXTCompInfo* pECI, oDLNode &pNodeqdim, qdim pIndent, qdim pTop, bool *pIsEven);	// Draw this node
+	qdim						drawNode(EXTCompInfo* pECI, oDLNode &pNodeqdim, qdim pIndent, qdim pTop, qlong & pListLineNo, bool & pIsEven);	// Draw this node
 	qdim						drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTop, bool pIsEven);	// Draw this row
 	
 	void						clearHitTest(void);													// clear our hitttest info

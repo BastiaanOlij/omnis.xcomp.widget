@@ -109,7 +109,7 @@ qdim	oDataList::drawDividers(qdim pTop, qdim pBottom) {
 	return left;
 };
 
-// Draw this node
+// Draw this node, might move this into oDLNode one day..
 qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim pTop, qlong & pListLineNo, bool & pIsEven) {
 	qdim	headerHeight = 0;
 
@@ -128,9 +128,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 		
 		if ((pListLineNo <= mVertScollPos) || (pTop > mClientRect.bottom)) {
 			// off screen, no need to draw but we do continue..
-		} else {
-			mLastVisListNo = pListLineNo;
-			
+		} else {			
 			if (pNode.lineNo()!=0) {
 				// draw as a full line
 				headerHeight = drawRow(pECI, pNode.lineNo(), pIndent + needIcon ? mIndent : 0, pTop + 2, pIsEven);
@@ -207,11 +205,16 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 	
 	// write bottom  back into our node..
 	pNode.setBottom(pTop);
+
+	if ((pListLineNo > mVertScollPos) && (pTop <= mClientRect.bottom)) {
+		// only counts if it is fully visible
+		mLastVisListNo = pListLineNo;
+	};
 	
 	return pTop;
 };
 
-// Draw this line
+// Draw this line, might move this into oDLNode one day..
 qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTop, bool pIsEven) {
 	qdim				left			= 0;
 	qdim				lineheight		= mCanvas->getFontHeight(); // minimum line height...
@@ -579,7 +582,9 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 					mLastCurrentLineTop = 0;
 				} else if (mLastCurrentLineTop == currentListLine) {
 					// still the same? then we do NOT adjust our positioning, the user may have scrolled down and wants to select another line. Lets not undo this!
-				} else if ((currentListLine<mVertScollPos) || (currentListLine>mLastVisListNo)) { 
+				} else if ((currentListLine<=mVertScollPos) || (currentListLine>mLastVisListNo)) { 
+					// note, mVertScrollPos starts at 0 for showing list line 1.
+					
 					qdim	newScrollPos = currentListLine - ((mLastVisListNo-mVertScollPos+1) / 2);
 					newScrollPos = newScrollPos < listLineNo ? newScrollPos : listLineNo-1;
 					newScrollPos = newScrollPos > 0 ? newScrollPos : 0;
@@ -1327,8 +1332,8 @@ HCURSOR	oDataList::getCursor(qpoint pAt, qword2 pHitTest) {
 		};
 	};
 	
-	// return default
-	return WND_CURS_DEFAULT;		
+	// return our default
+	return oBaseVisComponent::getCursor(pAt, pHitTest);		
 };
 
 // mouse left button pressed down (return true if we finished handling this, false if we want Omnis internal logic)

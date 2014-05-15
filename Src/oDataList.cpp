@@ -103,7 +103,7 @@ qdim	oDataList::drawDividers(qdim pTop, qdim pBottom) {
 	qdim	left = 0;
 	for (qulong i = 0; i<mColumnCount; i++) {
 		left += mColumnWidths[i];
-		mCanvas->drawLine(qpoint(left-mHorzScollPos,mClientRect.top), qpoint(left-mHorzScollPos,mClientRect.bottom), 1, GDI_COLOR_QGRAY, patStd0); // should make the color and linestyle configurable
+		mCanvas->drawLine(qpoint(left-mHorzScrollPos,mClientRect.top), qpoint(left-mHorzScrollPos,mClientRect.bottom), 1, GDI_COLOR_QGRAY, patStd0); // should make the color and linestyle configurable
 	};
 	
 	return left;
@@ -126,7 +126,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 	} else {
 		bool	needIcon = pNode.childNodeCount()>0;
 		
-		if ((pListLineNo <= mVertScollPos) || (pTop > mClientRect.bottom)) {
+		if ((pListLineNo <= mVertScrollPos) || (pTop > mClientRect.bottom)) {
 			// off screen, no need to draw but we do continue..
 		} else {			
 			if (pNode.lineNo()!=0) {
@@ -148,16 +148,16 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 					// draw even color background...
 					qrect	backGroundRect;
 					backGroundRect.left		= mClientRect.left;
-					backGroundRect.top		= pTop - mHorzScollPos;
+					backGroundRect.top		= pTop - mHorzScrollPos;
 					backGroundRect.right	= mClientRect.right;
 					backGroundRect.bottom	= backGroundRect.top + headerHeight + mLineSpacing;
 					
 					mCanvas->drawRect(backGroundRect, mEvenColor, mEvenColor);
 				};
 				
-				columnRect.left		= pIndent - mHorzScollPos + (needIcon ? mIndent : 0) + 2;
+				columnRect.left		= pIndent - mHorzScrollPos + (needIcon ? mIndent : 0) + 2;
 				columnRect.top		= pTop + 2;
-				columnRect.right	= colwidth - mHorzScollPos - 2;
+				columnRect.right	= colwidth - mHorzScrollPos - 2;
 				columnRect.bottom	= columnRect.top + headerHeight;
 				
 				mCanvas->drawText(pNode.description().cString(), columnRect, mTextColor, jstLeft, true, true);
@@ -174,7 +174,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 				
 				pNode.setTreeIconRect(treeRect);
 				
-				mCanvas->drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(treeRect.left - mHorzScollPos, treeRect.top));
+				mCanvas->drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(treeRect.left - mHorzScrollPos, treeRect.top));
 			};
 			
 			headerHeight	+= mLineSpacing;	// add some spacing..
@@ -206,7 +206,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 	// write bottom  back into our node..
 	pNode.setBottom(pTop);
 
-	if ((pListLineNo > mVertScollPos) && (pTop <= mClientRect.bottom)) {
+	if ((pListLineNo > mVertScrollPos) && (pTop <= mClientRect.bottom)) {
 		// only counts if it is fully visible
 		mLastVisListNo = pListLineNo;
 	};
@@ -304,7 +304,7 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 	};
 		
 	// 3) draw our text
-	left = -mHorzScollPos;
+	left = -mHorzScrollPos;
 	for (i = 0; i < mColumnCount; i++) {
 		qstring *	data = columndata[i];
 		qrect		columnRect;
@@ -544,25 +544,30 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 						
 			// Now draw our stuff...		
 			qdim	top				= 0;
-			qlong	listLineNo		= 0;
+			qlong	listLineNo		= 0;	// this will count the total of lines we have in our list including our grouping lines, excluding any collapsed lines
 			bool	isEven			= false;
 			mLastVisListNo			= 0;
 			top = drawNode(pECI, mRootNode, -1, top, listLineNo, isEven);
 			
-			addToTraceLog("First vis: %li, Last vis: %li, Total lines: %li", mVertScollPos+1, mLastVisListNo, listLineNo);
+			// As we do not know the size of our lines, we can have a mix of sizes, we're going to take it save and assume our lines double sized. Calculate our page size as how many would fit.
+			qlong	lineSize	= (mCanvas->getFontHeight() * 2) + mLineSpacing;
+			qlong	pageSize	= (mClientRect.bottom-mClientRect.top+1) / (lineSize > mMaxRowHeight ? mMaxRowHeight : lineSize);
+			if (pageSize < 1) pageSize = 1; 
+			
+//			addToTraceLog("First vis: %li, Last vis: %li, Total lines: %li", mVertScrollPos+1, mLastVisListNo, listLineNo);
 			
 			// update our vertical scroll range which we now do in line numbers, this may trigger another redraw..
-			if (mVertScollPos >= listLineNo) {
-				qdim newScrollPos		= listLineNo - 1;
+			if (mVertScrollPos > listLineNo - pageSize) {
+				qdim newScrollPos		= listLineNo - pageSize;
 				newScrollPos			= newScrollPos > 0 ? newScrollPos : 0;
 				
-				if (mVertScollPos != newScrollPos) {
-					mVertScollPos = newScrollPos;
-					WNDsetScrollPos(mHWnd, SB_VERT, mVertScollPos, qtrue);				
+				if (mVertScrollPos != newScrollPos) {
+					mVertScrollPos = newScrollPos;
+					WNDsetScrollPos(mHWnd, SB_VERT, mVertScrollPos, qtrue);				
 					redraw = true;
 				};
 			};
-			WNDsetScrollRange(mHWnd, SB_VERT, 0, listLineNo, 1, qtrue);
+			WNDsetScrollRange(mHWnd, SB_VERT, 0, listLineNo, pageSize, qtrue);
 									
 			// We are done with our list...
 			mOmnisList->setCurRow(currentRow);
@@ -582,15 +587,15 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 					mLastCurrentLineTop = 0;
 				} else if (mLastCurrentLineTop == currentListLine) {
 					// still the same? then we do NOT adjust our positioning, the user may have scrolled down and wants to select another line. Lets not undo this!
-				} else if ((currentListLine<=mVertScollPos) || (currentListLine>mLastVisListNo)) { 
+				} else if ((currentListLine<=mVertScrollPos) || (currentListLine>mLastVisListNo)) { 
 					// note, mVertScrollPos starts at 0 for showing list line 1.
 					
-					qdim	newScrollPos = currentListLine - ((mLastVisListNo-mVertScollPos+1) / 2);
-					newScrollPos = newScrollPos < listLineNo ? newScrollPos : listLineNo-1;
+					qdim	newScrollPos = currentListLine - ((mLastVisListNo-mVertScrollPos+1) / 2);
+					newScrollPos = newScrollPos > listLineNo - pageSize ? listLineNo - pageSize : newScrollPos;
 					newScrollPos = newScrollPos > 0 ? newScrollPos : 0;
-					if (mVertScollPos != newScrollPos) {
-						mVertScollPos = newScrollPos;
-						WNDsetScrollPos(mHWnd, SB_VERT, mVertScollPos, qtrue);
+					if (mVertScrollPos != newScrollPos) {
+						mVertScrollPos = newScrollPos;
+						WNDsetScrollPos(mHWnd, SB_VERT, mVertScrollPos, qtrue);
 						redraw = true;
 					};
 
@@ -612,12 +617,12 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 	horzPageSize			= horzPageSize > 1 ? horzPageSize : 1;
 	maxHorzScroll			= maxHorzScroll + 32;
 	maxHorzScroll			= maxHorzScroll > 0 ? maxHorzScroll : 0;
-	if (mHorzScollPos > maxHorzScroll - horzPageSize) {
+	if (mHorzScrollPos > maxHorzScroll - horzPageSize) {
 		qdim newOffsetX			= maxHorzScroll - horzPageSize;
 		newOffsetX				= newOffsetX > 0 ? newOffsetX : 0;
-		if (mHorzScollPos != newOffsetX) {
-			mHorzScollPos = newOffsetX;
-			WNDsetScrollPos(mHWnd, SB_HORZ, mHorzScollPos, qtrue);				
+		if (mHorzScrollPos != newOffsetX) {
+			mHorzScrollPos = newOffsetX;
+			WNDsetScrollPos(mHWnd, SB_HORZ, mHorzScrollPos, qtrue);				
 			redraw = true;
 		};
 	}
@@ -1242,17 +1247,17 @@ qEvents *	oDataList::events(void) {
 
 // window was scrolled
 void oDataList::evWindowScrolled(qdim pNewX, qdim pNewY) {
-	qdim pWasX = mHorzScollPos;
-	qdim pWasY = mVertScollPos;
+	qdim pWasX = mHorzScrollPos;
+	qdim pWasY = mVertScrollPos;
 	
 	// call base class
 	oBaseVisComponent::evWindowScrolled(pNewX, pNewY);
 	
 	// This should become part of our base class if we can use Omnis' internal values
-	if (mHorzScollPos!=pWasX) {
+	if (mHorzScrollPos!=pWasX) {
 		ECOsendEvent(mHWnd, oDL_evHScrolled, 0, 0, EEN_EXEC_IMMEDIATE);		
 	};
-	if (mVertScollPos!=pWasY) {
+	if (mVertScrollPos!=pWasY) {
 		ECOsendEvent(mHWnd, oDL_evVScrolled, 0, 0, EEN_EXEC_IMMEDIATE);				
 	};
 };
@@ -1276,7 +1281,7 @@ sDLHitTest	oDataList::doHitTest(qpoint pAt) {
 	sDLHitTest	above;
 	
 	// adjust our point by our horizontal scroll position
-	pAt.h += mHorzScollPos;
+	pAt.h += mHorzScrollPos;
 	
 	// first check if we're above one of our vertical dividers
 	qdim	left = 0;

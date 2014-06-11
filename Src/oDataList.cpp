@@ -580,7 +580,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 				
 				qdim	currentListLine = mRootNode.findListLineNo(currentRow);
 				
-				addToTraceLog("Current list line: %li, was: %li", currentListLine, mLastCurrentLineTop);
+				// addToTraceLog("Current list line: %li, was: %li", currentListLine, mLastCurrentLineTop);
 				
 				if (currentListLine==-1) {
 					// line not visible at all? we can ignore this, there is no sensible position to scroll too.
@@ -628,7 +628,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 	}
 	WNDsetScrollRange(mHWnd, SB_HORZ, 0, maxHorzScroll, horzPageSize, qtrue);
 
-	addToTraceLog("finished drawing in %li ms",((clock()-t) * 1000)/CLOCKS_PER_SEC);
+	// addToTraceLog("finished drawing in %li ms",((clock()-t) * 1000)/CLOCKS_PER_SEC);
 	
 	if (redraw) {
 		// just draw again, may need to protect against recursive calls? I think it'll be alright.

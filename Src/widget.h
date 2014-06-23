@@ -16,5 +16,6 @@
 #include "oCountButton.h"
 #include "oDataList.h"
 #include "oDropDown.h"
+#include "oImage.h"
 
 #endif

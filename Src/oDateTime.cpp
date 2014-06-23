@@ -213,7 +213,7 @@ ECOparam addSecondsParams[] = {
 // This is our array of methods we support
 ECOmethodEvent oDateTimeMethods[] = {
 	//	ID				Resource	Return type		Paramcount		Params					Flags		ExFlags
-	1,					8000,		fftNone,		0,				addSecondsParams,		0,			0,			// $addSeconds	
+	1,					8000,		fftNone,		1,				addSecondsParams,		0,			0,			// $addSeconds	
 };
 
 // return an array of method meta data

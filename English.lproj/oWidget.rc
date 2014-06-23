@@ -10,6 +10,7 @@ BEGIN
 	2001			"oCountButton"
 	2002			"oDataList"
 	2003			"oDropDown"
+	2004            "oImage"
 
 // properties
 	4000			"$localtime:our datetime in the local timezone"
@@ -32,6 +33,18 @@ BEGIN
 	4123			"$deselectOnGroupClick:Deselect lines when we click on a node"
 	4124			"$parentCalcs:calculations that identify a group as a parent group"
 	4200			"$displaycalc:If set, alternative display calculation"
+	4300			"$layercount:Number of layers"
+	4301			"$currentLayer:Layer we have selected"
+	4302			"$layertype:Type of layer"
+	4303			"$layerleft:Left of layer"
+	4304			"$layertop:Top of layer"
+	4305			"$layerwidth:Width of layer"
+	4306			"$layerheight:Height of layer"
+	4307			"$layercontents:Contents of the layer"
+	4308			"$layerenabled:Layer is enabled"
+	4309			"$image:Our image"
+	4310			"$imageWidth:Width of our image (0 = use layer 1)"
+	4311			"$imageHeight:Height of our image (0 = use layer 1)"
 
 // Events
 	5000			"click:User clicked on our field"
@@ -43,10 +56,13 @@ BEGIN
 // parameters
 	7000			"seconds:Seconds"
 	7001			"lineNo:Line number"
+	7100			"layer:Layer"
 
 // methods
 	8000			"$addSeconds:$addSeconds() Add seconds to datetime."
 	8010			"$isvisible:$isVisible(pvLineNo) Is line visible?"
+	8100			"$addLayer:$addLayer() add a layer to our image."
+	8101			"$remLayer:$remLayer(pLayer) removes a layer from our image"
 
 // methodtext
 	10000			"on evClick ;; Button has been clicked"

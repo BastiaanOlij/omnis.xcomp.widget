@@ -40,6 +40,8 @@
 		ACA0A88218D0817B006F9D3B /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACA0A87F18D0817B006F9D3B /* widget.cpp */; };
 		ACA0A88718D08185006F9D3B /* oWidget.bmp in Resources */ = {isa = PBXBuildFile; fileRef = ACA0A88318D08185006F9D3B /* oWidget.bmp */; };
 		ACA0A88818D0819D006F9D3B /* oWidget.rc in Resources */ = {isa = PBXBuildFile; fileRef = ACA0A88518D08185006F9D3B /* oWidget.rc */; };
+		ACE7A4921957BFB3008DD414 /* oImgLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE7A4911957BFB3008DD414 /* oImgLayer.cpp */; };
+		ACE7A4951957BFD6008DD414 /* oImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE7A4941957BFD6008DD414 /* oImage.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -103,6 +105,10 @@
 		ACA0A87F18D0817B006F9D3B /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = widget.cpp; path = Src/widget.cpp; sourceTree = "<group>"; };
 		ACA0A88418D08185006F9D3B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = English; path = English.lproj/oWidget.bmp; sourceTree = "<group>"; };
 		ACA0A88618D08185006F9D3B /* English */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; name = English; path = English.lproj/oWidget.rc; sourceTree = "<group>"; };
+		ACE7A4901957BFB3008DD414 /* oImgLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oImgLayer.h; path = Src/oImgLayer.h; sourceTree = "<group>"; };
+		ACE7A4911957BFB3008DD414 /* oImgLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oImgLayer.cpp; path = Src/oImgLayer.cpp; sourceTree = "<group>"; };
+		ACE7A4931957BFD6008DD414 /* oImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oImage.h; path = Src/oImage.h; sourceTree = "<group>"; };
+		ACE7A4941957BFD6008DD414 /* oImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oImage.cpp; path = Src/oImage.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +164,8 @@
 				AC26287818DBF58100A5BC69 /* oDLNode.cpp */,
 				ACA0A87E18D0817B006F9D3B /* oDateTime.cpp */,
 				AC50A5211916FB59009F8C74 /* oDropDown.cpp */,
+				ACE7A4911957BFB3008DD414 /* oImgLayer.cpp */,
+				ACE7A4941957BFD6008DD414 /* oImage.cpp */,
 				ACA0A87F18D0817B006F9D3B /* widget.cpp */,
 			);
 			name = Source;
@@ -179,6 +187,8 @@
 				AC26287618DBF57100A5BC69 /* oDLNode.h */,
 				ACA0A87B18D08160006F9D3B /* oDateTime.h */,
 				AC50A5201916FB48009F8C74 /* oDropDown.h */,
+				ACE7A4901957BFB3008DD414 /* oImgLayer.h */,
+				ACE7A4931957BFD6008DD414 /* oImage.h */,
 				ACA0A87C18D08160006F9D3B /* widget.h */,
 			);
 			name = Headers;
@@ -289,6 +299,8 @@
 				AC26287A18DBF58100A5BC69 /* oDLNode.cpp in Sources */,
 				AC50A5221916FB59009F8C74 /* oDropDown.cpp in Sources */,
 				AC7720351919C58100F48FA7 /* oDrawingCanvas.cpp in Sources */,
+				ACE7A4921957BFB3008DD414 /* oImgLayer.cpp in Sources */,
+				ACE7A4951957BFD6008DD414 /* oImage.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

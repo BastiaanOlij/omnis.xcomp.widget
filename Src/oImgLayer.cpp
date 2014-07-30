@@ -36,52 +36,6 @@ oImgLayer::~oImgLayer(void) {
 	// nothing to do here
 };
 
-sPixel	oImgLayer::mixPixel(sPixel pBase, sPixel pAdd, qbyte pAlpha) {
-	if ((pAlpha == 255) && (pAdd.mA == 255)) {
-		// opaque pixel...
-		return pAdd;
-	} else if ((pAlpha == 0) || (pAdd.mA == 0)) {		
-		// fully transparent pixel
-		return pBase;
-	} else {
-		sPixel	result;
-		qlong	value, alpha = pAlpha;
-
-		alpha		*= pAdd.mA;
-		result.mA	= 255;
-		
-		// Red
-		value		= pBase.mR;
-		value		*= (255 * 255) - alpha;
-		result.mR	= value >> 16;
-		
-		value		= pAdd.mR;
-		value		*= alpha;
-		result.mR	+= (value >> 16);
-		
-		// Green
-		value		= pBase.mG;
-		value		*= (255 * 255) - alpha;
-		result.mG	= value >> 16;
-		
-		value		= pAdd.mG;
-		value		*= alpha;
-		result.mG	+= (value >> 16);
-
-		// blue
-		value		= pBase.mB;
-		value		*= (255 * 255) - alpha;
-		result.mB	= value >> 16;
-		
-		value		= pAdd.mB;
-		value		*= alpha;
-		result.mB	+= (value >> 16);
-		
-		return result;
-	};
-};
-
-
 const char * oImgLayer::layerType() {
 	return "ImgLayer";
 };
@@ -135,7 +89,7 @@ void	oImgLayer::setContents(EXTfldval &pContents) {
 };
 
 // draw our layer onto the pixmap..
-void	oImgLayer::drawLayer(HPIXMAP pOnto, bool pMix) {
+void	oImgLayer::drawLayer(oRGBAImage & pOnto, bool pMix) {
 	// nothing to do here..
 };	
 
@@ -146,45 +100,13 @@ void	oImgLayer::drawLayer(HPIXMAP pOnto, bool pMix) {
 
 // init as empty bitmap
 oImgBitmap::oImgBitmap(qlong pWidth, qlong pHeight, qcol pColor) {
-	mImgWidth	= pWidth;
-	mImgHeight	= pHeight;
-	if ((pWidth == 0) && (pHeight == 0)) {
-		mPixmap = 0;
-	} else {
-		mPixmap = GDIcreateHPIXMAP(pWidth, pHeight, 32, false);
-		
-		sPixel *	pixels = (sPixel *) GDIlockHPIXMAP(mPixmap);
-		sPixel		pixel;
-		
-		// get real RGB value..
-		qlong col = GDIgetRealColor(pColor);
-
-		// split into RGBA components
-		// need to check if this is the same on windows..
-		pixel.mR = col & 0xFF;
-		pixel.mG = (col >> 8) & 0xFF;
-		pixel.mB = (col >> 16) & 0xFF;
-		// pixel.mA = (col >> 24) & 0xFF; 
-		pixel.mA = 255; // note, not supplied by omnis generally so we ignore...
-		
-//		oBaseComponent::addToTraceLog("RGB: %li, %li, %li, %li, %li",col,pixel.mR, pixel.mB, pixel.mG, pixel.mA);
-		
-		for (qlong Y = 0;Y<pWidth*pHeight; Y+=pWidth) {
-			for (qlong X = 0;X<pWidth;X++) {
-				pixels[Y+X] = pixel;
-			};			
-		}
-		
-		GDIunlockHPIXMAP(mPixmap);
-	};
+	mImage = new oRGBAImage(pWidth, pHeight, pColor);
 };
 
 oImgBitmap::~oImgBitmap() {
-	if (mPixmap != 0) {
-		GDIdeleteHPIXMAP(mPixmap);
-		mPixmap		= 0;
-		mImgWidth	= 0;
-		mImgHeight	= 0;
+	if (mImage != NULL) {
+		delete mImage;
+		mImage = NULL;
 	};
 };
 
@@ -193,15 +115,19 @@ const char * oImgBitmap::layerType() {
 };
 
 qlong	oImgBitmap::width() {
-	if (mWidth == 0) {
-		return mImgWidth;
+	if (mImage == NULL) {
+		return 0;
+	} else if (mWidth == 0) {
+		return mImage->width();
 	} else {
 		return mWidth;
 	};
 };
 
 void	oImgBitmap::setWidth(qlong pNewValue) {
-	if (mImgWidth == pNewValue) {
+	if (mImage == NULL) {
+		mWidth = pNewValue;				
+	} else if (mImage->width() == pNewValue) {
 		mWidth = 0;
 	} else {
 		mWidth = pNewValue;		
@@ -209,15 +135,19 @@ void	oImgBitmap::setWidth(qlong pNewValue) {
 };
 
 qlong	oImgBitmap::height() {
-	if (mHeight == 0) {
-		return mImgHeight;
+	if (mImage == NULL) {
+		return 0;
+	} else if (mHeight == 0) {
+		return mImage->height();
 	} else {
 		return mHeight;
 	};	
 };
 
 void	oImgBitmap::setHeight(qlong pNewValue) {
-	if (mImgHeight == pNewValue) {
+	if (mImage == NULL) {
+		mHeight = pNewValue;
+	} else if (mImage->height() == pNewValue) {
 		mHeight = 0;		
 	} else {		
 		mHeight = pNewValue;
@@ -225,230 +155,141 @@ void	oImgBitmap::setHeight(qlong pNewValue) {
 };
 
 void	oImgBitmap::getContents(EXTfldval &pContents) {
-	if (mPixmap==0) {
+	if (mImage == NULL) {
 		pContents.setEmpty(fftPicture, 0);		
 	} else {
-		GDIbitmapToColorShared(mPixmap, pContents);
+		HPIXMAP pixmap = mImage->asPixMap();
+		if (pixmap != 0) {
+			GDIbitmapToColorShared(pixmap, pContents);
+			
+			// does our EXTfldval own the data now? if so this is wrong
+			GDIdeleteHPIXMAP(pixmap);
+		} else {
+			pContents.setEmpty(fftPicture, 0);		
+			
+		};
 	};
 };
 
 void	oImgBitmap::setContents(EXTfldval &pContents) {
-	GDIdeleteHPIXMAP(mPixmap);
-	mPixmap		= 0;
-	mImgWidth	= 0;
-	mImgHeight	= 0;
-	
-	// first convert to shared picture
-	GDIconvToSharedPict(pContents);
-	
-	// now get our shared picture data
-	qlong bitmapLen = pContents.getBinLen();
-	if (bitmapLen > 0) {
-		qbyte * bitmapData = (qbyte *)MEMmalloc(sizeof(qbyte) * (bitmapLen+1));
-		if (bitmapData != NULL) {
-			qlong	reallen;
-			pContents.getBinary(bitmapLen, bitmapData, reallen);
-			
-			// and decompress it
-			mPixmap = GDIHPIXMAPfromSharedPicture(bitmapData, bitmapLen);
-			MEMfree(bitmapData);
-			
-			if (mPixmap != 0) {
-				HPIXMAPinfo	pixmapinfo;
-				GDIgetHPIXMAPinfo(mPixmap, &pixmapinfo);
-				mImgWidth = pixmapinfo.mWidth;
-				mImgHeight = pixmapinfo.mHeight;				
-
-				oBaseComponent::addToTraceLog("setContents: loaded layer with image %li, %li",mImgWidth, mImgHeight);
+	if (mImage == NULL) {
+		// really?
+	} else {
+		// first convert to shared picture
+		GDIconvToSharedPict(pContents);
+		
+		// now get our shared picture data
+		qlong bitmapLen = pContents.getBinLen();
+		if (bitmapLen > 0) {
+			qbyte * bitmapData = (qbyte *)MEMmalloc(sizeof(qbyte) * (bitmapLen+1));
+			if (bitmapData != NULL) {
+				qlong	reallen;
+				pContents.getBinary(bitmapLen, bitmapData, reallen);
+				
+				// and decompress it
+				HPIXMAP pixmap = GDIHPIXMAPfromSharedPicture(bitmapData, bitmapLen);
+				
+				MEMfree(bitmapData);
+				
+				if (pixmap != 0) {
+					mImage->copy(pixmap);
+					
+					// no longer need this...
+					GDIdeleteHPIXMAP(pixmap);
+					
+					oBaseComponent::addToTraceLog("setContents: loaded layer with image %li, %li",mImage->width(), mImage->height());
+				};
+			} else {
+				oBaseComponent::addToTraceLog("setContents: Couldn't allocate memory for pixel buffer");
 			};
-		} else {
-			oBaseComponent::addToTraceLog("setContents: Couldn't allocate memory for pixel buffer");
-		};
+		};		
 	};
-};
-
-// interpolate pixel
-sPixel	oImgBitmap::interpolatePixel(sPixel pA, sPixel pB, float pFract) {
-	sPixel	result;
-	float	delta;
-	
-	if (pA.mR == pB.mR) {
-		result.mR = pA.mR;
-	} else {
-		delta		= pB.mR - pA.mR;
-		delta		*= pFract;
-		result.mR	= pA.mR + delta;		
-	};
-
-	if (pA.mG == pB.mG) {
-		result.mG = pA.mG;
-	} else {
-		delta		= pB.mG - pA.mG;
-		delta		*= pFract;
-		result.mG	= pA.mG + delta;
-	};
-	
-	if (pA.mB == pB.mB) {
-		result.mB = pA.mB;
-	} else {
-		delta		= pB.mB - pA.mB;
-		delta		*= pFract;
-		result.mB	= pA.mB + delta;
-	};
-
-	if (pA.mA == pB.mA) {
-		result.mA = pA.mA;
-	} else {
-		delta		= pB.mA - pA.mA;
-		delta		*= pFract;
-		result.mA	= pA.mA + delta;
-	};
-	
-	return result;
-};
-
-// get interpolated pixel
-sPixel	oImgBitmap::getPixel(sPixel * pData, float pX, float pY) {
-	sPixel col;
-
-	if (pX < 0.0) pX = 0.0; // ???
-	if (pY < 0.0) pY = 0.0; // ???	
-	
-	qlong	intX		= floor(pX);
-	qlong	intY		= floor(pY);
-	bool	interpolate	= true;
-		
-	// make sure we stay within our buffer...
-	if (intX >= (mImgWidth - 1)) {
-		intX			= mImgWidth - 1;
-		interpolate		= false;
-	};
-	
-	if (intY >= (mImgHeight - 1)) {
-		intY			= mImgHeight - 1;
-		interpolate		= false;
-	};
-	
-	// calculate our top/left offset
-	qlong	offset		= intY;
-	offset *= mImgWidth;
-	offset += intX;
-	 
-	// check if we need to interpolate
-	if (interpolate) {
-		float	fractX		= pX - intX;
-		float	fractY		= pY - intY;
-		
-		if ((fractX > 0.0) || (fractY > 0.0)) {
-			sPixel	topcol		= interpolatePixel(pData[offset], pData[offset+1], fractX);
-			offset += mImgWidth;
-			sPixel	bottomcol	= interpolatePixel(pData[offset], pData[offset+1], fractX);
-			
-			col = interpolatePixel(topcol, bottomcol, fractY);
-		} else {
-			col = pData[offset];			
-		};
-	} else {
-		col = pData[offset];		
-	};
-
-	return col;		
 };
 
 // draw our layer onto the pixmap..
-void	oImgBitmap::drawLayer(HPIXMAP pOnto, bool pMix) {
-	if (mPixmap != 0) {
-		// get info about the pixmap we're drawing on....
-		HPIXMAPinfo	pixmapinfo;
-		GDIgetHPIXMAPinfo(pOnto, &pixmapinfo);
+void	oImgBitmap::drawLayer(oRGBAImage & pOnto, bool pMix) {
+	// get the size of our destination bitmap
+	qlong	destwidth	= pOnto.width();
+	qlong	destheight	= pOnto.height();
 
-		// now get our buffers....
-		sPixel *	sourceData	= (sPixel *) GDIlockHPIXMAP(mPixmap);
-		sPixel *	destData	= (sPixel *) GDIlockHPIXMAP(pOnto);
+	if ((mImage != NULL) && (destwidth != 0) && (destheight != 0)) {
+		// get the size we want our bitmap to be
+		qlong	sourcewidth		= mImage->width();
+		qlong	sourceheight	= mImage->height();
+		qlong	scaledwidth		= width();
+		qlong	scaledheight	= height();
+
+		qlong	maxX = (mLeft + scaledwidth);
+		if (maxX > destwidth) maxX = destwidth;
+
+		qlong	maxY = (mTop + scaledheight);
+		if (maxY > destheight) maxY = destheight;
 		
-		if ((sourceData!=NULL) && (destData!=NULL)) {
-			// get the size we want our bitmap to be
-			qlong	scaledwidth = width();
-			qlong	scaledheight = height();
+		if ((sourcewidth != scaledwidth) || (sourceheight != scaledheight)) {
+			// we're scaling this so we handle this slightly differently
+			// this code works well when enlarging our bitmap but is overkill for making things smaller
 			
-			if ((mImgWidth != scaledwidth) || (mImgHeight != scaledheight)) {
-				// we're scaling this so we handle this slightly differently
-				// this code works well when enlarging our bitmap but is overkill for making things smaller
-				float	stepX = mImgWidth;
-				float	stepY = mImgHeight;
+			bool	issmaller = (sourcewidth > scaledwidth) && (sourceheight > scaledheight);
+			
+			float	stepX = sourcewidth;
+			float	stepY = sourceheight;
 				
-				stepX = stepX / scaledwidth;
-				stepY = stepY / scaledheight;
+			stepX = stepX / scaledwidth;
+			stepY = stepY / scaledheight;
 				
-				float	sY = 0.0;
+			float	sY = 0.0;
 				
-				for (qlong Y = mTop; Y < (mTop + scaledheight); Y++) {
-					if (Y >= pixmapinfo.mHeight) {
-						// no need to continue
-						Y = (mTop + scaledheight);
-					} else if (Y >= 0) {
-						qlong	dest = Y * pixmapinfo.mWidth;
-						float	sX = 0.0;
+			for (qlong dY = mTop; dY < maxY; dY++) {
+				if (dY >= 0) {
+					float	sX = 0.0;
 						
-						for (qlong X = mLeft; X < (mLeft + scaledwidth); X++) {
-							if (X >= pixmapinfo.mWidth) {
-								// no need to continue
-								X = (mLeft + scaledwidth);
-							} else if (X >= 0)  {
-								sPixel pixel = getPixel(sourceData, sX, sY);
-								if (pMix) {
-									destData[dest + X] = mixPixel(destData[dest + X], pixel, mAlpha);
-								} else {
-									destData[dest + X] = pixel;
-								}							
+					for (qlong dX = mLeft; dX < maxX; dX++) {
+						if (dX >= 0)  {
+							sPixel pixel;
+							if (issmaller) {
+								// just get it
+								pixel = (* mImage)(floor(sX), floor(sY));
+							} else {
+								// interpolate
+								pixel = mImage->getPixel(sX, sY);
 							};
-							
-							sX += stepX;
-						};
-					};
-					sY += stepY;
-				}; 
-			} else {
-				// not scaled? just copy it!
-				qlong	sourceY = 0;
-				
-				for (qlong Y = mTop; Y < (mTop + scaledheight); Y++) {
-					if (Y >= pixmapinfo.mHeight) {
-						// no need to continue
-						Y = (mTop + scaledheight);
-					} else if (Y >= 0) {
-						qlong	source = sourceY;
-						qlong	dest = Y * pixmapinfo.mWidth;
-						for (qlong X = mLeft; X < (mLeft + scaledwidth); X++) {
-							if (X >= pixmapinfo.mWidth) {
-								// no need to continue
-								X = (mLeft + scaledwidth);
-							} else if (X >= 0)  {
-								sPixel	pixel = sourceData[source];
-								if (pMix) {
-									destData[dest + X] = mixPixel(destData[dest + X], pixel, mAlpha);
-								} else {
-									destData[dest + X] = pixel;
-								}
-								
-								dest++;
+							if (pMix) {
+								pOnto(dX, dY) = oRGBAImage::mixPixel(pOnto(dX, dY), pixel, mAlpha);
+							} else {
+								pOnto(dX, dY) = pixel;
 							};
-							
-							source++;
 						};
+							
+						sX += stepX;
 					};
-					
-					sourceY += mImgWidth;
 				};
-				
-			};			
+				sY += stepY;
+			}; 
 		} else {
-			oBaseComponent::addToTraceLog("drawLayer: Couldn't access pixel buffers");
-		};
-		
-		// unlock our buffers....
-		GDIunlockHPIXMAP(pOnto);
-		GDIunlockHPIXMAP(mPixmap);
+			// not scaled? just copy it!
+			qlong	sY = 0;
+				
+			for (qlong dY = mTop; dY < maxY; dY++) {
+				if (dY >= 0) {
+					qlong	sX = 0;
+
+					for (qlong dX = mLeft; dX < maxX; dX++) {
+						if (dX >= 0)  {
+							sPixel	pixel = (*mImage)(sX, sY);
+							if (pMix) {
+								pOnto(dX, dY) = oRGBAImage::mixPixel(pOnto(dX, dY), pixel, mAlpha);
+							} else {
+								pOnto(dX, dY) = pixel;
+							};
+						};
+							
+						sX++;
+					};
+				};
+					
+				sY++;
+			};				
+		};			
 	};
 };	
 

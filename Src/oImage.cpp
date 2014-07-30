@@ -16,7 +16,7 @@ oImage::oImage(void) {
 	oImgBitmap * bitmap = new oImgBitmap(640,480,GDI_COLOR_QBLUE);
 	mLayers.push_back(bitmap);
 	mCurrentLayer	= 1;
-	mCachedPixmap	= 0;
+	mCachedImage	= NULL;
 	mCachedWidth	= 0;
 	mCachedHeight	= 0;
 	mImageWidth		= 0;
@@ -51,9 +51,9 @@ void	oImage::copyObject(oBaseNVComponent *pCopy) {
 
 // clear our cached image
 void	oImage::clearCachedImg() {
-	if (mCachedPixmap!=0) {
-		GDIdeleteHPIXMAP(mCachedPixmap);
-		mCachedPixmap	= 0;
+	if (mCachedImage != NULL) {
+		delete mCachedImage;
+		mCachedImage	= NULL;
 		mCachedWidth	= 0;
 		mCachedHeight	= 0;
 	};
@@ -77,37 +77,19 @@ void	oImage::updateCachedImg(qdim pWidth, qdim pHeight) {
 			bool	mix = false;
 			
 			addToTraceLog("Creating cached image: %li, %li", pWidth, pHeight);
-			
-			mCachedWidth = pWidth;
-			mCachedHeight = pHeight;
-			mCachedPixmap = GDIcreateHPIXMAP(pWidth, pHeight, 32, false);
-			
-			sPixel * buffer = (sPixel *) GDIlockHPIXMAP(mCachedPixmap);
-			if (buffer != NULL) {
-				// fill our map with a default colour
-				sPixel col;
-				col.mR = 255;
-				col.mG = 255;
-				col.mB = 255;
-				col.mA = 255;
+			mCachedImage = new oRGBAImage(pWidth, pHeight);
+			if (mCachedImage != NULL) {
+				mCachedWidth = pWidth;
+				mCachedHeight = pHeight;
 				
-				for (qlong offset = 0; offset < pWidth*pHeight; offset++) {
-					buffer[offset] = col;
-				};
-				
-				GDIunlockHPIXMAP(mCachedPixmap);
-				
-				// and apply our layers...
+				// Apply our layers...
 				for	(qlong layer = 0;layer < mLayers.size(); layer++) {
 					if (mLayers[layer]->enabled()) {
-						mLayers[layer]->drawLayer(mCachedPixmap, mix);
+						mLayers[layer]->drawLayer(*mCachedImage, mix);
 						mix = true;
 					};
-				};
-			} else {
-				addToTraceLog("Couldn't lock pixel buffer");
-				clearCachedImg();
-			};
+				};				
+			};			
 		};
 	};
 };
@@ -259,10 +241,15 @@ void	oImage::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 			// create our image based on the size of our first layer
 			updateCachedImg(mImageWidth, mImageHeight);
 			
-			if (mCachedPixmap == 0) {
+			if (mCachedImage == NULL) {
 				pGetValue.setEmpty(fftPicture, 0);
 			} else {
-				GDIbitmapToColorShared(mCachedPixmap, pGetValue);
+				HPIXMAP pixmap = mCachedImage->asPixMap();
+				
+				GDIbitmapToColorShared(pixmap, pGetValue);
+				
+				// is this right? or does our EXTfldval own the image now?
+				GDIdeleteHPIXMAP(pixmap);				
 			};
 		}; break;
 		case oIM_imageWidth: {

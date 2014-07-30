@@ -56,11 +56,15 @@ BEGIN
 // parameters
 	7000			"seconds:Seconds"
 	7001			"lineNo:Line number"
+	7002			"X:X-coord"
+	7003			"Y:Y-coord"
 	7100			"layer:Layer"
 
 // methods
 	8000			"$addSeconds:$addSeconds() Add seconds to datetime."
 	8010			"$isvisible:$isVisible(pvLineNo) Is line visible?"
+	8011			"$lineAtPos:$lineAtPos(pvY) which line is at this Y coord"
+	8012			"$lineAtMouse:$lineAtMouse() which line is below the mouse"
 	8100			"$addLayer:$addLayer() add a layer to our image."
 	8101			"$remLayer:$remLayer(pLayer) removes a layer from our image"
 

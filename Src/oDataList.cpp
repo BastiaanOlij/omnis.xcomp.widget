@@ -1172,10 +1172,17 @@ ECOparam oDataListIsVisibleParam[] = {
 	7001,			fftInteger,	0,			0,		// pLineNo
 };
 
+ECOparam oDataListLineAtPosParam[] = {
+	//	Resource	Type		Flags		ExFlags
+	7003,			fftInteger,	0,			0,		// pY
+};
+
 // This is our array of methods we support
 ECOmethodEvent oDataListMethods[] = {
 //	ID				Resource	Return type		Paramcount		Params						Flags		ExFlags
 	1,				8010,		fftBoolean,		1,				oDataListIsVisibleParam,	0,			0,			// $isVisible
+	2,				8011,		fftInteger,		1,				oDataListLineAtPosParam,	0,			0,			// $lineAtPos
+	3,				8012,		fftInteger,		0,				0,							0,			0,			// $lineAtMouse
 };
 
 // return an array of method meta data
@@ -1203,6 +1210,44 @@ int	oDataList::invokeMethod(qlong pMethodId, EXTCompInfo* pECI) {
 				lvResult.setBool(2);				
 			};
 	 
+			ECOaddParam(pECI, &lvResult);
+			return 1L;							
+		}; break;
+		case 2: {
+			EXTfldval	lvResult;
+			qlong		lvY = getLongFromParam(1, pECI);
+
+			qpoint at(40, lvY);
+			sDLHitTest hittest = doHitTest(at);
+
+			if ((hittest.mAbove == oDL_row) || (hittest.mAbove == oDL_node)) {
+				lvResult.setLong(hittest.mLineNo);
+			} else {
+				lvResult.setLong(0);
+			};
+
+					  
+			ECOaddParam(pECI, &lvResult);
+			return 1L;							
+		}; break;
+		case 3: {
+			EXTfldval	lvResult;
+			qpoint pt;
+			
+			// get our mouse position and map it to our control so 0,0 is the left-top of our control
+			WNDgetCursorPos(&pt);
+			WNDmapWindowPoint(HWND_DESKTOP, mHWnd, &pt);
+			
+			// should test if pt is above our field...
+
+			sDLHitTest hittest = doHitTest(pt);
+			
+			if ((hittest.mAbove == oDL_row) || (hittest.mAbove == oDL_node)) {
+				lvResult.setLong(hittest.mLineNo);
+			} else {
+				lvResult.setLong(0);
+			};
+			
 			ECOaddParam(pECI, &lvResult);
 			return 1L;							
 		}; break;

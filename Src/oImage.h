@@ -42,7 +42,7 @@ private:
 	qdim						mImageHeight;														// height of our resulting image
 	
 	
-	HPIXMAP						mCachedPixmap;
+	oRGBAImage *				mCachedImage;
 	qlong						mCachedWidth;
 	qlong						mCachedHeight;
 	

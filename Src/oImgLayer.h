@@ -30,14 +30,12 @@ protected:
 	qlong		mWidth;
 	qlong		mHeight;
 	qbyte		mAlpha;
-
-	sPixel		mixPixel(sPixel pBase, sPixel pAdd, qbyte pAlpha);
 	
 public:
 	oImgLayer(void);
 	virtual ~oImgLayer(void);
 	
-	virtual	const char *	layerType();							// type of layer this is, just for feedback to the developer
+	virtual	const char *	layerType();								// type of layer this is, just for feedback to the developer
 	
 	virtual		bool		enabled();
 	virtual		void		setEnabled(bool pEnabled);
@@ -53,24 +51,19 @@ public:
 	virtual		void		getContents(EXTfldval &pContents);
 	virtual		void		setContents(EXTfldval &pContents);
 	
-	virtual		void		drawLayer(HPIXMAP pOnto, bool pMix);	// draw our layer onto the pixmap..
+	virtual		void		drawLayer(oRGBAImage & pOnto, bool pMix);	// draw our layer onto the pixmap..
 };
 
 class oImgBitmap : public oImgLayer {
 private:
-	qlong		mImgWidth;
-	qlong		mImgHeight;
-	HPIXMAP		mPixmap;
+	oRGBAImage *	mImage;
 	
-	sPixel		interpolatePixel(sPixel pA, sPixel pB, float pFract);
-	sPixel		getPixel(sPixel * pData, float pX, float pY);		// get interpolated pixel
-
 protected:
 public:
-	oImgBitmap(qlong pWidth, qlong pHeight, qcol pColor);			// init as empty bitmap
-	virtual ~oImgBitmap(void);										// and cleanup!
+	oImgBitmap(qlong pWidth, qlong pHeight, qcol pColor);				// init as empty bitmap
+	virtual ~oImgBitmap(void);											// and cleanup!
 
-	virtual	const char *	layerType();							// type of layer this is, just for feedback to the developer
+	virtual	const char *	layerType();								// type of layer this is, just for feedback to the developer
 
 	virtual		qlong		width();
 	virtual		void		setWidth(qlong pNewValue);
@@ -80,7 +73,7 @@ public:
 	virtual		void		getContents(EXTfldval &pContents);
 	virtual		void		setContents(EXTfldval &pContents);
 
-	virtual		void		drawLayer(HPIXMAP pOnto, bool pMix);	// draw our layer onto the pixmap..
+	virtual		void		drawLayer(oRGBAImage & pOnto, bool pMix);	// draw our layer onto the pixmap..
 };
 
 

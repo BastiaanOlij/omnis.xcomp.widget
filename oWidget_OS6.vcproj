@@ -243,6 +243,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\oImage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\oImgLayer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\widget.cpp"
 				>
 			</File>
@@ -267,6 +275,10 @@
 				</File>
 				<File
 					RelativePath="..\omnis.xcomp.framework\oDrawingCanvas.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\omnis.xcomp.framework\oRGBAImage.cpp"
 					>
 				</File>
 				<File
@@ -325,6 +337,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\oImage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\oImgLayer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\widget.h"
 				>
 			</File>
@@ -349,6 +369,10 @@
 				</File>
 				<File
 					RelativePath="..\omnis.xcomp.framework\omnis.xcomp.framework.h"
+					>
+				</File>
+				<File
+					RelativePath="..\omnis.xcomp.framework\oRGBAImage.h"
 					>
 				</File>
 				<File

@@ -13,7 +13,7 @@
 
 oImage::oImage(void) {
 	// by default we add an empty bitmap layer
-	oImgBitmap * bitmap = new oImgBitmap(640,480,GDI_COLOR_QBLUE);
+	oImgBitmap * bitmap = new oImgBitmap(640,480,GDI_COLOR_QWHITE);
 	mLayers.push_back(bitmap);
 	mCurrentLayer	= 1;
 	mCachedImage	= NULL;
@@ -76,7 +76,7 @@ void	oImage::updateCachedImg(qdim pWidth, qdim pHeight) {
 		if ((pWidth!=0) && (pHeight!=0)) {
 			bool	mix = false;
 			
-			addToTraceLog("Creating cached image: %li, %li", pWidth, pHeight);
+			// addToTraceLog("Creating cached image: %li, %li", pWidth, pHeight);
 			mCachedImage = new oRGBAImage(pWidth, pHeight);
 			if (mCachedImage != NULL) {
 				mCachedWidth = pWidth;
@@ -84,7 +84,7 @@ void	oImage::updateCachedImg(qdim pWidth, qdim pHeight) {
 				
 				// Apply our layers...
 				for	(qulong layer = 0;layer < mLayers.size(); layer++) {
-					addToTraceLog("Applying layer %li", layer+1);
+					// addToTraceLog("Applying layer %li", layer+1);
 					if (mLayers[layer]->enabled()) {
 						mLayers[layer]->drawLayer(*mCachedImage, mix);
 						mix = true;
@@ -245,7 +245,7 @@ void	oImage::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 			if (mCachedImage == NULL) {
 				pGetValue.setEmpty(fftBinary, 0);
 			} else {
-				addToTraceLog("Getting cached image as png");
+				// addToTraceLog("Getting cached image as png");
 
 				int len;
 				unsigned char * pngdata = mCachedImage->asPNG(len);

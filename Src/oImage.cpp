@@ -83,7 +83,8 @@ void	oImage::updateCachedImg(qdim pWidth, qdim pHeight) {
 				mCachedHeight = pHeight;
 				
 				// Apply our layers...
-				for	(qlong layer = 0;layer < mLayers.size(); layer++) {
+				for	(qulong layer = 0;layer < mLayers.size(); layer++) {
+					addToTraceLog("Applying layer %li", layer+1);
 					if (mLayers[layer]->enabled()) {
 						mLayers[layer]->drawLayer(*mCachedImage, mix);
 						mix = true;
@@ -178,7 +179,7 @@ qbool	oImage::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pECI) 
 			return true;						
 		}; break;
 		case oIM_currentlayer: {
-			qlong	newlayer = pNewValue.getLong();
+			qulong	newlayer = pNewValue.getLong();
 			if ((newlayer > 0) && (newlayer <= mLayers.size())) {
 				mCurrentLayer = newlayer;
 			};
@@ -242,14 +243,21 @@ void	oImage::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 			updateCachedImg(mImageWidth, mImageHeight);
 			
 			if (mCachedImage == NULL) {
-				pGetValue.setEmpty(fftPicture, 0);
+				pGetValue.setEmpty(fftBinary, 0);
 			} else {
-				HPIXMAP pixmap = mCachedImage->asPixMap();
-				
-				GDIbitmapToColorShared(pixmap, pGetValue);
-				
-				// is this right? or does our EXTfldval own the image now?
-				GDIdeleteHPIXMAP(pixmap);				
+				addToTraceLog("Getting cached image as png");
+
+				int len;
+				unsigned char * pngdata = mCachedImage->asPNG(len);
+
+				if (pngdata!=NULL) {
+					pGetValue.setBinary(fftBinary, pngdata, len);
+
+					// and free up our memory
+					free(pngdata);
+				} else {
+					pGetValue.setEmpty(fftBinary, 0);
+				};
 			};
 		}; break;
 		case oIM_imageWidth: {

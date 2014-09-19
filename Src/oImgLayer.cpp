@@ -156,17 +156,18 @@ void	oImgBitmap::setHeight(qlong pNewValue) {
 
 void	oImgBitmap::getContents(EXTfldval &pContents) {
 	if (mImage == NULL) {
-		pContents.setEmpty(fftPicture, 0);		
+		pContents.setEmpty(fftBinary, 0);		
 	} else {
-		HPIXMAP pixmap = mImage->asPixMap();
-		if (pixmap != 0) {
-			GDIbitmapToColorShared(pixmap, pContents);
-			
-			// does our EXTfldval own the data now? if so this is wrong
-			GDIdeleteHPIXMAP(pixmap);
+		int				len = 0;
+		unsigned char *	pngdata = mImage->asPNG(len);
+
+		if (pngdata == NULL) {
+			oBaseComponent::addToTraceLog("getContents: No image");
+			pContents.setEmpty(fftBinary, 0);		
 		} else {
-			pContents.setEmpty(fftPicture, 0);		
-			
+			pContents.setBinary(fftBinary, pngdata, len);
+
+			free(pngdata);
 		};
 	};
 };
@@ -175,121 +176,129 @@ void	oImgBitmap::setContents(EXTfldval &pContents) {
 	if (mImage == NULL) {
 		// really?
 	} else {
-		// first convert to shared picture
-		GDIconvToSharedPict(pContents);
-		
-		// now get our shared picture data
+		// We get the binary as is, we assume the contents is raw picture data in any format supported by STB
 		qlong bitmapLen = pContents.getBinLen();
 		if (bitmapLen > 0) {
 			qbyte * bitmapData = (qbyte *)MEMmalloc(sizeof(qbyte) * (bitmapLen+1));
 			if (bitmapData != NULL) {
 				qlong	reallen;
 				pContents.getBinary(bitmapLen, bitmapData, reallen);
-				
-				// and decompress it
-				HPIXMAP pixmap = GDIHPIXMAPfromSharedPicture(bitmapData, bitmapLen);
-				
+
+				// and assign it to our image
+				mImage->copy(bitmapData, reallen);
+
+				// and free our memory
 				MEMfree(bitmapData);
-				
-				if (pixmap != 0) {
-					mImage->copy(pixmap);
-					
-					// no longer need this...
-					GDIdeleteHPIXMAP(pixmap);
-					
-					oBaseComponent::addToTraceLog("setContents: loaded layer with image %li, %li",mImage->width(), mImage->height());
-				};
 			} else {
 				oBaseComponent::addToTraceLog("setContents: Couldn't allocate memory for pixel buffer");
 			};
-		};		
+		} else {
+			oBaseComponent::addToTraceLog("setContents: No image specified");
+		};
 	};
 };
 
 // draw our layer onto the pixmap..
 void	oImgBitmap::drawLayer(oRGBAImage & pOnto, bool pMix) {
+	if (mImage == NULL) {
+		// nothing to draw..
+		oBaseComponent::addToTraceLog("drawLayer: No source image");
+		return;
+	};
+
 	// get the size of our destination bitmap
 	qlong	destwidth	= pOnto.width();
 	qlong	destheight	= pOnto.height();
 
-	if ((mImage != NULL) && (destwidth != 0) && (destheight != 0)) {
-		// get the size we want our bitmap to be
-		qlong	sourcewidth		= mImage->width();
-		qlong	sourceheight	= mImage->height();
-		qlong	scaledwidth		= width();
-		qlong	scaledheight	= height();
-
-		qlong	maxX = (mLeft + scaledwidth);
-		if (maxX > destwidth) maxX = destwidth;
-
-		qlong	maxY = (mTop + scaledheight);
-		if (maxY > destheight) maxY = destheight;
-		
-		if ((sourcewidth != scaledwidth) || (sourceheight != scaledheight)) {
-			// we're scaling this so we handle this slightly differently
-			// this code works well when enlarging our bitmap but is overkill for making things smaller
-			
-			bool	issmaller = (sourcewidth > scaledwidth) && (sourceheight > scaledheight);
-			
-			float	stepX = sourcewidth;
-			float	stepY = sourceheight;
-				
-			stepX = stepX / scaledwidth;
-			stepY = stepY / scaledheight;
-				
-			float	sY = 0.0;
-				
-			for (qlong dY = mTop; dY < maxY; dY++) {
-				if (dY >= 0) {
-					float	sX = 0.0;
-						
-					for (qlong dX = mLeft; dX < maxX; dX++) {
-						if (dX >= 0)  {
-							sPixel pixel;
-							if (issmaller) {
-								// just get it
-								pixel = (* mImage)(floor(sX), floor(sY));
-							} else {
-								// interpolate
-								pixel = mImage->getPixel(sX, sY);
-							};
-							if (pMix) {
-								pOnto(dX, dY) = oRGBAImage::mixPixel(pOnto(dX, dY), pixel, mAlpha);
-							} else {
-								pOnto(dX, dY) = pixel;
-							};
-						};
-							
-						sX += stepX;
-					};
-				};
-				sY += stepY;
-			}; 
-		} else {
-			// not scaled? just copy it!
-			qlong	sY = 0;
-				
-			for (qlong dY = mTop; dY < maxY; dY++) {
-				if (dY >= 0) {
-					qlong	sX = 0;
-
-					for (qlong dX = mLeft; dX < maxX; dX++) {
-						if (dX >= 0)  {
-							sPixel	pixel = (*mImage)(sX, sY);
-							if (pMix) {
-								pOnto(dX, dY) = oRGBAImage::mixPixel(pOnto(dX, dY), pixel, mAlpha);
-							} else {
-								pOnto(dX, dY) = pixel;
-							};
-						};
-							
-						sX++;
-					};
-				};
-					
-				sY++;
-			};				
-		};			
+	if ((destwidth == 0) || (destheight == 0)) {
+		// nothing to draw..
+		oBaseComponent::addToTraceLog("drawLayer: Empty destination image");
+		return;
 	};
+
+	// get the size we want our bitmap to be
+	qlong	sourcewidth		= mImage->width();
+	qlong	sourceheight	= mImage->height();
+	qlong	scaledwidth		= width();
+	qlong	scaledheight	= height();
+
+	if ((sourcewidth==0) || (sourceheight==0)) {
+		// nothing to draw..
+		oBaseComponent::addToTraceLog("drawLayer: Empty source image");
+		return;
+	};
+
+	qlong	maxX = (mLeft + scaledwidth);
+	if (maxX > destwidth) maxX = destwidth;
+
+	qlong	maxY = (mTop + scaledheight);
+	if (maxY > destheight) maxY = destheight;
+		
+	if ((sourcewidth != scaledwidth) || (sourceheight != scaledheight)) {
+		// we're scaling this so we handle this slightly differently
+		// this code works well when enlarging our bitmap but is overkill for making things smaller
+		// look into using the resample logic available in STB, it may do a much better job, but thats for the next version...
+			
+		bool	issmaller = (sourcewidth > scaledwidth) && (sourceheight > scaledheight);
+			
+		float	stepX = (float) sourcewidth;
+		float	stepY = (float) sourceheight;
+				
+		stepX = stepX / scaledwidth;
+		stepY = stepY / scaledheight;
+				
+		float	sY = 0.0;
+				
+		for (qlong dY = mTop; dY < maxY; dY++) {
+			if (dY >= 0) {
+				float	sX = 0.0;
+						
+				for (qlong dX = mLeft; dX < maxX; dX++) {
+					if (dX >= 0)  {
+						sPixel pixel;
+						if (issmaller) {
+							// just get it
+							pixel = (* mImage)((qlong) floor(sX), (qlong) floor(sY));
+						} else {
+							// interpolate
+							pixel = mImage->getPixel(sX, sY);
+						};
+						if (pMix) {
+							pOnto(dX, dY) = oRGBAImage::mixPixel(pOnto(dX, dY), pixel, mAlpha);
+						} else {
+							pOnto(dX, dY) = pixel;
+						};
+					};
+							
+					sX += stepX;
+				};
+			};
+			sY += stepY;
+		}; 
+	} else {
+		// not scaled? just copy it!
+		qlong	sY = 0;
+				
+		for (qlong dY = mTop; dY < maxY; dY++) {
+			if (dY >= 0) {
+				qlong	sX = 0;
+				
+				for (qlong dX = mLeft; dX < maxX; dX++) {
+					if (dX >= 0)  {
+						sPixel	pixel = (*mImage)(sX, sY);
+						if (pMix) {
+							pOnto(dX, dY) = oRGBAImage::mixPixel(pOnto(dX, dY), pixel, mAlpha);
+						} else {
+							pOnto(dX, dY) = pixel;
+						};
+					};
+							
+					sX++;
+				};
+			};
+					
+			sY++;
+		};				
+	};			
 };	
 

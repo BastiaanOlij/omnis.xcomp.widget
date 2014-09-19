@@ -15,7 +15,7 @@ qshort	mainlib::major() {
 };
 
 qshort	mainlib::minor() {
-	return 5;
+	return 6;
 };
 
 /* see omnis.xcomp.framework\oXCompLib.h for methods to implement here */ 

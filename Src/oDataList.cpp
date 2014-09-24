@@ -1713,7 +1713,9 @@ bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
 		} else {
 			return false;
 		};
-	};	
+	} else {
+		return false;
+	};
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -127,6 +127,7 @@ public:
 	static	qEvents *			events(void);														// return an array of events meta data
 
 	// scrolling
+	virtual qdim				getVertStepSize(void);												// get our vertical step size
 	virtual void				evWindowScrolled(qdim pNewX, qdim pNewY);							// window was scrolled
 
 	// mouse

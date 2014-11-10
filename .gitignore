@@ -1,8 +1,12 @@
-/oWidget_OS4.ncb
 /Release
 /*.suo
 /*.sln
-/oWidget_OS4.vcproj.BASTIAAN-VPC.Bastiaan.user
 /URel
+/DRel
 /*.ncb
 /*.user
+build
+oWidget_OS6.xcodeproj/project.xcworkspace
+oWidget_OS6.xcodeproj/xcuserdata
+basolij.pbxuser
+basolij.perspectivev3

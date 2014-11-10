@@ -131,7 +131,7 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 		} else {			
 			if (pNode.lineNo()!=0) {
 				// draw as a full line
-				headerHeight = drawRow(pECI, pNode.lineNo(), pIndent + needIcon ? mIndent : 0, pTop + 2, pIsEven);
+				headerHeight = drawRow(pECI, pNode.lineNo(), pIndent + (needIcon ? mIndent : 0), pTop + 2, pIsEven);
 				headerHeight -= pTop;
 			} else {
 				// Draw our description
@@ -1702,12 +1702,20 @@ bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
 					mOmnisList->selectRow(row, qtrue, qfalse);
 				};				
 				
+                // and select our first line
+                mOmnisList->setCurRow(1);
+
 				delete mOmnisList;
 				mOmnisList = 0;
 			};
 			
 			// and redraw
 			WNDinvalidateRect(mHWnd, NULL);
+            
+            // and finally treat this as a click
+			EXTfldval	evParam[1];
+			evParam[0].setLong(1);
+			ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_IMMEDIATE);
 			
 			return true;
 		} else {

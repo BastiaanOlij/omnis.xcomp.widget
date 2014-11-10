@@ -1690,7 +1690,7 @@ bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
 	if (enabled) {
 		pchar	testchar = pKey->getPChar();
 		
-		if ((testchar=='a') && (pKey->isControl()) && (!pKey->isShift()) && (!pKey->isAlt()) && mShowSelected && pDown && (mDataList != NULL)) {
+		if ((testchar=='a' || testchar=='A') && (pKey->isControl()) && (!pKey->isShift()) && (!pKey->isAlt()) && mShowSelected && pDown && (mDataList != NULL)) {
 			// we must make selection changes to both our internal and the external list!
 			mOmnisList = getDataList(pECI);
 			

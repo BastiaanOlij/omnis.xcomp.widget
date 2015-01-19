@@ -40,6 +40,7 @@
 		ACA0A88218D0817B006F9D3B /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACA0A87F18D0817B006F9D3B /* widget.cpp */; };
 		ACA0A88718D08185006F9D3B /* oWidget.bmp in Resources */ = {isa = PBXBuildFile; fileRef = ACA0A88318D08185006F9D3B /* oWidget.bmp */; };
 		ACA0A88818D0819D006F9D3B /* oWidget.rc in Resources */ = {isa = PBXBuildFile; fileRef = ACA0A88518D08185006F9D3B /* oWidget.rc */; };
+		ACBB4CB11A6CB47200CD657C /* oFontDropDown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACBB4CAF1A6CB47200CD657C /* oFontDropDown.cpp */; };
 		ACD5FF311988AC1800B355FB /* oRGBAImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD5FF301988AC1800B355FB /* oRGBAImage.cpp */; };
 		ACE7A4921957BFB3008DD414 /* oImgLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE7A4911957BFB3008DD414 /* oImgLayer.cpp */; };
 		ACE7A4951957BFD6008DD414 /* oImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE7A4941957BFD6008DD414 /* oImage.cpp */; };
@@ -106,6 +107,8 @@
 		ACA0A87F18D0817B006F9D3B /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = widget.cpp; path = Src/widget.cpp; sourceTree = "<group>"; };
 		ACA0A88418D08185006F9D3B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = English; path = English.lproj/oWidget.bmp; sourceTree = "<group>"; };
 		ACA0A88618D08185006F9D3B /* English */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; name = English; path = English.lproj/oWidget.rc; sourceTree = "<group>"; };
+		ACBB4CAF1A6CB47200CD657C /* oFontDropDown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oFontDropDown.cpp; path = Src/oFontDropDown.cpp; sourceTree = "<group>"; };
+		ACBB4CB01A6CB47200CD657C /* oFontDropDown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oFontDropDown.h; path = Src/oFontDropDown.h; sourceTree = "<group>"; };
 		ACD5FF2F1988AC1800B355FB /* oRGBAImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oRGBAImage.h; path = ../omnis.xcomp.framework/oRGBAImage.h; sourceTree = SOURCE_ROOT; };
 		ACD5FF301988AC1800B355FB /* oRGBAImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oRGBAImage.cpp; path = ../omnis.xcomp.framework/oRGBAImage.cpp; sourceTree = SOURCE_ROOT; };
 		ACE7A4901957BFB3008DD414 /* oImgLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oImgLayer.h; path = Src/oImgLayer.h; sourceTree = "<group>"; };
@@ -167,6 +170,7 @@
 				AC26287818DBF58100A5BC69 /* oDLNode.cpp */,
 				ACA0A87E18D0817B006F9D3B /* oDateTime.cpp */,
 				AC50A5211916FB59009F8C74 /* oDropDown.cpp */,
+				ACBB4CAF1A6CB47200CD657C /* oFontDropDown.cpp */,
 				ACE7A4911957BFB3008DD414 /* oImgLayer.cpp */,
 				ACE7A4941957BFD6008DD414 /* oImage.cpp */,
 				ACA0A87F18D0817B006F9D3B /* widget.cpp */,
@@ -190,6 +194,7 @@
 				AC26287618DBF57100A5BC69 /* oDLNode.h */,
 				ACA0A87B18D08160006F9D3B /* oDateTime.h */,
 				AC50A5201916FB48009F8C74 /* oDropDown.h */,
+				ACBB4CB01A6CB47200CD657C /* oFontDropDown.h */,
 				ACE7A4901957BFB3008DD414 /* oImgLayer.h */,
 				ACE7A4931957BFD6008DD414 /* oImage.h */,
 				ACA0A87C18D08160006F9D3B /* widget.h */,
@@ -294,6 +299,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC4B180617CC557D00E9447A /* FrameworkWndProc.cpp in Sources */,
+				ACBB4CB11A6CB47200CD657C /* oFontDropDown.cpp in Sources */,
 				AC4B180717CC557D00E9447A /* oBaseComponent.cpp in Sources */,
 				AC4B180817CC557D00E9447A /* oUTF8.cpp in Sources */,
 				AC4B180917CC557D00E9447A /* oXCompLib.cpp in Sources */,
@@ -504,7 +510,7 @@
 				96CA4E5F0907E8CC00C234AA /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Deployment;
 		};
 		96CF455E08FBABD1003AA3FE /* Build configuration list for PBXProject "oWidget_OS6" */ = {
 			isa = XCConfigurationList;
@@ -513,7 +519,7 @@
 				96CF456008FBABD1003AA3FE /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Deployment;
 		};
 		96D355F30908DD80006B6436 /* Build configuration list for PBXAggregateTarget "ReleaseBuild" */ = {
 			isa = XCConfigurationList;
@@ -522,7 +528,7 @@
 				96D355F50908DD80006B6436 /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Deployment;
 		};
 /* End XCConfigurationList section */
 	};

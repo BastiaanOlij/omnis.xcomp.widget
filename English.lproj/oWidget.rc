@@ -11,6 +11,7 @@ BEGIN
 	2002			"oDataList"
 	2003			"oDropDown"
 	2004            "oImage"
+    2005            "oFontDropDown"
 
 // properties
 	4000			"$localtime:our datetime in the local timezone"
@@ -33,6 +34,7 @@ BEGIN
 	4123			"$deselectOnGroupClick:Deselect lines when we click on a node"
 	4124			"$parentCalcs:calculations that identify a group as a parent group"
 	4200			"$displaycalc:If set, alternative display calculation"
+    4201            "$fontColumn:Column number containing our font name"
 	4300			"$layercount:Number of layers"
 	4301			"$currentLayer:Layer we have selected"
 	4302			"$layertype:Type of layer"

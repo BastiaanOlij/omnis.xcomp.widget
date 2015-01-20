@@ -44,6 +44,7 @@
 		ACD5FF311988AC1800B355FB /* oRGBAImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD5FF301988AC1800B355FB /* oRGBAImage.cpp */; };
 		ACE7A4921957BFB3008DD414 /* oImgLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE7A4911957BFB3008DD414 /* oImgLayer.cpp */; };
 		ACE7A4951957BFD6008DD414 /* oImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE7A4941957BFD6008DD414 /* oImage.cpp */; };
+		ACF252111A6DC5E500597AEC /* oRoundedButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACF2520F1A6DC5E500597AEC /* oRoundedButton.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -115,6 +116,8 @@
 		ACE7A4911957BFB3008DD414 /* oImgLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oImgLayer.cpp; path = Src/oImgLayer.cpp; sourceTree = "<group>"; };
 		ACE7A4931957BFD6008DD414 /* oImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oImage.h; path = Src/oImage.h; sourceTree = "<group>"; };
 		ACE7A4941957BFD6008DD414 /* oImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oImage.cpp; path = Src/oImage.cpp; sourceTree = "<group>"; };
+		ACF2520F1A6DC5E500597AEC /* oRoundedButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oRoundedButton.cpp; path = Src/oRoundedButton.cpp; sourceTree = "<group>"; };
+		ACF252101A6DC5E500597AEC /* oRoundedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oRoundedButton.h; path = Src/oRoundedButton.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				ACA0A87D18D0817B006F9D3B /* oCountButton.cpp */,
+				ACF2520F1A6DC5E500597AEC /* oRoundedButton.cpp */,
 				AC26287718DBF58100A5BC69 /* oDataList.cpp */,
 				AC26287818DBF58100A5BC69 /* oDLNode.cpp */,
 				ACA0A87E18D0817B006F9D3B /* oDateTime.cpp */,
@@ -190,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				ACA0A87A18D08160006F9D3B /* oCountButton.h */,
+				ACF252101A6DC5E500597AEC /* oRoundedButton.h */,
 				AC26287518DBF57100A5BC69 /* oDataList.h */,
 				AC26287618DBF57100A5BC69 /* oDLNode.h */,
 				ACA0A87B18D08160006F9D3B /* oDateTime.h */,
@@ -313,6 +318,7 @@
 				AC26287A18DBF58100A5BC69 /* oDLNode.cpp in Sources */,
 				AC50A5221916FB59009F8C74 /* oDropDown.cpp in Sources */,
 				AC7720351919C58100F48FA7 /* oDrawingCanvas.cpp in Sources */,
+				ACF252111A6DC5E500597AEC /* oRoundedButton.cpp in Sources */,
 				ACE7A4921957BFB3008DD414 /* oImgLayer.cpp in Sources */,
 				ACE7A4951957BFD6008DD414 /* oImage.cpp in Sources */,
 				ACD5FF311988AC1800B355FB /* oRGBAImage.cpp in Sources */,

@@ -74,7 +74,7 @@ bool	oDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 	qbool	isSelected = pInfo->mListPtr->isRowSelected(pInfo->mLine,qfalse);
 	
 	if (isSelected && mShowSelected) {
-		mCanvas->drawIcon(1655+cBMPicon16x16, qpoint(pInfo->mLineRect.left, pInfo->mLineRect.top));
+		mCanvas->drawIcon(1655+cBMPicon16x16, pInfo->mLineRect);
 	};
 	
 	// draw our text
@@ -209,8 +209,13 @@ qEvents *	oDropDown::events(void) {
 };
 
 void	oDropDown::evClick(qpoint pAt, EXTCompInfo* pECI) {
-	// need to find out if Omnis has an internal ID for its standard evClick
-	ECOsendEvent(mHWnd, oDD_evClick, 0, 0, EEN_EXEC_IMMEDIATE);	
+    // !BAS! I don't think this is called as we're leaving it up to Omnis to handle the mouse events...
+
+	bool enabled = (isEnabled() && isActive() && ECOisOMNISinTrueRuntime(mHWnd));
+    if (enabled) {
+        // need to find out if Omnis has an internal ID for its standard evClick
+        ECOsendEvent(mHWnd, oDD_evClick, 0, 0, EEN_EXEC_IMMEDIATE);
+    };
 };	
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

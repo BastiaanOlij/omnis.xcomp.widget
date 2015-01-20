@@ -174,7 +174,9 @@ qdim	oDataList::drawNode(EXTCompInfo* pECI, oDLNode &pNode, qdim pIndent, qdim p
 				
 				pNode.setTreeIconRect(treeRect);
 				
-				mCanvas->drawIcon((pNode.expanded() ? 1120 : 1121), qpoint(treeRect.left - mHorzScrollPos, treeRect.top));
+                qrect at = treeRect;
+                treeRect.left -= mHorzScrollPos;
+				mCanvas->drawIcon((pNode.expanded() ? 1120 : 1121), treeRect);
 			};
 			
 			headerHeight	+= mLineSpacing;	// add some spacing..
@@ -1428,18 +1430,10 @@ void	oDataList::evMouseMoved(qpoint pMovedTo) {
 
 // mouse click at this location
 void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
-	EXTfldval	enabledFld;
-	bool		enabled;
-	
-	/* 
+	/*
 	 Even if our field is disabled we still get these events. 
-	 We may move this check into our framework however I can imagine there will be situations where we still want
-	 to handle this to some extent even when the field is disabled 
-	 */
-	ECOgetProperty(mHWnd, anumEnabled, enabledFld);
-	enabled = enabledFld.getBool() == 2;
-	
-	if (enabled) {
+    */
+	if (isActive() && ECOisOMNISinTrueRuntime(mHWnd)) {
 		mMouseHitTest = this->doHitTest(pAt); // redo our hittest just in case
 		
 		// we must also update our list pointed to by $dataname. Note that if we're dealing with an item reference we'll be updating the same list twice..
@@ -1459,93 +1453,97 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 				
 				// maybe send a click event back to Omnis?
 			}; break;
-			case oDL_node: {		
-				if ((mDataList != NULL) && (mOmnisList != NULL) && mDeselectOnNodeClick) {
-					if (mShowSelected) {
-						// deselect all
-						qlong	rowCnt = mDataList->rowCnt();
+			case oDL_node: {
+                if (isEnabled()) {
+                    if ((mDataList != NULL) && (mOmnisList != NULL) && mDeselectOnNodeClick) {
+                        if (mShowSelected) {
+                            // deselect all
+                            qlong	rowCnt = mDataList->rowCnt();
 						
-						for (qlong row = 1; row<=rowCnt; row++) {
-							mDataList->selectRow(row, qfalse, qfalse);								
-							mOmnisList->selectRow(row, qfalse, qfalse);
-						};
-					} else {
-						// deselect the current row
-						qlong	row = mDataList->getCurRow();
-						if (row != 0) {
-							mDataList->selectRow(row, qfalse, qfalse);
-							mOmnisList->selectRow(row, qfalse, qfalse);						
-						};
-					};
+                            for (qlong row = 1; row<=rowCnt; row++) {
+                                mDataList->selectRow(row, qfalse, qfalse);
+                                mOmnisList->selectRow(row, qfalse, qfalse);
+                            };
+                        } else {
+                            // deselect the current row
+                            qlong	row = mDataList->getCurRow();
+                            if (row != 0) {
+                                mDataList->selectRow(row, qfalse, qfalse);
+                                mOmnisList->selectRow(row, qfalse, qfalse);
+                            };
+                        };
 					
-					mDataList->setCurRow(0);
-					mOmnisList->setCurRow(0);
+                        mDataList->setCurRow(0);
+                        mOmnisList->setCurRow(0);
 					
-					// and redraw
-					WNDinvalidateRect(mHWnd, NULL);
-				};
+                        // and redraw
+                        WNDinvalidateRect(mHWnd, NULL);
+                    };
 				
-				// let user know we clicked outside of our line
-				EXTfldval	evParam[1];
-				evParam[0].setLong(0);
-				ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_IMMEDIATE);				
+                    // let user know we clicked outside of our line
+                    EXTfldval	evParam[1];
+                    evParam[0].setLong(0);
+                    ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_IMMEDIATE);
+                };
 			}; break;
 			case oDL_row: {
-				//			addToTraceLog("Clicked on row %li at %li, %li",mMouseHitTest.mLineNo, pAt.h,pAt.v);
+                if (isEnabled()) {
+                    //			addToTraceLog("Clicked on row %li at %li, %li",mMouseHitTest.mLineNo, pAt.h,pAt.v);
 				
-				if ((mDataList != NULL) && (mOmnisList != NULL)) {
-					qlong	currentRow = mDataList->getCurRow();
-					qlong	rowCnt = mDataList->rowCnt();
+                    if ((mDataList != NULL) && (mOmnisList != NULL)) {
+                        qlong	currentRow = mDataList->getCurRow();
+                        qlong	rowCnt = mDataList->rowCnt();
 					
-					if ((isShift() == 1) && (currentRow!=0) && (mShowSelected)) {
-						// select from the current line to the line we clicked on, then make that line current
-						qlong	isSelected = mDataList->isRowSelected(currentRow, qfalse);
+                        if ((isShift() == 1) && (currentRow!=0) && (mShowSelected)) {
+                            // select from the current line to the line we clicked on, then make that line current
+                            qlong	isSelected = mDataList->isRowSelected(currentRow, qfalse);
 						
-						while (currentRow!=mMouseHitTest.mLineNo) {
-							if (currentRow > mMouseHitTest.mLineNo) {
-								currentRow--;
-							} else {
-								currentRow++;
-							};
+                            while (currentRow!=mMouseHitTest.mLineNo) {
+                                if (currentRow > mMouseHitTest.mLineNo) {
+                                    currentRow--;
+                                } else {
+                                    currentRow++;
+                                };
 							
-							mDataList->selectRow(currentRow, isSelected, qfalse);
-							mOmnisList->selectRow(currentRow, isSelected, qfalse);
-						};
+                                mDataList->selectRow(currentRow, isSelected, qfalse);
+                                mOmnisList->selectRow(currentRow, isSelected, qfalse);
+                            };
 						
-						// and make this our new current row
-						mDataList->setCurRow(mMouseHitTest.mLineNo);
-						mOmnisList->setCurRow(mMouseHitTest.mLineNo);
-					} else {
-						if ((isControl() != 0) && (mShowSelected)) { /* note, control on windows, cmnd on mac */
-							// toggle the line we clicked on
-							qlong	isSelected = mDataList->isRowSelected(mMouseHitTest.mLineNo, qfalse);
-							mDataList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
-							mOmnisList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
-						} else {
-							// deselect all lines...
-							for (qlong row = 1; row<=rowCnt; row++) {
-								mDataList->selectRow(row, qfalse, qfalse);	
-								mOmnisList->selectRow(row, qfalse, qfalse);
-							};
+                            // and make this our new current row
+                            mDataList->setCurRow(mMouseHitTest.mLineNo);
+                            mOmnisList->setCurRow(mMouseHitTest.mLineNo);
+                        } else {
+                            if ((isControl() != 0) && (mShowSelected)) { /* note, control on windows, cmnd on mac */
+                                // toggle the line we clicked on
+                                qlong	isSelected = mDataList->isRowSelected(mMouseHitTest.mLineNo, qfalse);
+                                mDataList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
+                                mOmnisList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
+                            } else {
+                                // deselect all lines...
+                                for (qlong row = 1; row<=rowCnt; row++) {
+                                    mDataList->selectRow(row, qfalse, qfalse);
+                                    mOmnisList->selectRow(row, qfalse, qfalse);
+                                };
 							
-							// select the line we clicked on and make it current
-							mDataList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
-							mOmnisList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
-						};
+                                // select the line we clicked on and make it current
+                                mDataList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
+                                mOmnisList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
+                            };
 						
-						// do make it the current row
-						mDataList->setCurRow(mMouseHitTest.mLineNo);							
-						mOmnisList->setCurRow(mMouseHitTest.mLineNo); 
-					};				
-				};
+                            // do make it the current row
+                            mDataList->setCurRow(mMouseHitTest.mLineNo);
+                            mOmnisList->setCurRow(mMouseHitTest.mLineNo);
+                        };
+                    };
 				
-				// and redraw
-				WNDinvalidateRect(mHWnd, NULL);
+                    // and redraw
+                    WNDinvalidateRect(mHWnd, NULL);
 				
-				// let user know we clicked on a line
-				EXTfldval	evParam[1];
-				evParam[0].setLong(mMouseHitTest.mLineNo);
-				ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_IMMEDIATE);				
+                    // let user know we clicked on a line
+                    EXTfldval	evParam[1];
+                    evParam[0].setLong(mMouseHitTest.mLineNo);
+                    ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_IMMEDIATE);
+                };
 			};	break;
 			default:
 				break;
@@ -1560,17 +1558,7 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 
 // mouse left button double clicked (return true if we finished handling this, false if we want Omnis internal logic)
 bool	oDataList::evDoubleClick(qpoint pAt, EXTCompInfo* pECI) {
-	EXTfldval	enabledFld;
-	bool		enabled;
-	
-	/* 
-	 Even if our field is disabled we still get these events. 
-	 We may move this check into our framework however I can imagine there will be situations where we still want
-	 to handle this to some extent even when the field is disabled 
-	 */
-	ECOgetProperty(mHWnd, anumEnabled, enabledFld);
-	enabled = enabledFld.getBool() == 2;
-	
+	bool enabled = (isEnabled() && isActive() && ECOisOMNISinTrueRuntime(mHWnd));
 	if (enabled) {
 		mMouseHitTest = this->doHitTest(pAt); // redo our hittest just in case
 		
@@ -1599,17 +1587,7 @@ bool	oDataList::evDoubleClick(qpoint pAt, EXTCompInfo* pECI) {
 
 // mouse right button pressed down (return true if we finished handling this, false if we want Omnis internal logic)
 bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {
-	EXTfldval	enabledFld;
-	bool		enabled;
-	
-	/* 
-	 Even if our field is disabled we still get these events. 
-	 We may move this check into our framework however I can imagine there will be situations where we still want
-	 to handle this to some extent even when the field is disabled 
-	 */
-	ECOgetProperty(mHWnd, anumEnabled, enabledFld);
-	enabled = enabledFld.getBool() == 2;
-	
+	bool enabled = (isEnabled() && isActive() && ECOisOMNISinTrueRuntime(mHWnd));
 	if (enabled) {
 		// make sure the line we're over is selected!
 		mMouseHitTest = this->doHitTest(pDownAt); // redo our hittest just in case
@@ -1676,17 +1654,7 @@ bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {
 
 // let us know a key was pressed. Return true if Omnis should not do anything with this keypress
 bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
-	EXTfldval	enabledFld;
-	bool		enabled;
-	
-	/* 
-	 Even if our field is disabled we still get these events. 
-	 We may move this check into our framework however I can imagine there will be situations where we still want
-	 to handle this to some extent even when the field is disabled 
-	*/
-	ECOgetProperty(mHWnd, anumEnabled, enabledFld);
-	enabled = enabledFld.getBool() == 2;
-	
+	bool enabled = (isEnabled() && isActive() && ECOisOMNISinTrueRuntime(mHWnd));
 	if (enabled) {
 		pchar	testchar = pKey->getPChar();
 		
@@ -1732,16 +1700,7 @@ bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
 
 // Can we drag from this location? Return false if we can't
 bool	oDataList::canDrag(qpoint pFrom) {
-	EXTfldval	enabledFld;
-	bool		enabled;
-	
-	/* 
-	 Even if our field is disabled we still get these events. 
-	 We may move this check into our framework however I can imagine there will be situations where we still want
-	 to handle this to some extent even when the field is disabled 
-	 */
-	ECOgetProperty(mHWnd, anumEnabled, enabledFld);
-	enabled = enabledFld.getBool() == 2;
+	bool enabled = (isEnabled() && isActive() && ECOisOMNISinTrueRuntime(mHWnd));
 	
 	if (enabled) {
 		switch (mMouseHitTest.mAbove) {

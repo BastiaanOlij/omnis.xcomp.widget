@@ -38,7 +38,7 @@ void oCountButton::doPaint(EXTCompInfo* pECI) {
 	oBaseVisComponent::doPaint(pECI);
 	
 	if (mIconID!=0) {
-		mCanvas->drawIcon(mIconID, qpoint(mClientRect.left, mClientRect.top));
+		mCanvas->drawIcon(mIconID, mClientRect);
 	};
 	
 	if (mCounter>0) {
@@ -223,7 +223,14 @@ qEvents *	oCountButton::events(void) {
 };
 
 void	oCountButton::evClick(qpoint pAt, EXTCompInfo* pECI) {
-	// need to find out if Omnis has an internal ID for its standard evClick
-	ECOsendEvent(mHWnd, oCB_evClick, 0, 0, EEN_EXEC_IMMEDIATE);	
+	/*
+	 Even if our field is disabled we still get these events. 
+	 We may move this check into our framework however I can imagine there will be situations where we still want
+	 to handle this to some extent even when the field is disabled 
+	 */
+	if (isEnabled() && isActive() && ECOisOMNISinTrueRuntime(mHWnd)) {
+        // need to find out if Omnis has an internal ID for its standard evClick
+        ECOsendEvent(mHWnd, oCB_evClick, 0, 0, EEN_EXEC_IMMEDIATE);
+    };
 };	
 

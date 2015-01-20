@@ -203,8 +203,13 @@ qEvents *	oFontDropDown::events(void) {
 };
 
 void	oFontDropDown::evClick(qpoint pAt, EXTCompInfo* pECI) {
-	// need to find out if Omnis has an internal ID for its standard evClick
-	ECOsendEvent(mHWnd, oFDD_evClick, 0, 0, EEN_EXEC_IMMEDIATE);
+    // !BAS! I don't think this is called as we're leaving it up to Omnis to handle the mouse events...
+    
+	bool enabled = (isEnabled() && isActive() && ECOisOMNISinTrueRuntime(mHWnd));
+    if (enabled) {
+        // need to find out if Omnis has an internal ID for its standard evClick
+        ECOsendEvent(mHWnd, oFDD_evClick, 0, 0, EEN_EXEC_IMMEDIATE);
+    };
 };	
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

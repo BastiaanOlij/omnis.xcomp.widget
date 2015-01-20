@@ -50,6 +50,19 @@ qint mainlib::ecm_connect(void) {
 	addComponent(lvComponent);	
 
 	lvComponent.componentType		= cObjType_Basic;
+	lvComponent.componentID			= 2006;
+	lvComponent.bitmapID			= 1;
+	lvComponent.flags				= 0;
+	lvComponent.groupResID			= 0;
+	lvComponent.newObjectFunction	= (void * (*)()) &(oRoundedButton::newObject);
+	lvComponent.mProperties			= oRoundedButton::properties();
+	lvComponent.mMethods			= oRoundedButton::methods();
+	lvComponent.mEventMethodID		= 10000;
+	lvComponent.mEvents				= oRoundedButton::events();
+	
+	addComponent(lvComponent);	
+
+	lvComponent.componentType		= cObjType_Basic;
 	lvComponent.componentID			= 2002;
 	lvComponent.bitmapID			= 1;
 	lvComponent.flags				= 0;

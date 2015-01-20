@@ -12,6 +12,7 @@ BEGIN
 	2003			"oDropDown"
 	2004            "oImage"
     2005            "oFontDropDown"
+	2006			"oRoundedButton"
 
 // properties
 	4000			"$localtime:our datetime in the local timezone"
@@ -19,7 +20,8 @@ BEGIN
 	4100			"$counter:counter to display"
 	4101			"$radius:radius"
 	4102			"$spacing:spacing"
-	4103			"$countColour:Background colour of our counter"
+	4103			"$countColor:Background color of our counter"
+    4104            "$fillColor:Fill color for our button"
 	4110			"$columncount:Number of columns we display"
 	4111			"$columncalcs:Our column calculations, tab delimited"
 	4112			"$columnwidths:Our columns widths"

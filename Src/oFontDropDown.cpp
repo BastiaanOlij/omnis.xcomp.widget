@@ -51,6 +51,10 @@ bool	oFontDropDown::drawListContents(EXTListLineInfo *pInfo, EXTCompInfo* pECI) 
             GDItextSpecStruct   textSpec = mCanvas->textSpec();
             str255              fontName;
             qpoint              leftTop(pInfo->mLineRect.left+10, pInfo->mLineRect.top);
+            
+#ifndef iswin32
+            leftTop.h += 2;
+#endif
         
             // get our font name
             EXTfldval fontNameFld;
@@ -77,6 +81,10 @@ bool	oFontDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
         GDItextSpecStruct   textSpec = mCanvas->textSpec();
         str255              fontName;
         qpoint              leftTop(pInfo->mLineRect.left+20, pInfo->mLineRect.top);
+
+#ifndef iswin32
+        leftTop.h += 2;
+#endif
         
         // get our font name
         EXTfldval fontNameFld;

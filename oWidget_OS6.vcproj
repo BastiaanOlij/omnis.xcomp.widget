@@ -243,11 +243,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\oFontDropDown.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\oImage.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Src\oImgLayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\oRoundedButton.cpp"
 				>
 			</File>
 			<File
@@ -337,11 +345,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\oFontDropDown.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\oImage.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Src\oImgLayer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\oRoundedButton.h"
 				>
 			</File>
 			<File

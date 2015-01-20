@@ -16,6 +16,7 @@
 oFontDropDown::oFontDropDown(void) {
 	mObjType			= cObjType_DropList;
     mFontColumn         = 1;
+	ECOlistSetLineHeight( mHWnd, 16);
 };
 
 // Destructor to clean up
@@ -49,8 +50,7 @@ bool	oFontDropDown::drawListContents(EXTListLineInfo *pInfo, EXTCompInfo* pECI) 
 				
             GDItextSpecStruct   textSpec = mCanvas->textSpec();
             str255              fontName;
-            qrect               where = pInfo->mLineRect;
-            qpoint              leftTop(where.left+10, where.top+3);
+            qpoint              leftTop(pInfo->mLineRect.left+10, pInfo->mLineRect.top);
         
             // get our font name
             EXTfldval fontNameFld;
@@ -76,8 +76,7 @@ bool	oFontDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 	if (text!=NULL) {
         GDItextSpecStruct   textSpec = mCanvas->textSpec();
         str255              fontName;
-		qrect               where = pInfo->mLineRect;
-        qpoint              leftTop(where.left+20, where.top+3);
+        qpoint              leftTop(pInfo->mLineRect.left+20, pInfo->mLineRect.top);
         
         // get our font name
         EXTfldval fontNameFld;
@@ -88,7 +87,7 @@ bool	oFontDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 
         // and draw our text
 		mCanvas->drawText(text->cString(), leftTop, textSpec);
-		
+
 		delete text;
 	};
 	

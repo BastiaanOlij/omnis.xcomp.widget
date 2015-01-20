@@ -49,16 +49,14 @@ bool	oDropDown::drawListContents(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 	};
 		
 	if (calcFld != NULL) {
+        GDItextSpecStruct   textSpec = mCanvas->textSpec();
+        qpoint              leftTop(pInfo->mLineRect.left+10, pInfo->mLineRect.top);
+
 		EXTfldval	result;
 		calcFld->evalCalculation(result, pECI->mLocLocp, NULL, qfalse);
-		qstring		text(result);
-			
-//			addToTraceLog("Result: %qs", &text);
-		qrect	where = pInfo->mLineRect;
-		where.left	+= 10;
-		where.top	+= 3;
+		qstring		text(result);		
 		
-		mCanvas->drawText(text.cString(), where, mTextColor);
+		mCanvas->drawText(text.cString(), leftTop, textSpec);
 		
 		delete calcFld;
 	};
@@ -80,11 +78,10 @@ bool	oDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 	// draw our text
 	qstring *	text = newStringFromParam(1, pECI); // first parameter contains our calculated text :)
 	if (text!=NULL) {	
-		qrect	where = pInfo->mLineRect;
-		where.left	+= 20;
-		where.top	+= 3;
-		
-		mCanvas->drawText(text->cString(), where, mTextColor);
+        GDItextSpecStruct   textSpec = mCanvas->textSpec();
+        qpoint              leftTop(pInfo->mLineRect.left+20, pInfo->mLineRect.top);
+	
+		mCanvas->drawText(text->cString(), leftTop, textSpec);
 		
 		delete text;
 	};

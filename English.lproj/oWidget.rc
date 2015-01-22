@@ -22,6 +22,7 @@ BEGIN
 	4102			"$spacing:spacing"
 	4103			"$countColor:Background color of our counter"
     4104            "$fillColor:Fill color for our button"
+    4105            "$iconPos:0 = left, 1 = right"
 	4110			"$columncount:Number of columns we display"
 	4111			"$columncalcs:Our column calculations, tab delimited"
 	4112			"$columnwidths:Our columns widths"

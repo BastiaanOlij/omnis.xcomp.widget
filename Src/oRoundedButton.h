@@ -18,6 +18,7 @@
 enum oRoundedButtonPropIDs {
 	oRB_radius			= 100,
     oRB_fillColor       = 101,
+    oRB_iconPos         = 102,
 };
 
 enum oRoundedButtonEventIDs {
@@ -27,10 +28,12 @@ enum oRoundedButtonEventIDs {
 class oRoundedButton : public oBaseVisComponent {
 private:
 	qulong						mIconID;
+    qjst                        mIconPos;
 	int							mRadius;
     qcol                        mButtonColor;
     qcol                        mBorderColor;
     qstring                     mText;
+    qlong                       mButtonMode;
 	
 public:
 	oRoundedButton(void);

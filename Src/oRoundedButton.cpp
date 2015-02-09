@@ -86,8 +86,6 @@ ECOproperty oRoundedButtonProperties[] = {
 	anumIconID,					0,		fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $iconid
     oRB_iconPos,                4105,   fftInteger,     EXTD_FLAG_PROPAPP
                                                         + EXTD_FLAG_INTCONSTANT,0,      preJstLeft, preJstRight, // $iconPos
-    anumBorderColor,            0,      fftInteger,     EXTD_FLAG_PROPAPP
-                                                        + EXTD_FLAG_PWINDCOL,   0,      0,          0,      // $bordercolor
     oRB_fillColor,              4104,   fftInteger,     EXTD_FLAG_PROPAPP
                                                         + EXTD_FLAG_PWINDCOL,   0,      0,          0,      // $fillcolor
 	oRB_radius,					4101,	fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $radius
@@ -125,11 +123,6 @@ qbool oRoundedButton::setProperty(qlong pPropID, EXTfldval &pNewValue,EXTCompInf
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
 		}; break;
-        case anumBorderColor: {
-            mBorderColor = pNewValue.getLong();
-            WNDinvalidateRect(mHWnd, NULL);
-            return qtrue;
-        }; break;
         case oRB_fillColor: {
             mButtonColor = pNewValue.getLong();
             WNDinvalidateRect(mHWnd, NULL);
@@ -155,33 +148,36 @@ qbool oRoundedButton::setProperty(qlong pPropID, EXTfldval &pNewValue,EXTCompInf
 };
 
 // get the value of a property
-void oRoundedButton::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
+qbool oRoundedButton::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 	// most anum properties are managed by Omnis but some we need to do ourselves...
 	
 	switch (pPropID) {
         case anumText: {
             pGetValue.setChar((qchar *)mText.cString(), mText.length());
+            return true;
         }; break;
 		case anumIconID: {
 			pGetValue.setLong(mIconID);
+            return true;
 		}; break;
         case oRB_iconPos: {
             pGetValue.setLong(mIconPos);
-        }; break;
-        case anumBorderColor: {
-            pGetValue.setLong(mBorderColor);
+            return true;
         }; break;
         case oRB_fillColor: {
             pGetValue.setLong(mButtonColor);
+            return true;
         }; break;
 		case oRB_radius: {
 			pGetValue.setLong(mRadius);
+            return true;
 		}; break;
         case anumButtonmode: {
 			pGetValue.setLong(mButtonMode);
+            return true;
 		}; break;
 		default:
-			oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
+			return oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
 			
 			break;
 	};

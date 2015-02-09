@@ -31,7 +31,6 @@ private:
     qjst                        mIconPos;
 	int							mRadius;
     qcol                        mButtonColor;
-    qcol                        mBorderColor;
     qstring                     mText;
     qlong                       mButtonMode;
 	
@@ -46,7 +45,7 @@ public:
 	// properties
 	static  qProperties *		properties(void);													// return an array of property data
 	virtual qbool				setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pECI);	// set the value of a property
-	virtual void				getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI);	// get the value of a property
+	virtual qbool				getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI);	// get the value of a property
 	
 	// methods
 	static  qMethods *			methods(void);														// return array of method meta data

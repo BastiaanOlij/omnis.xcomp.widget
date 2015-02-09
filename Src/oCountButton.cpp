@@ -138,27 +138,32 @@ qbool oCountButton::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* 
 };
 
 // get the value of a property
-void oCountButton::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
+qbool oCountButton::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 	// most anum properties are managed by Omnis but some we need to do ourselves...
 	
 	switch (pPropID) {
 		case anumIconID: {
 			pGetValue.setLong(mIconID);
+            return true;
 		}; break;
 		case oCB_counter: {
 			pGetValue.setLong(mCounter);
+            return true;
 		}; break;
 		case oCB_radius: {
 			pGetValue.setLong(mRadius);
+            return true;
 		}; break;
 		case oCB_spacing: {
 			pGetValue.setLong(mSpacing);
+            return true;
 		}; break;
 		case oCB_countColour: {
 			pGetValue.setLong(mCountColour);
+            return true;
 		}; break;
 		default:
-			oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
+			return oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
 			
 			break;
 	};

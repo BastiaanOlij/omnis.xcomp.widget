@@ -47,7 +47,7 @@ public:
 	static  qProperties *		properties(void);													// return an array of property data
 	virtual qbool				canAssign(qlong pPropID);											// return true/false if a property can be written too
 	virtual qbool				setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pECI);	// set the value of a property
-	virtual void				getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI);	// get the value of a property
+	virtual qbool				getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI);	// get the value of a property
 	
 	// methods
 	static  qMethods *			methods(void);														// return array of method meta data

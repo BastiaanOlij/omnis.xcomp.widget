@@ -956,7 +956,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 };
 
 // get the value of a property
-void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
+qbool oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 	// most anum properties are managed by Omnis but some we need to do ourselves...
 	
 	switch (pPropID) {
@@ -978,6 +978,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			
 			pGetValue.setChar((qchar *)columncalcs.cString(), columncalcs.length());
 			
+            return true;
 		}; break;
 		case oDL_columnwidths: {
 			qstring		widths = QTEXT("");;
@@ -994,6 +995,7 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			};
 						
 			pGetValue.setChar((qchar *)widths.cString(), widths.length());					
+            return true;
 		}; break;
 		case oDL_columnaligns: {
 			qstring		aligns = QTEXT("");
@@ -1016,12 +1018,15 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			};
 			
 			pGetValue.setChar((qchar *)aligns.cString(), aligns.length());					
+            return true;
 		}; break;
 		case oDL_maxrowheight: {
 			pGetValue.setLong(mMaxRowHeight);
+            return true;
 		}; break;
 		case oDL_columnprefix: {
 			pGetValue.setChar((qchar *) mColumnPrefix.cString(), mColumnPrefix.length());
+            return true;
 		}; break;
 		case oDL_verticalExtend: {
 			qstring bools;
@@ -1035,9 +1040,11 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			}
 
 			pGetValue.setChar((qchar *) bools.cString(), bools.length());
+            return true;
 		}; break;
 		case oDL_evenColor: {
 			pGetValue.setLong(mEvenColor);
+            return true;
 		}; break;
 		case oDL_groupcalcs: {
 			qstring	groupcalcs;
@@ -1054,21 +1061,27 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			};
 			
 			pGetValue.setChar((qchar *)groupcalcs.cString(), groupcalcs.length());
+            return true;
 		}; break;
 		case oDL_treeIndent:{
 			pGetValue.setLong(mIndent);
+            return true;
 		}; break;
 		case anumLineHtExtra: {
 			pGetValue.setLong(mLineSpacing);
+            return true;
 		}; break;
 		case anumShowselected: {
 			pGetValue.setBool(mShowSelected ? 2 : 1);
+            return true;
 		}; break;
 		case oDL_filtercalc: {
 			pGetValue.setChar((qchar *)mFilter.cString(), mFilter.length());
+            return true;
 		}; break;
 		case oDL_deselNodeClick: {
 			pGetValue.setBool(mDeselectOnNodeClick ? 2 : 1);
+            return true;
 		}; break;
 		case oDL_parentCalcs: {
 			qstring	parentcalcs;
@@ -1092,10 +1105,10 @@ void oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			};
 			
 			pGetValue.setChar((qchar *)parentcalcs.cString(), parentcalcs.length());
-			
+            return true;
 		}; break;
 		default:
-			oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
+			return oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
 			
 			break;
 	};

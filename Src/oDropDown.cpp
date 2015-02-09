@@ -131,18 +131,20 @@ qbool oDropDown::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 };
 
 // get the value of a property
-void oDropDown::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
+qbool oDropDown::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 	// most anum properties are managed by Omnis but some we need to do ourselves...
 	
 	switch (pPropID) {
 		case anumShowselected: {
 			pGetValue.setBool(mShowSelected ? 2 : 1);
+            return true;
 		}; break;
 		case oDD_displayCalc: {
 			pGetValue.setChar((qchar *) mDisplayCalc.cString(), mDisplayCalc.length());
+            return true;
 		}; break;
 		default:
-			oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
+			return oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
 			
 			break;
 	};

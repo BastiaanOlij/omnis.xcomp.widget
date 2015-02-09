@@ -171,7 +171,7 @@ qbool oDateTime::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 };
 	
 // get the value of a property
-void oDateTime::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
+qbool oDateTime::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 	// most anum properties are managed by Omnis but some we need to do ourselves...
 		
 	switch (pPropID) {
@@ -182,6 +182,7 @@ void oDateTime::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			TimeStampToOmnis(*timestruct,omnisstamp);
 			
 			pGetValue.setDate(omnisstamp, dpFdtimeC);
+            return true;
 		}; break;
 		case oDT_utctime: {
 			struct tm *		timestruct = gmtime(&mTimestamp);
@@ -190,9 +191,10 @@ void oDateTime::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI
 			TimeStampToOmnis(*timestruct,omnisstamp);
 			
 			pGetValue.setDate(omnisstamp, dpFdtimeC);
+            return true;
 		}; break;
 		default:
-			oBaseNVComponent::getProperty(pPropID, pGetValue, pECI);
+			return oBaseNVComponent::getProperty(pPropID, pGetValue, pECI);
 				
 			break;
 	};

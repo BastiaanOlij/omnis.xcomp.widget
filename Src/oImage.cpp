@@ -233,10 +233,11 @@ qbool	oImage::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pECI) 
 };
 
 // get the value of a property
-void	oImage::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
+qbool oImage::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 	switch (pPropID) {
 		case oIM_layerCount: {
 			pGetValue.setLong(mLayers.size());
+            return true;
 		}; break;
 		case oIM_image: {
 			// create our image based on the size of our first layer
@@ -259,44 +260,55 @@ void	oImage::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 					pGetValue.setEmpty(fftBinary, 0);
 				};
 			};
+            return true;
 		}; break;
 		case oIM_imageWidth: {
 			pGetValue.setLong(mImageWidth);
+            return true;
 		}; break;
 		case oIM_imageHeight: {
 			pGetValue.setLong(mImageHeight);
+            return true;
 		}; break;
 		case oIM_currentlayer: {
 			pGetValue.setLong(mCurrentLayer);
+            return true;
 		}; break;
 		case oIM_layertype: {
 			oImgLayer	*layer = mLayers[mCurrentLayer-1];
 			qstring		layertype (layer->layerType());
 			pGetValue.setChar((qchar *)layertype.cString(), layertype.length());								
+            return true;
 		}; break;
 		case oIM_layerenabled: {
 			oImgLayer	*layer = mLayers[mCurrentLayer-1];
 			pGetValue.setBool(layer->enabled() ? 2 : 1);
-		}; break;			
+            return true;
+		}; break;
 		case oIM_layerleft: {
 			oImgLayer	*layer = mLayers[mCurrentLayer-1];
 			pGetValue.setLong(layer->left());
+            return true;
 		}; break;
 		case oIM_layertop: {
 			oImgLayer	*layer = mLayers[mCurrentLayer-1];
 			pGetValue.setLong(layer->top());
+            return true;
 		}; break;
 		case oIM_layerwidth: {
 			oImgLayer	*layer = mLayers[mCurrentLayer-1];
 			pGetValue.setLong(layer->width());
+            return true;
 		}; break;
 		case oIM_layerheight: {
 			oImgLayer	*layer = mLayers[mCurrentLayer-1];
 			pGetValue.setLong(layer->height());
+            return true;
 		}; break;
 		case oIM_layercontents: {
 			oImgLayer	*layer = mLayers[mCurrentLayer-1];
 			layer->getContents(pGetValue);
+            return true;
 		}; break;
 		default:
 			return oBaseNVComponent::getProperty(pPropID, pGetValue, pECI);

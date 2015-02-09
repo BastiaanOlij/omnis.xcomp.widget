@@ -113,7 +113,7 @@ public:
 	// properties
 	static  qProperties *		properties(void);													// return an array of property data
 	virtual qbool				setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pECI);	// set the value of a property
-	virtual void				getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI);	// get the value of a property
+	virtual qbool				getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI);	// get the value of a property
 
 	virtual qbool				setPrimaryData(EXTfldval &pNewValue);								// Changes our primary data
 	virtual qbool				getPrimaryData(EXTfldval &pGetValue);								// Retrieves our primary data, return false if we do not manage a copy

@@ -138,15 +138,16 @@ qbool oFontDropDown::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo*
 };
 
 // get the value of a property
-void oFontDropDown::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
+qbool oFontDropDown::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
 	// most anum properties are managed by Omnis but some we need to do ourselves...
 	
 	switch (pPropID) {
 		case oFDD_fontColumn: {
 			pGetValue.setLong(mFontColumn);
+            return true;
 		}; break;
 		default:
-			oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
+			return oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
 			
 			break;
 	};

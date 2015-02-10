@@ -15,7 +15,7 @@
 // Constructor to initialize object
 oRoundedButton::oRoundedButton(void) {
     mShowName       = false;
-	mBKTheme		= WND_BK_PARENT;
+	mBKTheme		= WND_BK_PARENT;    /* now that we use our build in properties properly we need to find out how to properly default this */
 	mIconID			= 0;
     mIconPos        = jstLeft;
 	mRadius			= 8;

@@ -17,6 +17,7 @@
 // Constructor to initialize object
 oDropDown::oDropDown(void) {
 	mObjType			= cObjType_DropList;
+    mBKTheme            = WND_BK_CONTROL;
 	mDisplayCalc		= "";
 };
 

@@ -15,6 +15,7 @@
 // Constructor to initialize object
 oFontDropDown::oFontDropDown(void) {
 	mObjType			= cObjType_DropList;
+    mBKTheme            = WND_BK_CONTROL;
     mFontColumn         = 1;
 	ECOlistSetLineHeight( mHWnd, 16);
 };

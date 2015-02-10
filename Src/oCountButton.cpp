@@ -12,7 +12,7 @@
 
 // Constructor to initialize object
 oCountButton::oCountButton(void) {
-	mBKTheme		= WND_BK_PARENT;
+	mBKTheme		= WND_BK_PARENT; /* now that we use our build in properties properly we need to find out how to properly default this */
 	mCounter		= 0;
 	mIconID			= 0;
 	mRadius			= 5;
@@ -86,7 +86,7 @@ qProperties * oCountButton::properties(void) {
 
 // set the value of a property
 qbool oCountButton::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pECI) {
-	// most anum properties are managed by Omnis but some we need to do ourselves, no idea why...
+	// most anum properties are managed by Omnis but some we need to do ourselves...
 	
 	switch (pPropID) {
 		case anumIconID: {

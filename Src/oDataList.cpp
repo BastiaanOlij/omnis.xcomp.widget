@@ -962,6 +962,7 @@ qbool oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pEC
 	switch (pPropID) {
 		case oDL_columncount: {
 			pGetValue.setLong(mColumnCount);
+			return true;
 		}; break;
 		case oDL_columncalcs: {
 			qstring	columncalcs;

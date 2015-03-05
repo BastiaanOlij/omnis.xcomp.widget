@@ -13,6 +13,7 @@ BEGIN
 	2004            "oImage"
     2005            "oFontDropDown"
 	2006			"oRoundedButton"
+    2007            "oTextEdit"
 
 // properties
 	4000			"$localtime:our datetime in the local timezone"
@@ -50,6 +51,8 @@ BEGIN
 	4309			"$image:Our image"
 	4310			"$imageWidth:Width of our image (0 = use layer 1)"
 	4311			"$imageHeight:Height of our image (0 = use layer 1)"
+    4400            "$lefticonid:IconId for left icon"
+    4401            "$righticonid:IconId for right icon"
 
 // Events
 	5000			"click:User clicked on our field"
@@ -85,6 +88,13 @@ BEGIN
 	10020			"on evClick ;; Line has been clicked"
 	10021			"Quit event handler (Pass to next handler)"
 	10022			" "
+
+    10030           "on evBefore"
+	10031			"Quit event handler (Pass to next handler)"
+	10032			""
+    10033           "on evAfter"
+	10034			"Quit event handler (Pass to next handler)"
+	10035			" "
 
 // Entry point
 	31000			"FrameworkWndProc"

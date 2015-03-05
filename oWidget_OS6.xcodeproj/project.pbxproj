@@ -28,6 +28,7 @@
 		AC1FE41E18D07ACD007C0416 /* oBaseVisComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC1FE41A18D07ACD007C0416 /* oBaseVisComponent.cpp */; };
 		AC26287918DBF58100A5BC69 /* oDataList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC26287718DBF58100A5BC69 /* oDataList.cpp */; };
 		AC26287A18DBF58100A5BC69 /* oDLNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC26287818DBF58100A5BC69 /* oDLNode.cpp */; };
+		AC29263D1A887492004AC6AD /* oTextEdit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC29263B1A887492004AC6AD /* oTextEdit.cpp */; };
 		AC4B180617CC557D00E9447A /* FrameworkWndProc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC4B17FA17CC557D00E9447A /* FrameworkWndProc.cpp */; };
 		AC4B180717CC557D00E9447A /* oBaseComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC4B17FB17CC557D00E9447A /* oBaseComponent.cpp */; };
 		AC4B180817CC557D00E9447A /* oUTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC4B17FE17CC557D00E9447A /* oUTF8.cpp */; };
@@ -84,6 +85,8 @@
 		AC26287618DBF57100A5BC69 /* oDLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDLNode.h; path = Src/oDLNode.h; sourceTree = "<group>"; };
 		AC26287718DBF58100A5BC69 /* oDataList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDataList.cpp; path = Src/oDataList.cpp; sourceTree = "<group>"; };
 		AC26287818DBF58100A5BC69 /* oDLNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDLNode.cpp; path = Src/oDLNode.cpp; sourceTree = "<group>"; };
+		AC29263B1A887492004AC6AD /* oTextEdit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oTextEdit.cpp; path = Src/oTextEdit.cpp; sourceTree = "<group>"; };
+		AC29263C1A887492004AC6AD /* oTextEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oTextEdit.h; path = Src/oTextEdit.h; sourceTree = "<group>"; };
 		AC4B17FA17CC557D00E9447A /* FrameworkWndProc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameworkWndProc.cpp; path = ../omnis.xcomp.framework/FrameworkWndProc.cpp; sourceTree = SOURCE_ROOT; };
 		AC4B17FB17CC557D00E9447A /* oBaseComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseComponent.cpp; path = ../omnis.xcomp.framework/oBaseComponent.cpp; sourceTree = SOURCE_ROOT; };
 		AC4B17FC17CC557D00E9447A /* oBaseComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseComponent.h; path = ../omnis.xcomp.framework/oBaseComponent.h; sourceTree = SOURCE_ROOT; };
@@ -177,6 +180,7 @@
 				ACBB4CAF1A6CB47200CD657C /* oFontDropDown.cpp */,
 				ACE7A4911957BFB3008DD414 /* oImgLayer.cpp */,
 				ACE7A4941957BFD6008DD414 /* oImage.cpp */,
+				AC29263B1A887492004AC6AD /* oTextEdit.cpp */,
 				ACA0A87F18D0817B006F9D3B /* widget.cpp */,
 			);
 			name = Source;
@@ -202,6 +206,7 @@
 				ACBB4CB01A6CB47200CD657C /* oFontDropDown.h */,
 				ACE7A4901957BFB3008DD414 /* oImgLayer.h */,
 				ACE7A4931957BFD6008DD414 /* oImage.h */,
+				AC29263C1A887492004AC6AD /* oTextEdit.h */,
 				ACA0A87C18D08160006F9D3B /* widget.h */,
 			);
 			name = Headers;
@@ -307,6 +312,7 @@
 				ACBB4CB11A6CB47200CD657C /* oFontDropDown.cpp in Sources */,
 				AC4B180717CC557D00E9447A /* oBaseComponent.cpp in Sources */,
 				AC4B180817CC557D00E9447A /* oUTF8.cpp in Sources */,
+				AC29263D1A887492004AC6AD /* oTextEdit.cpp in Sources */,
 				AC4B180917CC557D00E9447A /* oXCompLib.cpp in Sources */,
 				AC4B180A17CC557D00E9447A /* qString.cpp in Sources */,
 				AC1FE41D18D07ACD007C0416 /* oBaseNVComponent.cpp in Sources */,

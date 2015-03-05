@@ -19,5 +19,6 @@
 #include "oDropDown.h"
 #include "oFontDropDown.h"
 #include "oImage.h"
+#include "oTextEdit.h"
 
 #endif

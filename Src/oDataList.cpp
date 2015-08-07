@@ -1760,7 +1760,13 @@ qlong	oDataList::evSetDragValue(FLDdragDrop *pDragInfo, EXTCompInfo* pECI) {
 	// will this get destroyed by omnis?? if not we may want to solve this differently...
 	qrgn *region = new qrgn;
 	GDIsetRectRgn(region, left, top, left+width, top+32);
-	
+
+	/* free any shape Omnis may have set, we're replacing it with our own*/
+	if (pDragInfo->mDragShape!=0) {
+		delete pDragInfo->mDragShape;
+		pDragInfo->mDragShape = 0;
+	};
+
 	pDragInfo->mDragShape = region;
 	pDragInfo->mAllowsBitmapDragging = 0;
 	
@@ -1775,11 +1781,11 @@ qlong	oDataList::evSetDragValue(FLDdragDrop *pDragInfo, EXTCompInfo* pECI) {
 
 // Ended dragging, return -1 if we leave it up to Omnis to handle this
 qlong	oDataList::evEndDrag(FLDdragDrop *pDragInfo) {
-	// free up our memory
-	if (pDragInfo->mDragShape!=0) {
-		delete pDragInfo->mDragShape;
-		pDragInfo->mDragShape = 0;
-	};
+	// Let Omnis free this up, it requires the info to clean it up....
+//	if (pDragInfo->mDragShape!=0) {
+//		delete pDragInfo->mDragShape;
+//		pDragInfo->mDragShape = 0;
+//	};
 	
 	// rest Omnis can do...
 	return -1; 

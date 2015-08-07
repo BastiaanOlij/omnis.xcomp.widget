@@ -1,6 +1,7 @@
 /Release
 /*.suo
 /*.sln
+/*.sdf
 /URel
 /DRel
 /*.ncb

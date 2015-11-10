@@ -6,20 +6,6 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		96D355F20908DD62006B6436 /* ReleaseBuild */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 96D355F30908DD80006B6436 /* Build configuration list for PBXAggregateTarget "ReleaseBuild" */;
-			buildPhases = (
-			);
-			dependencies = (
-				9658838409BC64BB0063770F /* PBXTargetDependency */,
-			);
-			name = ReleaseBuild;
-			productName = ReleaseBuild;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		96CA4E550907E8CC00C234AA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		96CA4E5A0907E8CC00C234AA /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
@@ -60,16 +46,6 @@
 			script = "/Developer/Tools/omnisrc.app/Contents/MacOS/omnisrc INPUT_FILE_PATH TEMP_FILE_DIR REZ_SEARCH_PATHS XCOMP\ncp $TEMP_FILE_DIR/omnisrc/xcomp.rsrc $INSTALL_DIR/$CONTENTS_FOLDER_PATH/Resources";
 		};
 /* End PBXBuildRule section */
-
-/* Begin PBXContainerItemProxy section */
-		9658838309BC64BB0063770F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 96CA4E530907E8CC00C234AA;
-			remoteInfo = UnicodeCore;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -280,7 +256,6 @@
 			projectRoot = "";
 			targets = (
 				96CA4E530907E8CC00C234AA /* UnicodeCore */,
-				96D355F20908DD62006B6436 /* ReleaseBuild */,
 			);
 		};
 /* End PBXProject section */
@@ -326,14 +301,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		9658838409BC64BB0063770F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 96CA4E530907E8CC00C234AA /* UnicodeCore */;
-			targetProxy = 9658838309BC64BB0063770F /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
@@ -389,6 +356,7 @@
 				OTHER_CFLAGS = (
 					"-fshort-wchar",
 					"-Dismach_o",
+					"-DOMNISSDK=60",
 					"-Wno-comment",
 				);
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -429,6 +397,7 @@
 				OTHER_CFLAGS = (
 					"-fshort-wchar",
 					"-Dismach_o",
+					"-DOMNISSDK=60",
 					"-Wno-comment",
 				);
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -468,44 +437,6 @@
 			};
 			name = Deployment;
 		};
-		96D355F40908DD80006B6436 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ReleaseBuild;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Development;
-		};
-		96D355F50908DD80006B6436 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ReleaseBuild;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Deployment;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -523,15 +454,6 @@
 			buildConfigurations = (
 				96CF455F08FBABD1003AA3FE /* Development */,
 				96CF456008FBABD1003AA3FE /* Deployment */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
-		};
-		96D355F30908DD80006B6436 /* Build configuration list for PBXAggregateTarget "ReleaseBuild" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				96D355F40908DD80006B6436 /* Development */,
-				96D355F50908DD80006B6436 /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Deployment;

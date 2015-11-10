@@ -28,19 +28,12 @@ oDataList::oDataList(void) {
 	mEvenColor				= GDI_COLOR_QDEFAULT;
 	mIndent					= 20;
 	mLineSpacing			= 4;
-	mDataList				= 0;
 	mOmnisList				= 0;
 	mLastCurrentLineTop		= 0;
 };
 
 // Destructor to clean up
 oDataList::~oDataList(void) {
-	// clean up!
-	if (mDataList != NULL) {
-		delete mDataList;
-		mDataList	= 0;
-	};
-
 	clearGroupCalcs();
 	clearColumnCalcs();
 };
@@ -359,8 +352,8 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 		
 	if ( ECOisDesign(mHWnd) ) {
 		// Don't draw anything else..
-	} else {		
-		// We ignore our mDataList, we just use our $dataname list directly here...
+	} else {
+        // Get our omnis list
 		mOmnisList = getDataList(pECI);
 					
 		if (mOmnisList==0) {
@@ -369,6 +362,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 			qlong		rowCount = mOmnisList->rowCnt();
 			qlong		currentRow = mOmnisList->getCurRow();
 			
+            mRebuildNodes = true; // for now always true, we need to improve on this somehow!
 			if (mRebuildNodes) {
 				// Update our nodes7
 				mRootNode.unTouchChildren(); // untouch children
@@ -1119,66 +1113,12 @@ qbool oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pEC
 //
 // $dataname list
 //
-// We keep a copy of our list because if we do not, when Omnis asks us for our copy, we loose our list. 
-// The documentation states that if you return 0 from ECM_GETPRIMARYDATA Omnis wouldn't but I'm missing something
-// here as I couldn't get this to work.
-//
-// We do our drawing based directly on $dataname but we must make sure both our $dataname list and our internal
-// copy are updated when we make changes to our selection
+// We no longer keep a copy of our list data within our component but purely access it by reference.
+// This prevents a whole lot of copying of data but does require we redraw the display at set times
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Changes our primary data
-qbool	oDataList::setPrimaryData(EXTfldval &pNewValue) {
-//	addToTraceLog("setPrimaryData"); // just for debugging..
-
-	// Clear our data list.
-	if (mDataList != NULL) {
-		delete mDataList;
-		mDataList = 0;
-	};
-	
-	// testing
-/*	ffttype		datatype;
-	qshort		datasubtype;
-	 
-	pNewValue.getType(datatype, &datasubtype);
-	qstring		msg = QTEXT("Data type pNewValue: ");
-	msg += fldTypeName(datatype);
-	addToTraceLog(msg.c_str());	
-*/
-	
-	// Make sure we rebuild our node tree next time we draw..
-	mRebuildNodes			= true;
-	
-	// Copy our variable as per usual
-	qbool retval = oBaseVisComponent::setPrimaryData(pNewValue);
-	
-	// Keep a copy of the pointer to our data list...
-	mDataList = mPrimaryData.getList(qfalse);
-	if (mDataList == NULL) {
-		addToTraceLog("$dataname is not a list!");
-	};
-	
-	WNDinvalidateRect(mHWnd, NULL);	
-	
-	return retval;
-};
-
-// Retrieves our primary data, return false if we do not manage a copy
-qbool	oDataList::getPrimaryData(EXTfldval &pGetValue) {
-//	addToTraceLog("getPrimaryData"); // just for debugging..
-
-	return oBaseVisComponent::getPrimaryData(pGetValue);
-};
-
-// Compare with our primary data, return DATA_CMPDATA_SAME if same
-qlong	oDataList::cmpPrimaryData(EXTfldval &pWithValue) {
-//	addToTraceLog("cmpPrimaryData"); // just for debugging..
-
-//	return oBaseVisComponent::cmpPrimaryData(pWithValue);
-	return DATA_CMPDATA_DIFFER; // we need a good list compare, for now just always assume its changed..
-};
+// ...
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // methods
@@ -1469,25 +1409,22 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 			}; break;
 			case oDL_node: {
                 if (isEnabled()) {
-                    if ((mDataList != NULL) && (mOmnisList != NULL) && mDeselectOnNodeClick) {
+                    if ((mOmnisList != NULL) && mDeselectOnNodeClick) {
                         if (mShowSelected) {
                             // deselect all
-                            qlong	rowCnt = mDataList->rowCnt();
+                            qlong	rowCnt = mOmnisList->rowCnt();
 						
                             for (qlong row = 1; row<=rowCnt; row++) {
-                                mDataList->selectRow(row, qfalse, qfalse);
                                 mOmnisList->selectRow(row, qfalse, qfalse);
                             };
                         } else {
                             // deselect the current row
-                            qlong	row = mDataList->getCurRow();
+                            qlong	row = mOmnisList->getCurRow();
                             if (row != 0) {
-                                mDataList->selectRow(row, qfalse, qfalse);
                                 mOmnisList->selectRow(row, qfalse, qfalse);
                             };
                         };
 					
-                        mDataList->setCurRow(0);
                         mOmnisList->setCurRow(0);
 					
                         // and redraw
@@ -1504,13 +1441,13 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
                 if (isEnabled()) {
                     //			addToTraceLog("Clicked on row %li at %li, %li",mMouseHitTest.mLineNo, pAt.h,pAt.v);
 				
-                    if ((mDataList != NULL) && (mOmnisList != NULL)) {
-                        qlong	currentRow = mDataList->getCurRow();
-                        qlong	rowCnt = mDataList->rowCnt();
+                    if (mOmnisList != NULL) {
+                        qlong	currentRow = mOmnisList->getCurRow();
+                        qlong	rowCnt = mOmnisList->rowCnt();
 					
                         if ((isShift() == 1) && (currentRow!=0) && (mShowSelected)) {
                             // select from the current line to the line we clicked on, then make that line current
-                            qlong	isSelected = mDataList->isRowSelected(currentRow, qfalse);
+                            qlong	isSelected = mOmnisList->isRowSelected(currentRow, qfalse);
 						
                             while (currentRow!=mMouseHitTest.mLineNo) {
                                 if (currentRow > mMouseHitTest.mLineNo) {
@@ -1519,33 +1456,27 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
                                     currentRow++;
                                 };
 							
-                                mDataList->selectRow(currentRow, isSelected, qfalse);
                                 mOmnisList->selectRow(currentRow, isSelected, qfalse);
                             };
 						
                             // and make this our new current row
-                            mDataList->setCurRow(mMouseHitTest.mLineNo);
                             mOmnisList->setCurRow(mMouseHitTest.mLineNo);
                         } else {
                             if ((isControl() != 0) && (mShowSelected)) { /* note, control on windows, cmnd on mac */
                                 // toggle the line we clicked on
-                                qlong	isSelected = mDataList->isRowSelected(mMouseHitTest.mLineNo, qfalse);
-                                mDataList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
+                                qlong	isSelected = mOmnisList->isRowSelected(mMouseHitTest.mLineNo, qfalse);
                                 mOmnisList->selectRow(mMouseHitTest.mLineNo, !isSelected, qfalse);
                             } else {
                                 // deselect all lines...
                                 for (qlong row = 1; row<=rowCnt; row++) {
-                                    mDataList->selectRow(row, qfalse, qfalse);
                                     mOmnisList->selectRow(row, qfalse, qfalse);
                                 };
 							
                                 // select the line we clicked on and make it current
-                                mDataList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
                                 mOmnisList->selectRow(mMouseHitTest.mLineNo, qtrue, qfalse);
                             };
 						
                             // do make it the current row
-                            mDataList->setCurRow(mMouseHitTest.mLineNo);
                             mOmnisList->setCurRow(mMouseHitTest.mLineNo);
                         };
                     };
@@ -1610,7 +1541,7 @@ bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {
 		mOmnisList = getDataList(pECI);
 		
 		qlong	currentLine = mOmnisList->getCurRow();
-		qlong	rowCnt = mDataList->rowCnt();
+		qlong	rowCnt = mOmnisList->rowCnt();
 		qlong	newCurrentLine = 0;
 		bool	selectionChanged = false;
 		
@@ -1618,19 +1549,17 @@ bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {
 			newCurrentLine = mMouseHitTest.mLineNo;
 		};
 		
-		if (newCurrentLine > 0 && mDataList->isRowSelected(newCurrentLine, qfalse)) {
+		if (newCurrentLine > 0 && mOmnisList->isRowSelected(newCurrentLine, qfalse)) {
 			// The line we clicked on is marked as selected? Then we keep the selection as is.
 		} else {
 			for (qlong row = 1; row<=rowCnt; row++) {
 				if (row == newCurrentLine) {
-					if (!mDataList->isRowSelected(row, qfalse)) {
+					if (!mOmnisList->isRowSelected(row, qfalse)) {
 						selectionChanged = true;
-						mDataList->selectRow(row, qtrue, qfalse);
 						mOmnisList->selectRow(row, qtrue, qfalse);
 					};
-				} else if (mDataList->isRowSelected(row, qfalse)) {
+				} else if (mOmnisList->isRowSelected(row, qfalse)) {
 					selectionChanged = true;
-					mDataList->selectRow(row, qfalse, qfalse);
 					mOmnisList->selectRow(row, qfalse, qfalse);
 				};
 			};		
@@ -1672,15 +1601,14 @@ bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
 	if (enabled) {
 		pchar	testchar = pKey->getPChar();
 		
-		if ((testchar=='a' || testchar=='A') && (pKey->isControl()) && (!pKey->isShift()) && (!pKey->isAlt()) && mShowSelected && pDown && (mDataList != NULL)) {
+		if ((testchar=='a' || testchar=='A') && (pKey->isControl()) && (!pKey->isShift()) && (!pKey->isAlt()) && mShowSelected && pDown) {
 			// we must make selection changes to both our internal and the external list!
 			mOmnisList = getDataList(pECI);
 			
 			if (mOmnisList != NULL) {
-				qlong	rowCnt = mDataList->rowCnt();
+				qlong	rowCnt = mOmnisList->rowCnt();
 				
 				for (qlong row = 1; row<=rowCnt; row++) {
-					mDataList->selectRow(row, qtrue, qfalse);								
 					mOmnisList->selectRow(row, qtrue, qfalse);
 				};				
 				
@@ -1747,35 +1675,40 @@ bool	oDataList::canDrag(qpoint pFrom) {
 qlong	oDataList::evSetDragValue(FLDdragDrop *pDragInfo, EXTCompInfo* pECI) {
 	// !BAS! see if we can use a bitmap of the first line we're dragging instead of a shape... but for now we keep a shape..
 	// also need to see what we can do about showing some text...
-	
-	qdim width		= 0;
-	qdim height		= 32;
-	for (unsigned int i = 0; i < mColumnWidths.numberOfElements(); i++) {
-		width += mColumnWidths[i];
-	};
-	if (width < 100) width = 100;
-	qdim left	= pDragInfo->mStartPoint.h - (width/2);
-	qdim top	= pDragInfo->mStartPoint.v - (height/2);
-	
-	// will this get destroyed by omnis?? if not we may want to solve this differently...
-	qrgn *region = new qrgn;
-	GDIsetRectRgn(region, left, top, left+width, top+32);
 
-	/* free any shape Omnis may have set, we're replacing it with our own*/
-	if (pDragInfo->mDragShape!=0) {
-		delete pDragInfo->mDragShape;
-		pDragInfo->mDragShape = 0;
-	};
+	mOmnisList = getDataList(pECI);
+    if (mOmnisList != NULL) {
+        qdim width		= 0;
+        qdim height		= 32;
+        for (unsigned int i = 0; i < mColumnWidths.numberOfElements(); i++) {
+            width += mColumnWidths[i];
+        };
+        if (width < 100) width = 100;
+        qdim left	= pDragInfo->mStartPoint.h - (width/2);
+        qdim top	= pDragInfo->mStartPoint.v - (height/2);
+	
+        // will this get destroyed by omnis?? if not we may want to solve this differently...
+        qrgn *region = new qrgn;
+        GDIsetRectRgn(region, left, top, left+width, top+32);
 
-	pDragInfo->mDragShape = region;
-	pDragInfo->mAllowsBitmapDragging = 0;
+        /* free any shape Omnis may have set, we're replacing it with our own*/
+        if (pDragInfo->mDragShape!=0) {
+            delete pDragInfo->mDragShape;
+            pDragInfo->mDragShape = 0;
+        };
+
+        pDragInfo->mDragShape = region;
+        pDragInfo->mAllowsBitmapDragging = 0;
 	
-	EXTfldval	dragType(pDragInfo->mDragType);
-	dragType.setLong(cFLDdragDrop_dragData);
+        EXTfldval	dragType(pDragInfo->mDragType);
+        dragType.setLong(cFLDdragDrop_dragData);
 	
-	EXTfldval dragValue(pDragInfo->mDragValue);
-	dragValue.setList(mDataList, qfalse, qfalse);
-	
+        EXTfldval dragValue(pDragInfo->mDragValue);
+        dragValue.setList(mOmnisList, qfalse, qfalse);
+        
+		delete mOmnisList;
+        mOmnisList = 0;
+	};
 	return qtrue;
 };
 

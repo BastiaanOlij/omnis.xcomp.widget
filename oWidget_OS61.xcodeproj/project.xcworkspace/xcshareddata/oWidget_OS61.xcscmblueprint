@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "E45CB948879AD12011D9D65951D5E3902FC0E244",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "83859B19F24D8570D364771565ABFE47806DF8FC" : 0,
+    "E45CB948879AD12011D9D65951D5E3902FC0E244" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "7B3FA4A5-DFF9-47F3-959F-0F3E53133812",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "83859B19F24D8570D364771565ABFE47806DF8FC" : "omnis.xcomp.framework",
+    "E45CB948879AD12011D9D65951D5E3902FC0E244" : "omnis.xcomp.widget"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "oWidget_OS61",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "oWidget_OS61.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/BastiaanOlij\/omnis.xcomp.framework",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "83859B19F24D8570D364771565ABFE47806DF8FC"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/BastiaanOlij\/omnis.xcomp.widget",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E45CB948879AD12011D9D65951D5E3902FC0E244"
+    }
+  ]
+}

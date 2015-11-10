@@ -84,7 +84,6 @@ private:
 	qstring						mFilter;															// Our filter
 
 	oDLNode						mRootNode;															// Our root node
-	EXTqlist *					mDataList;															// Our copy of our data list
 	EXTqlist *					mOmnisList;															// List pointed to by $dataname (only set during events)
 	
 	qlong						mLastVisListNo;														// Last list line no we actually drew..
@@ -115,10 +114,6 @@ public:
 	virtual qbool				setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pECI);	// set the value of a property
 	virtual qbool				getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI);	// get the value of a property
 
-	virtual qbool				setPrimaryData(EXTfldval &pNewValue);								// Changes our primary data
-	virtual qbool				getPrimaryData(EXTfldval &pGetValue);								// Retrieves our primary data, return false if we do not manage a copy
-	virtual qlong				cmpPrimaryData(EXTfldval &pWithValue);								// Compare with our primary data, return DATA_CMPDATA_SAME if same
-	
 	// methods
 	static  qMethods *			methods(void);														// return array of method meta data
 	virtual int					invokeMethod(qlong pMethodId, EXTCompInfo* pECI);					// invoke a method

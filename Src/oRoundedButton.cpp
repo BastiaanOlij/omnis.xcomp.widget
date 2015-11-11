@@ -55,7 +55,7 @@ void oRoundedButton::doPaint(EXTCompInfo* pECI) {
     } else if (mouseIsOver()) {
         mCanvas->drawRoundedRect(mClientRect, mRadius * 2, mButtonColor, GDIgetDarkerShade(mBorderColor = GDI_COLOR_QDEFAULT ? mButtonColor : mBorderColor));
     } else {
-        mCanvas->drawRoundedRect(mClientRect, mRadius * 2, mButtonColor, mBorderColor);
+		mCanvas->drawRoundedRect(mClientRect, mRadius * 2, mButtonColor, mBorderColor = GDI_COLOR_QDEFAULT ? mButtonColor : mBorderColor);
     };
     
     // and our icon...

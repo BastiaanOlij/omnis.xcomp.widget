@@ -84,7 +84,9 @@ private:
 	qstring						mFilter;															// Our filter
 
 	oDLNode						mRootNode;															// Our root node
-	EXTqlist *					mOmnisList;															// List pointed to by $dataname (only set during events)
+    bool                        mCheckedDataName;                                                   // check if we've attempted to convert our dataname
+    qstring                     mListName;                                                          // Contents of $listname
+	EXTqlist *					mOmnisList;															// List pointed to by $listname (only set during events)
 	
 	qlong						mLastVisListNo;														// Last list line no we actually drew..
 	sDLHitTest					mMouseHitTest;														// Our hittest info when our mouse button was pressed

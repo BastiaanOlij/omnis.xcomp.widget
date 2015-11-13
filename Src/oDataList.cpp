@@ -30,6 +30,7 @@ oDataList::oDataList(void) {
 	mLineSpacing			= 4;
 	mOmnisList				= 0;
 	mLastCurrentLineTop		= 0;
+    mCheckedDataName        = false;
 };
 
 // Destructor to clean up
@@ -347,6 +348,29 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 	// call base class to draw background
 	oBaseVisComponent::doPaint(pECI);
 	
+    // check if we have a list name
+    if ((mListName.length() == 0) && (!mCheckedDataName)) {
+        /* convert from when we used dataname */
+        EXTfldval	dataNameFld;
+        
+        /* get the value of $dataname, i.e. "ivList" */
+        ECOgetProperty(mHWnd, anumFieldname, dataNameFld);
+        
+        if (dataNameFld.getCharLen() != 0) {
+            str255		emptyString;
+
+            // copy it into our list name, using ECOsetProperty ensures we update our property manager
+            ECOsetProperty(mHWnd, anumListName, dataNameFld);
+//            addToTraceLog("Set $listname to %qs", &mListName);
+            
+            // and clear our dataname
+            dataNameFld.setChar(emptyString);
+            ECOsetProperty(mHWnd, anumFieldname, dataNameFld);
+        };
+        
+        mCheckedDataName = true; // do this only once...
+    };
+    
 	// check our columns
 	checkColumns();
 		
@@ -354,7 +378,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 		// Don't draw anything else..
 	} else {
         // Get our omnis list
-		mOmnisList = getDataList(pECI);
+		mOmnisList = getNamedList(mListName, pECI);
 					
 		if (mOmnisList==0) {
 			// no list to draw?
@@ -639,9 +663,8 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 
 ECOproperty oDataListProperties[] = { 
 	//	ID						ResID	Type			Flags					ExFlags	EnumStart	EnumEnd
-	anumFieldname,				0,		fftList,		EXTD_FLAG_PRIMEDATA
-														+EXTD_FLAG_FAR_SRCH
-														+EXTD_FLAG_PROPGENERAL,	0,		0,			0,		// $dataname
+	anumListName,				0,		fftCharacter,	EXTD_FLAG_FAR_SRCH
+														+EXTD_FLAG_PROPGENERAL,	0,		0,			0,		// $listname
 	anumHScroll,				0,		fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $hscroll
 	anumVScroll,				0,		fftInteger,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $vscroll
 	anumHorzscroll,				0,		fftBoolean,		EXTD_FLAG_PROPAPP,		0,		0,			0,		// $horzscroll
@@ -683,12 +706,16 @@ qProperties * oDataList::properties(void) {
 	return lvProperties;
 };
 
-
 // set the value of a property
 qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pECI) {
 	// most anum properties are managed by Omnis but some we need to do ourselves, no idea why...
 	
 	switch (pPropID) {
+        case anumListName: {
+            mListName = pNewValue;
+			WNDinvalidateRect(mHWnd, NULL);
+			return qtrue;
+        }; break;
 		case oDL_columncount: {
 			mColumnCount = pNewValue.getLong();
 			if (mColumnCount < 1) mColumnCount = 1;
@@ -954,6 +981,10 @@ qbool oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pEC
 	// most anum properties are managed by Omnis but some we need to do ourselves...
 	
 	switch (pPropID) {
+        case anumListName: {
+            pGetValue.setChar((qchar *)mListName.cString(), mListName.length());
+			return true;
+        }; break;
 		case oDL_columncount: {
 			pGetValue.setLong(mColumnCount);
 			return true;
@@ -1391,7 +1422,7 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
 		mMouseHitTest = this->doHitTest(pAt); // redo our hittest just in case
 		
 		// we must also update our list pointed to by $dataname. Note that if we're dealing with an item reference we'll be updating the same list twice..
-		mOmnisList = getDataList(pECI);
+		mOmnisList = getNamedList(mListName, pECI);
 		
 		switch (mMouseHitTest.mAbove) {
 			case oDL_none:
@@ -1538,7 +1569,7 @@ bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {
 		mMouseHitTest = this->doHitTest(pDownAt); // redo our hittest just in case
 		
 		// we must also update our list pointed to by $dataname. Note that if we're dealing with an item reference we'll be updating the same list twice..
-		mOmnisList = getDataList(pECI);
+		mOmnisList = getNamedList(mListName, pECI);
 		
 		qlong	currentLine = mOmnisList->getCurRow();
 		qlong	rowCnt = mOmnisList->rowCnt();
@@ -1603,7 +1634,8 @@ bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
 		
 		if ((testchar=='a' || testchar=='A') && (pKey->isControl()) && (!pKey->isShift()) && (!pKey->isAlt()) && mShowSelected && pDown) {
 			// we must make selection changes to both our internal and the external list!
-			mOmnisList = getDataList(pECI);
+            mOmnisList = getNamedList(mListName, pECI);
+
 			
 			if (mOmnisList != NULL) {
 				qlong	rowCnt = mOmnisList->rowCnt();
@@ -1676,7 +1708,7 @@ qlong	oDataList::evSetDragValue(FLDdragDrop *pDragInfo, EXTCompInfo* pECI) {
 	// !BAS! see if we can use a bitmap of the first line we're dragging instead of a shape... but for now we keep a shape..
 	// also need to see what we can do about showing some text...
 
-	mOmnisList = getDataList(pECI);
+	mOmnisList = getNamedList(mListName, pECI);
     if (mOmnisList != NULL) {
         qdim width		= 0;
         qdim height		= 32;

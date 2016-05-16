@@ -73,6 +73,9 @@ BEGIN
 	8100			"$addLayer:$addLayer() add a layer to our image."
 	8101			"$remLayer:$remLayer(pLayer) removes a layer from our image"
 
+// static methods
+    9000            "$monitors:$monitors() returns detailed info about connected monitors"
+
 // methodtext
 	10000			"on evClick ;; Button has been clicked"
 	10001			"Quit event handler (Pass to next handler)"

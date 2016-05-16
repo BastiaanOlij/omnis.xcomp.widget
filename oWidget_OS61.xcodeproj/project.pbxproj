@@ -31,6 +31,7 @@
 		ACDED0BD1B4E196A008A730B /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACDED0B31B4E196A008A730B /* widget.cpp */; };
 		ACDED0C21B4E197D008A730B /* oWidget.bmp in Resources */ = {isa = PBXBuildFile; fileRef = ACDED0BE1B4E197D008A730B /* oWidget.bmp */; };
 		ACDED0C31B4E1985008A730B /* oWidget.rc in Resources */ = {isa = PBXBuildFile; fileRef = ACDED0C01B4E197D008A730B /* oWidget.rc */; };
+		ACF4A50F1CE959FE00EA194F /* monitor_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACF4A50E1CE959FE00EA194F /* monitor_mac.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -94,6 +95,8 @@
 		ACDED0B31B4E196A008A730B /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = widget.cpp; path = Src/widget.cpp; sourceTree = "<group>"; };
 		ACDED0BF1B4E197D008A730B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = English; path = English.lproj/oWidget.bmp; sourceTree = "<group>"; };
 		ACDED0C11B4E197D008A730B /* English */ = {isa = PBXFileReference; explicitFileType = text; name = English; path = English.lproj/oWidget.rc; sourceTree = "<group>"; };
+		ACF4A50D1CE959ED00EA194F /* monitor_mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = monitor_mac.h; path = oWidget_OS61.xcodeproj/../Src/monitor_mac.h; sourceTree = "<group>"; };
+		ACF4A50E1CE959FE00EA194F /* monitor_mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = monitor_mac.mm; path = Src/monitor_mac.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +156,7 @@
 				ACDED0B01B4E196A008A730B /* oImage.cpp */,
 				ACDED0B11B4E196A008A730B /* oImgLayer.cpp */,
 				ACDED0B21B4E196A008A730B /* oRoundedButton.cpp */,
+				ACF4A50E1CE959FE00EA194F /* monitor_mac.mm */,
 				ACDED0B31B4E196A008A730B /* widget.cpp */,
 			);
 			name = Source;
@@ -178,6 +182,7 @@
 				ACDED0A61B4E1950008A730B /* oImage.h */,
 				ACDED0A71B4E1950008A730B /* oImgLayer.h */,
 				ACDED0A81B4E1950008A730B /* oRoundedButton.h */,
+				ACF4A50D1CE959ED00EA194F /* monitor_mac.h */,
 				ACDED0A91B4E1950008A730B /* widget.h */,
 			);
 			name = Headers;
@@ -285,6 +290,7 @@
 				ACDED0971B4E193B008A730B /* FrameworkWndProc.cpp in Sources */,
 				ACDED0B71B4E196A008A730B /* oDLNode.cpp in Sources */,
 				ACDED0B41B4E196A008A730B /* oCountButton.cpp in Sources */,
+				ACF4A50F1CE959FE00EA194F /* monitor_mac.mm in Sources */,
 				ACDED0BB1B4E196A008A730B /* oImgLayer.cpp in Sources */,
 				ACDED0B51B4E196A008A730B /* oDataList.cpp in Sources */,
 				ACDED0981B4E193B008A730B /* oBaseComponent.cpp in Sources */,
@@ -332,6 +338,7 @@
 		96CA4E5E0907E8CC00C234AA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				BUILD_VARIANTS = normal;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_LOCATION = YES;
@@ -376,7 +383,7 @@
 		96CA4E5F0907E8CC00C234AA /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = /;
@@ -423,8 +430,8 @@
 				DSTROOT = /;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				LIBRARY_STYLE = DYNAMIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx10.7;
 			};
 			name = Development;
 		};
@@ -433,8 +440,8 @@
 			buildSettings = {
 				ARCHS = i386;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx10.7;
 			};
 			name = Deployment;
 		};

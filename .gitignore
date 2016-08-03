@@ -4,6 +4,8 @@
 /*.sdf
 /URel
 /DRel
+/URel64
+/DRel64
 /*.ncb
 /*.user
 build

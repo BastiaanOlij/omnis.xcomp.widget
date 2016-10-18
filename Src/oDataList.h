@@ -27,6 +27,7 @@ enum oDataListPropIDs {
 	oDL_columnprefix	= 105,
 	oDL_verticalExtend	= 106,
 	oDL_evenColor		= 107,
+	oDL_selectColor		= 108,
 	oDL_groupcalcs		= 120,
 	oDL_treeIndent		= 121,
 	oDL_filtercalc		= 122,
@@ -80,6 +81,7 @@ private:
 	bool						mColumnExtend[256];													// Flags to indicate which columns extend our row height
 	qdim						mMaxRowHeight;														// Maximum rowheight
 	qcol						mEvenColor;															// Background color for even lines
+	qcol						mSelectColor;														// Background color for selected lines
 	
 	qstring						mFilter;															// Our filter
 

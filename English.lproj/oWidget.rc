@@ -10,8 +10,8 @@ BEGIN
 	2001			"oCountButton"
 	2002			"oDataList"
 	2003			"oDropDown"
-	2004            "oImage"
-    2005            "oFontDropDown"
+	2004			"oImage"
+	2005			"oFontDropDown"
 	2006			"oRoundedButton"
 
 // properties
@@ -21,8 +21,8 @@ BEGIN
 	4101			"$radius:radius"
 	4102			"$spacing:spacing"
 	4103			"$countColor:Background color of our counter"
-    4104            "$fillColor:Fill color for our button"
-    4105            "$iconPos:0 = left, 1 = right"
+	4104			"$fillColor:Fill color for our button"
+	4105			"$iconPos:0 = left, 1 = right"
 	4110			"$columncount:Number of columns we display"
 	4111			"$columncalcs:Our column calculations, tab delimited"
 	4112			"$columnwidths:Our columns widths"
@@ -31,13 +31,14 @@ BEGIN
 	4115			"$columnPrefix:This calculation gets added to every line"
 	4116			"$verticalExtends:Limits which columns wrapping text will increase the row height"
 	4117			"$evenColor:Alternative background color for even lines (default color = ignore)"
+	4118			"$selectColor:Background color for selected lines (default color = use system)"
 	4120			"$groupcalcs:calculations by which we group"
 	4121			"$treeIndent:Number of pixels we indent our nodes in our treelist with"
 	4122			"$filtercalc:calculation by which to filter which lines we show"
 	4123			"$deselectOnGroupClick:Deselect lines when we click on a node"
 	4124			"$parentCalcs:calculations that identify a group as a parent group"
 	4200			"$displaycalc:If set, alternative display calculation"
-    4201            "$fontColumn:Column number containing our font name"
+	4201			"$fontColumn:Column number containing our font name"
 	4300			"$layercount:Number of layers"
 	4301			"$currentLayer:Layer we have selected"
 	4302			"$layertype:Type of layer"
@@ -74,7 +75,7 @@ BEGIN
 	8101			"$remLayer:$remLayer(pLayer) removes a layer from our image"
 
 // static methods
-    9000            "$monitors:$monitors() returns detailed info about connected monitors"
+	9000			"$monitors:$monitors() returns detailed info about connected monitors"
 
 // methodtext
 	10000			"on evClick ;; Button has been clicked"

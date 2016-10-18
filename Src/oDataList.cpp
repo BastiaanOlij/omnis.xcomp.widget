@@ -26,6 +26,7 @@ oDataList::oDataList(void) {
 	mRebuildNodes			= true;
 	mDeselectOnNodeClick	= false;
 	mEvenColor				= GDI_COLOR_QDEFAULT;
+	mSelectColor			= GDI_COLOR_QDEFAULT;
 	mIndent					= 20;
 	mLineSpacing			= 4;
 	mOmnisList				= 0;
@@ -283,19 +284,18 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 	
 	qrect	rowRect;
 
+	// 2) Do highlighted drawing
+	rowRect.left = mClientRect.left;
+	rowRect.top = pTop;
+	rowRect.right = mClientRect.right;
+	rowRect.bottom = pTop + lineheight + mLineSpacing;
 	if (isSelected) {
-		// 2) Do highlighted drawing
-		rowRect.left = mClientRect.left;
-		rowRect.top = pTop;
-		rowRect.right = mClientRect.right;
-		rowRect.bottom = pTop + lineheight + mLineSpacing;
-		GDIhiliteTextStart(mCanvas->hdc(), &rowRect, mTextColor);	// !BAS! Move into canvas!
+		if (mSelectColor == GDI_COLOR_QDEFAULT) {
+			GDIhiliteTextStart(mCanvas->hdc(), &rowRect, mTextColor);	// !BAS! Move into canvas!
+		} else {
+			mCanvas->drawRect(rowRect, mSelectColor, mSelectColor);
+		}
 	} else if (pIsEven && (mEvenColor!=GDI_COLOR_QDEFAULT)) {
-		rowRect.left = mClientRect.left;
-		rowRect.top = pTop;
-		rowRect.right = mClientRect.right;
-		rowRect.bottom = pTop + lineheight + mLineSpacing;
-			
 		mCanvas->drawRect(rowRect, mEvenColor, mEvenColor);
 	};
 		
@@ -319,7 +319,7 @@ qdim	oDataList::drawRow(EXTCompInfo* pECI, qlong pLineNo, qdim pIndent, qdim pTo
 		left += mColumnWidths[i];
 	};
 		
-	if (isSelected) {
+	if (isSelected && (mSelectColor == GDI_COLOR_QDEFAULT)) {
 		// 4) unhighlight
 		GDIhiliteTextEnd(mCanvas->hdc(), &rowRect, mTextColor);	// !BAS! Move into canvas!
 	};
@@ -681,6 +681,8 @@ ECOproperty oDataListProperties[] = {
 	oDL_verticalExtend,			4116,	fftCharacter,	EXTD_FLAG_PROPDATA,		0,		0,			0,		// $verticalExtend
 	oDL_evenColor,				4117,	fftInteger,		EXTD_FLAG_PROPAPP
 														+EXTD_FLAG_PWINDCOL,	0,		0,			0,		// $evencolor
+	oDL_selectColor,			4118,	fftInteger,		EXTD_FLAG_PROPAPP
+														+ EXTD_FLAG_PWINDCOL,	0,		0,			0,		// $selectcolor
 
 	oDL_groupcalcs,				4120,	fftCharacter,	EXTD_FLAG_PROPDATA
 														+EXTD_FLAG_PWINDMLINE
@@ -834,6 +836,12 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 		}; break;
 		case oDL_evenColor: {
 			mEvenColor = pNewValue.getLong();
+
+			WNDinvalidateRect(mHWnd, NULL);
+			return qtrue;
+		}; break;
+		case oDL_selectColor: {
+			mSelectColor = pNewValue.getLong();
 
 			WNDinvalidateRect(mHWnd, NULL);
 			return qtrue;
@@ -1071,6 +1079,10 @@ qbool oDataList::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pEC
 		case oDL_evenColor: {
 			pGetValue.setLong(mEvenColor);
             return true;
+		}; break;
+		case oDL_selectColor: {
+			pGetValue.setLong(mSelectColor);
+			return true;
 		}; break;
 		case oDL_groupcalcs: {
 			qstring	groupcalcs;

@@ -3,9 +3,9 @@
 /*.sln
 /*.sdf
 /URel
-/DRel
+/UDeb
 /URel64
-/DRel64
+/UDeb64
 /*.ncb
 /*.user
 build

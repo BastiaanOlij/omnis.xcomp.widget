@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2DD7697317BBA5F4005F1CFB"
-               BuildableName = "oExample.u_xcomp"
+               BuildableName = "oWidget.u_xcomp"
                BlueprintName = "UnicodeCore"
                ReferencedContainer = "container:example_OS80.xcodeproj">
             </BuildableReference>
@@ -50,7 +50,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2DD7697317BBA5F4005F1CFB"
-            BuildableName = "oExample.u_xcomp"
+            BuildableName = "oWidget.u_xcomp"
             BlueprintName = "UnicodeCore"
             ReferencedContainer = "container:example_OS80.xcodeproj">
          </BuildableReference>
@@ -68,7 +68,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2DD7697317BBA5F4005F1CFB"
-            BuildableName = "oExample.u_xcomp"
+            BuildableName = "oWidget.u_xcomp"
             BlueprintName = "UnicodeCore"
             ReferencedContainer = "container:example_OS80.xcodeproj">
          </BuildableReference>

@@ -6,6 +6,7 @@
 /UDeb
 /URel64
 /UDeb64
+/UnicodeCore.build
 /*.ncb
 /*.user
 build

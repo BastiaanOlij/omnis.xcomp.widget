@@ -20,7 +20,7 @@ qshort	mainlib::major() {
 };
 
 qshort	mainlib::minor() {
-	return 118;
+	return 119;
 };
 
 ECOmethodEvent widgetStaticFuncs[] = {
@@ -135,6 +135,47 @@ qbool	mainlib::ecm_disconnect(void) {
 	return oXCompLib::ecm_disconnect();
 };
 
+#ifdef iswin32
+void addActiveWindowToMonitorList(EXTqlist * pMonitorList) {
+	/* Get some info about the active window */
+	TCHAR		name[250];
+	qchar		qname[250];
+	RECT        position;
+	HWND		hWnd = GetActiveWindow();
+
+	int len = GetWindowTextLength(hWnd);
+	if (len > 0) {
+		if (len > 249) {
+			len = 249;
+		};
+
+		GetWindowText(hWnd, name, len+1);
+		CHRconvFromOs::convFromOs(name, len, qname, 250);
+	};
+
+	GetWindowRect(hWnd, &position);
+
+	/* now add it to our list */
+	EXTfldval	colFld;
+	qlong		rowNo = pMonitorList->insertRow();
+
+	pMonitorList->getColValRef(rowNo, 1, colFld, qtrue);
+	colFld.setLong(position.left);
+	pMonitorList->getColValRef(rowNo, 2, colFld, qtrue);
+	colFld.setLong(position.top);
+	pMonitorList->getColValRef(rowNo, 3, colFld, qtrue);
+	colFld.setLong(position.right);
+	pMonitorList->getColValRef(rowNo, 4, colFld, qtrue);
+	colFld.setLong(position.bottom);
+
+	if (len > 0) {
+		pMonitorList->getColValRef(rowNo, 5, colFld, qtrue);
+		colFld.setChar(qname, len);
+	};
+};
+
+#endif
+
 int	mainlib::invokeMethod(qlong pMethodId, EXTCompInfo* pECI) {
 	switch (pMethodId) {
         case 9000: { /* $monitors - get list with monitor info */
@@ -151,9 +192,14 @@ int	mainlib::invokeMethod(qlong pMethodId, EXTCompInfo* pECI) {
             monitorList->addCol(3, fftInteger, 0, 0, NULL, &colName);
             colName = QTEXT("Bottom");
             monitorList->addCol(4, fftInteger, 0, 0, NULL, &colName);
+            colName = QTEXT("Name");
+            monitorList->addCol(5, fftCharacter, dpFcharacter, 250, NULL, &colName);
             
 #ifdef iswin32
-            /* not yet supported */
+			/* on windows Omnis is contained within its main window, so we add its dimensions */
+			addActiveWindowToMonitorList(monitorList);
+
+			/* may in due time add the actual monitors to this list as well  */
 #else
             /* lets see if we can call some obj-c */
             monitor_mac * moninfo = new monitor_mac();

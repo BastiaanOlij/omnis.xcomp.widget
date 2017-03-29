@@ -9,8 +9,8 @@
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "7B3FA4A5-DFF9-47F3-959F-0F3E53133812",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "83859B19F24D8570D364771565ABFE47806DF8FC" : "omnis.xcomp.framework",
-    "E45CB948879AD12011D9D65951D5E3902FC0E244" : "omnis.xcomp.widget"
+    "83859B19F24D8570D364771565ABFE47806DF8FC" : "omnis.xcomp.framework\/",
+    "E45CB948879AD12011D9D65951D5E3902FC0E244" : "omnis.xcomp.widget\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "oWidget_OS61",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,

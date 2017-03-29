@@ -1499,7 +1499,14 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
                                     currentRow++;
                                 };
 							
-                                mOmnisList->selectRow(currentRow, isSelected, qfalse);
+                                qdim		lvAt = mRootNode.findTopForLine(currentRow);
+			
+                                if (lvAt==-1) {
+                                    // no top position? = not visible, don't select it
+                                    mOmnisList->selectRow(currentRow, qfalse, qfalse);
+                                } else {
+                                    mOmnisList->selectRow(currentRow, isSelected, qfalse);
+                                };
                             };
 						
                             // and make this our new current row

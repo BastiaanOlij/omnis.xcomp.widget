@@ -20,7 +20,7 @@ qshort	mainlib::major() {
 };
 
 qshort	mainlib::minor() {
-	return 119;
+	return 120;
 };
 
 ECOmethodEvent widgetStaticFuncs[] = {

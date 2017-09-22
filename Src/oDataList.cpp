@@ -920,6 +920,8 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			mFilter = pNewValue;
 
 			mRebuildNodes = true;
+			mLastCurrentLineTop = 0;
+			mVertScrollPos = 0;
 			WNDinvalidateRect(mHWnd, NULL);
 			
 			return qtrue;

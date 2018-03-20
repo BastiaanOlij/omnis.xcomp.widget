@@ -1650,7 +1650,7 @@ bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {
 // let us know a key was pressed. Return true if Omnis should not do anything with this keypress
 bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
 	bool enabled = (isEnabled() && isActive() && ECOisOMNISinTrueRuntime(mHWnd));
-	if (enabled) {
+	if (enabled && ECOhasFocus(mHWnd)) {
 		pchar	testchar = pKey->getPChar();
 		
 		if ((testchar=='a' || testchar=='A') && (pKey->isControl()) && (!pKey->isShift()) && (!pKey->isAlt()) && mShowSelected && pDown) {

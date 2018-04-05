@@ -922,6 +922,7 @@ qbool oDataList::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 			mRebuildNodes = true;
 			mLastCurrentLineTop = 0;
 			mVertScrollPos = 0;
+            WNDsetScrollPos(mHWnd, SB_VERT, mVertScrollPos, qfalse); // no need to redraw, we're about to redraw the whole control...
 			WNDinvalidateRect(mHWnd, NULL);
 			
 			return qtrue;

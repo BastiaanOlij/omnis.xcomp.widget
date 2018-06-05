@@ -10,10 +10,8 @@
 /*.ncb
 /*.user
 build
-oWidget_OS6.xcodeproj/project.xcworkspace
-oWidget_OS6.xcodeproj/xcuserdata
 basolij.pbxuser
 basolij.perspectivev3
-oWidget_OS61.xcodeproj/project.xcworkspace/xcuserdata
-oWidget_OS61.xcodeproj/xcuserdata
 .vs
+xcuserdata
+.DS_Store

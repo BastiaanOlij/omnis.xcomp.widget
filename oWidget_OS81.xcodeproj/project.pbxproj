@@ -44,7 +44,7 @@
 			outputFiles = (
 				"$(TEMP_FILE_DIR)/omnisrc/Localizable.strings",
 			);
-			script = "$DEVELOPER_TOOLS_DIR/omnisrc64.app/Contents/MacOS/omnisrc64 INPUT_FILE_PATH TEMP_FILE_DIR REZ_SEARCH_PATHS XCOMP\nif [ -f $TEMP_FILE_DIR/omnisrc/Bitmap.strings ]; then\ncp $TEMP_FILE_DIR/omnisrc/Bitmap.strings $INSTALL_DIR/$CONTENTS_FOLDER_PATH/Resources\nfi\nshopt -s nullglob\nif [ ! -z \"`echo $TEMP_FILE_DIR/omnisrc/*.PNG`\" ]; then\ncp $TEMP_FILE_DIR/omnisrc/*.PNG $INSTALL_DIR/$CONTENTS_FOLDER_PATH/Resources\nfi";
+			script = "$PROJECT_DIR/../tools/omnisrc64.app/Contents/MacOS/omnisrc64 INPUT_FILE_PATH TEMP_FILE_DIR REZ_SEARCH_PATHS XCOMP\nif [ -f $TEMP_FILE_DIR/omnisrc/Bitmap.strings ]; then\ncp $TEMP_FILE_DIR/omnisrc/Bitmap.strings $INSTALL_DIR/$CONTENTS_FOLDER_PATH/Resources\nfi\nshopt -s nullglob\nif [ ! -z \"`echo $TEMP_FILE_DIR/omnisrc/*.PNG`\" ]; then\ncp $TEMP_FILE_DIR/omnisrc/*.PNG $INSTALL_DIR/$CONTENTS_FOLDER_PATH/Resources\nfi";
 		};
 /* End PBXBuildRule section */
 
@@ -357,6 +357,7 @@
 				INSTALL_PATH = "$(PROJECT_DIR)/../_OSXUnicodeDbg";
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = DYNAMIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CFLAGS = (
 					"-fshort-wchar",
 					"-Dismach_o",
@@ -396,6 +397,7 @@
 				INSTALL_PATH = "$(PROJECT_DIR)/../_OSXUnicode";
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = DYNAMIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CFLAGS = (
 					"-fshort-wchar",
 					"-Dismach_o",

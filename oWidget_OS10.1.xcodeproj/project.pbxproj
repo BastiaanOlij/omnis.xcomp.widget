@@ -40,6 +40,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.rc";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"$(TEMP_FILE_DIR)/omnisrc/Localizable.strings",
@@ -258,7 +260,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Omnis Software Ltd";
 			};
-			buildConfigurationList = 2DD7696F17BBA5F4005F1CFB /* Build configuration list for PBXProject "oWidget_OS10.0" */;
+			buildConfigurationList = 2DD7696F17BBA5F4005F1CFB /* Build configuration list for PBXProject "oWidget_OS10.1" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -377,7 +379,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-fshort-wchar",
@@ -418,7 +420,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				OTHER_CFLAGS = (
 					"-fshort-wchar",
 					"-Dismach_o",
@@ -499,7 +501,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2DD7696F17BBA5F4005F1CFB /* Build configuration list for PBXProject "oWidget_OS10.0" */ = {
+		2DD7696F17BBA5F4005F1CFB /* Build configuration list for PBXProject "oWidget_OS10.1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2DD7698417BBA5F4005F1CFB /* Development */,

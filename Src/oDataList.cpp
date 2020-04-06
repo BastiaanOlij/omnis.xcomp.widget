@@ -1775,35 +1775,31 @@ qlong	oDataList::evSetDragValue(FLDdragDrop *pDragInfo, EXTCompInfo* pECI) {
         };
         if (width < 100) width = 100;
 
-        /*
-        qdim left	= pDragInfo->mStartPoint.h - (width/2);
-        qdim top	= pDragInfo->mStartPoint.v - (height/2);
-	
-        // this crashes, there is a fix in 10.2 coming
-        qrgn *region = GDIallocQRGN();
-        GDIsetRectRgn(region, left, top, left+width, top+32);
-
-        // free any shape Omnis may have set, we're replacing it with our own
-        if (pDragInfo->mDragShape!=0) {
-            delete pDragInfo->mDragShape;
-            pDragInfo->mDragShape = 0;
-        };
-
-        pDragInfo->mDragShape = region;
-        pDragInfo->mAllowsBitmapDragging = 0;
-
-        */
-
 		HDC tmpDC;
 		GDIcreateAlphaDC(&tmpDC, width, height);
-		qrect r(0, 0, width - 1, height - 1);
+		qrect r(0, 0, width - 3, height - 3);
 
 		// Draw the alpha bitmap - for now we do a simple shape, we should really draw our row in here.
-		HPEN pen = GDIcreatePen(1, 0x8800FF00, patFill);
+        qcol wasColor = GDIgetTextColor(tmpDC);
+        qbyte wasAlpha = GDIgetTextColorAlpha(tmpDC);
+        qcol borderColor = GDI_COLOR_QBLACK;
+        GDIsetTextColor(tmpDC, borderColor);
+
+        HPEN pen = GDIcreatePen(1, borderColor, patFill);
 		HPEN oldPen = GDIselectObject(tmpDC, pen);
+        
+        GDIsetTextColorAlpha(tmpDC, 0x44);
+        GDIfillRect(tmpDC, &r, GDIgetStockBrush(BLACK_BRUSH));
+        GDIsetTextColorAlpha(tmpDC, 0xAA);
 		GDIframeRect(tmpDC, &r);
+                
 		GDIselectObject(tmpDC, oldPen);
 		GDIdeleteObject(pen);
+        GDIsetTextColor(tmpDC, wasColor);
+        GDIsetTextColorAlpha(tmpDC, wasAlpha);
+        
+        pDragInfo->mDrawOffset.h = -(width / 2);
+        pDragInfo->mDrawOffset.v = -(height / 2);
 
 		pDragInfo->mBitmapBounds = r;
 		GDIdeleteAlphaDC(tmpDC, &pDragInfo->mDragBitmap);      // This deletes HDC and creates an alpha bitmap containing what was drawn into HDC

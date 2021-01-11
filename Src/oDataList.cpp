@@ -24,6 +24,7 @@ oDataList::oDataList(void) {
 	mColumnCount			= 1;
 	mShowSelected			= false;
 	mRebuildNodes			= true;
+	mDrawRecurseCount		= 0;
 	mDeselectOnNodeClick	= false;
 	mEvenColor				= GDI_COLOR_QDEFAULT;
 	mSelectColor			= GDI_COLOR_QDEFAULT;
@@ -32,6 +33,7 @@ oDataList::oDataList(void) {
 	mOmnisList				= 0;
 	mLastCurrentLineTop		= 0;
     mCheckedDataName        = false;
+	mInWindowScrolled		= false;
 };
 
 // Destructor to clean up
@@ -342,6 +344,13 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 	// That means the first time we draw our list we calculate the size of all texts and build our nodes
 	// After that we skip as much of the logic as we can and effectively only draw lines that are visible.
 
+	// prevent recursive calls to this to go on and on and on...
+	if (mDrawRecurseCount > 3) {
+		addToTraceLog("Draw recurse count hit 4");
+		return;
+	}
+	mDrawRecurseCount++;
+
 	qbool	redraw = false; // if our scroll position changes, we draw twice!
 	clock_t	t = clock();
 	
@@ -588,7 +597,14 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 					redraw = true;
 				};
 			};
-			WNDsetScrollRange(mHWnd, SB_VERT, 0, listLineNo, pageSize, qtrue);
+			{
+				qdim wasMin, wasMax, wasPage;
+				WNDgetScrollRange(mHWnd, SB_VERT, &wasMin, &wasMax, &wasPage);
+				if (wasMin != 0 || wasMax != listLineNo || wasPage != pageSize) {
+					addToTraceLog("Changing vert scroll from %li, %li to %li, %li", wasMax, wasPage, listLineNo, pageSize);
+					WNDsetScrollRange(mHWnd, SB_VERT, 0, listLineNo, pageSize, qtrue);
+				}
+			};
 									
 			// We are done with our list...
 			mOmnisList->setCurRow(currentRow);
@@ -647,7 +663,15 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 			redraw = true;
 		};
 	}
-	WNDsetScrollRange(mHWnd, SB_HORZ, 0, maxHorzScroll, horzPageSize, qtrue);
+
+	{
+		qdim wasMin, wasMax, wasPage;
+		WNDgetScrollRange(mHWnd, SB_HORZ, &wasMin, &wasMax, &wasPage);
+		if (wasMin != 0 || wasMax != maxHorzScroll || wasPage != horzPageSize) {
+			addToTraceLog("Changing horz scroll from %li, %li to %li, %li", wasMax, wasPage, maxHorzScroll, horzPageSize);
+			WNDsetScrollRange(mHWnd, SB_HORZ, 0, maxHorzScroll, horzPageSize, qtrue);
+		}
+	};
 
 	// addToTraceLog("finished drawing in %li ms",((clock()-t) * 1000)/CLOCKS_PER_SEC);
 	
@@ -655,6 +679,8 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 		// just draw again, may need to protect against recursive calls? I think it'll be alright.
 		doPaint(pECI);
 	};
+
+	mDrawRecurseCount--;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1300,19 +1326,29 @@ qdim oDataList::getVertStepSize(void) {
 
 // window was scrolled
 void oDataList::evWindowScrolled(qdim pNewX, qdim pNewY) {
-	qdim pWasX = mHorzScrollPos;
-	qdim pWasY = mVertScrollPos;
-	
-	// call base class
-	oBaseVisComponent::evWindowScrolled(pNewX, pNewY);
-	
-	// This should become part of our base class if we can use Omnis' internal values
-	if (mHorzScrollPos!=pWasX) {
-		ECOsendEvent(mHWnd, oDL_evHScrolled, 0, 0, EEN_EXEC_IMMEDIATE);		
-	};
-	if (mVertScrollPos!=pWasY) {
-		ECOsendEvent(mHWnd, oDL_evVScrolled, 0, 0, EEN_EXEC_IMMEDIATE);				
-	};
+	if (!mInWindowScrolled) {
+		mInWindowScrolled = true;
+		qdim pWasX = mHorzScrollPos;
+		qdim pWasY = mVertScrollPos;
+
+		// call base class
+		oBaseVisComponent::evWindowScrolled(pNewX, pNewY);
+
+		// According to Omnis tech support instantiating this object will prevent escape testing and solve a recursive issue leading to a crash...
+		ECOdisableTestesc disable_test();
+
+		// This should become part of our base class if we can use Omnis' internal values
+		if (mHorzScrollPos != pWasX) {
+			ECOsendEvent(mHWnd, oDL_evHScrolled, 0, 0, EEN_EXEC_LATER);
+		};
+		if (mVertScrollPos != pWasY) {
+			ECOsendEvent(mHWnd, oDL_evVScrolled, 0, 0, EEN_EXEC_LATER);
+		};
+
+		mInWindowScrolled = false;
+	} else {
+		addToTraceLog("evWindowScrolled recurse call");
+	}
 };
 
 
@@ -1422,7 +1458,7 @@ void	oDataList::evMouseMoved(qpoint pMovedTo) {
 			mColumnWidths.setElementAtIndex(mMouseHitTest.mColNo, newWidth);
 			WNDinvalidateRect(mHWnd, NULL);
 			
-			ECOsendEvent(mHWnd, oDL_evColumnResized, 0, 0, EEN_EXEC_IMMEDIATE);
+			ECOsendEvent(mHWnd, oDL_evColumnResized, 0, 0, EEN_EXEC_LATER);
 		};
 		mMouseLast = pMovedTo;
 	};
@@ -1480,7 +1516,7 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
                     // let user know we clicked outside of our line
                     EXTfldval	evParam[1];
                     evParam[0].setLong(0);
-                    ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_IMMEDIATE);
+                    ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_LATER);
                 };
 			}; break;
 			case oDL_row: {
@@ -1540,7 +1576,7 @@ void	oDataList::evClick(qpoint pAt, EXTCompInfo* pECI) {
                     // let user know we clicked on a line
                     EXTfldval	evParam[1];
                     evParam[0].setLong(mMouseHitTest.mLineNo);
-                    ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_IMMEDIATE);
+                    ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_LATER);
                 };
 			};	break;
 			default:
@@ -1572,7 +1608,7 @@ bool	oDataList::evDoubleClick(qpoint pAt, EXTCompInfo* pECI) {
 				// maybe send a click event back to Omnis?
 			};	break;
 			case oDL_row: {
-				ECOsendEvent(mHWnd, oDL_evDoubleClick, 0, 0, EEN_EXEC_IMMEDIATE);				
+				ECOsendEvent(mHWnd, oDL_evDoubleClick, 0, 0, EEN_EXEC_LATER);				
 			};	break;
 			default:
 				break;
@@ -1636,7 +1672,7 @@ bool	oDataList::evMouseRDown(qpoint pDownAt, EXTCompInfo* pECI) {
 			// let user know we changed our selection by simulating a click on a line
 			EXTfldval	evParam[1];
 			evParam[0].setLong(newCurrentLine);
-			ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_IMMEDIATE);				
+			ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_LATER);				
 		};
 	};
 
@@ -1679,7 +1715,7 @@ bool	oDataList::evKeyPressed(qkey *pKey, bool pDown, EXTCompInfo* pECI) {
             // and finally treat this as a click
 			EXTfldval	evParam[1];
 			evParam[0].setLong(1);
-			ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_IMMEDIATE);
+			ECOsendEvent(mHWnd, oDL_evClick, evParam, 1, EEN_EXEC_LATER);
 			
 			return true;
 		} else {
@@ -1738,21 +1774,37 @@ qlong	oDataList::evSetDragValue(FLDdragDrop *pDragInfo, EXTCompInfo* pECI) {
             width += mColumnWidths[i];
         };
         if (width < 100) width = 100;
-        qdim left	= pDragInfo->mStartPoint.h - (width/2);
-        qdim top	= pDragInfo->mStartPoint.v - (height/2);
-	
-        // will this get destroyed by omnis?? if not we may want to solve this differently...
-        qrgn *region = new qrgn;
-        GDIsetRectRgn(region, left, top, left+width, top+32);
 
-        /* free any shape Omnis may have set, we're replacing it with our own*/
-        if (pDragInfo->mDragShape!=0) {
-            delete pDragInfo->mDragShape;
-            pDragInfo->mDragShape = 0;
-        };
+		HDC tmpDC;
+		GDIcreateAlphaDC(&tmpDC, width, height);
+		qrect r(0, 0, width - 3, height - 3);
 
-        pDragInfo->mDragShape = region;
-        pDragInfo->mAllowsBitmapDragging = 0;
+		// Draw the alpha bitmap - for now we do a simple shape, we should really draw our row in here.
+        qcol wasColor = GDIgetTextColor(tmpDC);
+        qbyte wasAlpha = GDIgetTextColorAlpha(tmpDC);
+        qcol borderColor = GDI_COLOR_QBLACK;
+        GDIsetTextColor(tmpDC, borderColor);
+
+        HPEN pen = GDIcreatePen(1, borderColor, patFill);
+		HPEN oldPen = GDIselectObject(tmpDC, pen);
+        
+        GDIsetTextColorAlpha(tmpDC, 0x44);
+        GDIfillRect(tmpDC, &r, GDIgetStockBrush(BLACK_BRUSH));
+        GDIsetTextColorAlpha(tmpDC, 0xAA);
+		GDIframeRect(tmpDC, &r);
+                
+		GDIselectObject(tmpDC, oldPen);
+		GDIdeleteObject(pen);
+        GDIsetTextColor(tmpDC, wasColor);
+        GDIsetTextColorAlpha(tmpDC, wasAlpha);
+        
+        pDragInfo->mDrawOffset.h = -(width / 2);
+        pDragInfo->mDrawOffset.v = -(height / 2);
+
+		pDragInfo->mBitmapBounds = r;
+		GDIdeleteAlphaDC(tmpDC, &pDragInfo->mDragBitmap);      // This deletes HDC and creates an alpha bitmap containing what was drawn into HDC
+		pDragInfo->mDragBitmapMask =  (HBITMAPMASK)0x02; // In 10.2 (HBITMAPMASK)0x02 will be a constant HBITMAP_ISALPHA
+		pDragInfo->mAllowsBitmapDragging = qtrue;
 	
         EXTfldval	dragType(pDragInfo->mDragType);
         dragType.setLong(cFLDdragDrop_dragData);

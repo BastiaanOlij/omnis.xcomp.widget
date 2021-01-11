@@ -62,6 +62,8 @@ typedef struct sDLGrouping {
 class oDataList : public oBaseVisComponent {
 private:
 	bool						mRebuildNodes;														// if true we need to rebuild our nodes
+	int							mDrawRecurseCount;													// count to protect us from recursive calls into doPaint
+	bool						mInWindowScrolled;													// are we already handling our window scroll?
 
 	bool						mShowSelected;														// if true we show selected lines, if false we only show the current line
 	qdim						mIndent;															// Indent for our tree

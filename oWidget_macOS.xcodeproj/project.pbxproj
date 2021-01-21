@@ -260,7 +260,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Omnis Software Ltd";
 			};
-			buildConfigurationList = 2DD7696F17BBA5F4005F1CFB /* Build configuration list for PBXProject "oWidget_OS10.1" */;
+			buildConfigurationList = 2DD7696F17BBA5F4005F1CFB /* Build configuration list for PBXProject "oWidget_OS" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -439,8 +439,10 @@
 		2DD7698717BBA5F4005F1CFB /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_DIR)";
+				DEVELOPMENT_TEAM = "";
 				DSTROOT = /;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -453,11 +455,12 @@
 				HEADER_SEARCH_PATHS = $PROJECT_DIR/../complib/u_complib.framework/Headers;
 				INFOPLIST_FILE = $PROJECT_DIR/Info.plist;
 				INSTALL_PATH = $PROJECT_DIR/../_OSXUnicodeDbg;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				OTHER_CFLAGS = (
 					"-fshort-wchar",
 					"-Dismach_o",
 					"-Wno-comment",
-					"-DOMNISSDK=100",
+					"-DOMNISSDK=102",
 				);
 				OTHER_LDFLAGS = "";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
@@ -470,8 +473,10 @@
 		2DD7698817BBA5F4005F1CFB /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_DIR)";
+				DEVELOPMENT_TEAM = "";
 				DSTROOT = /;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -484,11 +489,12 @@
 				HEADER_SEARCH_PATHS = $PROJECT_DIR/../complib/u_complib.framework/Headers;
 				INFOPLIST_FILE = $PROJECT_DIR/Info.plist;
 				INSTALL_PATH = $PROJECT_DIR/../_OSXUnicode;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				OTHER_CFLAGS = (
 					"-fshort-wchar",
 					"-Dismach_o",
 					"-Wno-comment",
-					"-DOMNISSDK=100",
+					"-DOMNISSDK=102",
 				);
 				OTHER_LDFLAGS = "";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
@@ -501,7 +507,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2DD7696F17BBA5F4005F1CFB /* Build configuration list for PBXProject "oWidget_OS10.1" */ = {
+		2DD7696F17BBA5F4005F1CFB /* Build configuration list for PBXProject "oWidget_OS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2DD7698417BBA5F4005F1CFB /* Development */,

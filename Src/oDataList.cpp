@@ -601,7 +601,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 				qdim wasMin, wasMax, wasPage;
 				WNDgetScrollRange(mHWnd, SB_VERT, &wasMin, &wasMax, &wasPage);
 				if (wasMin != 0 || wasMax != listLineNo || wasPage != pageSize) {
-					addToTraceLog("Changing vert scroll from %li, %li to %li, %li", wasMax, wasPage, listLineNo, pageSize);
+					// addToTraceLog("Changing vert scroll from %li, %li to %li, %li", wasMax, wasPage, listLineNo, pageSize);
 					WNDsetScrollRange(mHWnd, SB_VERT, 0, listLineNo, pageSize, qtrue);
 				}
 			};
@@ -668,7 +668,7 @@ void oDataList::doPaint(EXTCompInfo* pECI) {
 		qdim wasMin, wasMax, wasPage;
 		WNDgetScrollRange(mHWnd, SB_HORZ, &wasMin, &wasMax, &wasPage);
 		if (wasMin != 0 || wasMax != maxHorzScroll || wasPage != horzPageSize) {
-			addToTraceLog("Changing horz scroll from %li, %li to %li, %li", wasMax, wasPage, maxHorzScroll, horzPageSize);
+			// addToTraceLog("Changing horz scroll from %li, %li to %li, %li", wasMax, wasPage, maxHorzScroll, horzPageSize);
 			WNDsetScrollRange(mHWnd, SB_HORZ, 0, maxHorzScroll, horzPageSize, qtrue);
 		}
 	};

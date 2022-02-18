@@ -24,57 +24,56 @@
 class oImgLayer {
 private:
 protected:
-	bool		mEnabled;
-	qlong		mLeft;
-	qlong		mTop;
-	qlong		mWidth;
-	qlong		mHeight;
-	qbyte		mAlpha;
-	
+	bool mEnabled;
+	qlong mLeft;
+	qlong mTop;
+	qlong mWidth;
+	qlong mHeight;
+	qbyte mAlpha;
+
 public:
 	oImgLayer(void);
 	virtual ~oImgLayer(void);
-	
-	virtual	const char *	layerType();								// type of layer this is, just for feedback to the developer
-	
-	virtual		bool		enabled();
-	virtual		void		setEnabled(bool pEnabled);
-	virtual		qlong		left();
-	virtual		void		setLeft(qlong pNewValue);
-	virtual		qlong		top();
-	virtual		void		setTop(qlong pNewValue);
-	virtual		qlong		width();
-	virtual		void		setWidth(qlong pNewValue);
-	virtual		qlong		height();
-	virtual		void		setHeight(qlong pNewValue);	
-	
-	virtual		void		getContents(EXTfldval &pContents);
-	virtual		void		setContents(EXTfldval &pContents);
-	
-	virtual		void		drawLayer(oRGBAImage & pOnto, bool pMix);	// draw our layer onto the pixmap..
+
+	virtual const char *layerType(); // type of layer this is, just for feedback to the developer
+
+	virtual bool enabled();
+	virtual void setEnabled(bool pEnabled);
+	virtual qlong left();
+	virtual void setLeft(qlong pNewValue);
+	virtual qlong top();
+	virtual void setTop(qlong pNewValue);
+	virtual qlong width();
+	virtual void setWidth(qlong pNewValue);
+	virtual qlong height();
+	virtual void setHeight(qlong pNewValue);
+
+	virtual void getContents(EXTfldval &pContents);
+	virtual void setContents(EXTfldval &pContents);
+
+	virtual void drawLayer(oRGBAImage &pOnto, bool pMix); // draw our layer onto the pixmap..
 };
 
 class oImgBitmap : public oImgLayer {
 private:
-	oRGBAImage *	mImage;
-	
+	oRGBAImage *mImage;
+
 protected:
 public:
-	oImgBitmap(qlong pWidth, qlong pHeight, qcol pColor);				// init as empty bitmap
-	virtual ~oImgBitmap(void);											// and cleanup!
+	oImgBitmap(qlong pWidth, qlong pHeight, qcol pColor); // init as empty bitmap
+	virtual ~oImgBitmap(void); // and cleanup!
 
-	virtual	const char *	layerType();								// type of layer this is, just for feedback to the developer
+	virtual const char *layerType(); // type of layer this is, just for feedback to the developer
 
-	virtual		qlong		width();
-	virtual		void		setWidth(qlong pNewValue);
-	virtual		qlong		height();
-	virtual		void		setHeight(qlong pNewValue);
+	virtual qlong width();
+	virtual void setWidth(qlong pNewValue);
+	virtual qlong height();
+	virtual void setHeight(qlong pNewValue);
 
-	virtual		void		getContents(EXTfldval &pContents);
-	virtual		void		setContents(EXTfldval &pContents);
+	virtual void getContents(EXTfldval &pContents);
+	virtual void setContents(EXTfldval &pContents);
 
-	virtual		void		drawLayer(oRGBAImage & pOnto, bool pMix);	// draw our layer onto the pixmap..
+	virtual void drawLayer(oRGBAImage &pOnto, bool pMix); // draw our layer onto the pixmap..
 };
-
 
 #endif

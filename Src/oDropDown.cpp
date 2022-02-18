@@ -16,49 +16,49 @@
 
 // Constructor to initialize object
 oDropDown::oDropDown(void) {
-	mObjType			= cObjType_DropList;
-    mBKTheme            = WND_BK_CONTROL;
-	mDisplayCalc		= "";
+	mObjType = cObjType_DropList;
+	mBKTheme = WND_BK_CONTROL;
+	mDisplayCalc = "";
 };
 
 // Destructor to clean up
-oDropDown::~oDropDown(void) {
-	
+oDropDown::~oDropDown(void){
+
 };
 
 // instantiate a new object
-oDropDown * oDropDown::newObject(void) {
+oDropDown *oDropDown::newObject(void) {
 	oDropDown *lvNewDropDown = new oDropDown();
-	
+
 	return lvNewDropDown;
 };
 
 // Do our list content drawing here (what we see when the list is collapsed, for cObjType_DropList only)
-bool	oDropDown::drawListContents(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {	
+bool oDropDown::drawListContents(EXTListLineInfo *pInfo, EXTCompInfo *pECI) {
 	// Draw our text
-	EXTfldval *	calcFld;
-		
-	if (mDisplayCalc.length()==0) {
+	EXTfldval *calcFld;
+
+	if (mDisplayCalc.length() == 0) {
 		EXTfldval fval;
-			
-		ECOgetProperty(mHWnd,anumListCalc,fval); 
-		qstring	calculation(fval);
-			
+
+		ECOgetProperty(mHWnd, anumListCalc, fval);
+		qstring calculation(fval);
+
 		calcFld = newCalculation(calculation, pECI);
 	} else {
 		calcFld = newCalculation(mDisplayCalc, pECI);
 	};
-		
-	if (calcFld != NULL) {
-        GDItextSpecStruct   textSpec = mCanvas->textSpec();
-        qpoint              leftTop(pInfo->mLineRect.left+10, pInfo->mLineRect.top);
 
-		EXTfldval	result;
+	if (calcFld != NULL) {
+		GDItextSpecStruct textSpec = mCanvas->textSpec();
+		qpoint leftTop(pInfo->mLineRect.left + 10, pInfo->mLineRect.top);
+
+		EXTfldval result;
 		calcFld->evalCalculation(result, pECI->mLocLocp, NULL, qfalse);
-		qstring		text(result);		
-		
+		qstring text(result);
+
 		mCanvas->drawText(text.cString(), leftTop, textSpec);
-		
+
 		delete calcFld;
 	};
 
@@ -66,27 +66,27 @@ bool	oDropDown::drawListContents(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 };
 
 // Do our list line drawing here (for cObjType_List or cObjType_DropList)
-bool	oDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
+bool oDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo *pECI) {
 	// Omnis seems to already have put a tick infront of our current line. grmbl grmbl grmbl
 	// Whenever selecting a line to toggle you'll need to react appropriately
-	
-	qbool	isSelected = pInfo->mListPtr->isRowSelected(pInfo->mLine,qfalse);
-	
+
+	qbool isSelected = pInfo->mListPtr->isRowSelected(pInfo->mLine, qfalse);
+
 	if (isSelected && mShowSelected) {
-		mCanvas->drawIcon(1655+cBMPicon16x16, pInfo->mLineRect);
+		mCanvas->drawIcon(1655 + cBMPicon16x16, pInfo->mLineRect);
 	};
-	
+
 	// draw our text
-	qstring *	text = newStringFromParam(1, pECI); // first parameter contains our calculated text :)
-	if (text!=NULL) {	
-        GDItextSpecStruct   textSpec = mCanvas->textSpec();
-        qpoint              leftTop(pInfo->mLineRect.left+20, pInfo->mLineRect.top);
-	
+	qstring *text = newStringFromParam(1, pECI); // first parameter contains our calculated text :)
+	if (text != NULL) {
+		GDItextSpecStruct textSpec = mCanvas->textSpec();
+		qpoint leftTop(pInfo->mLineRect.left + 20, pInfo->mLineRect.top);
+
 		mCanvas->drawText(text->cString(), leftTop, textSpec);
-		
+
 		delete text;
 	};
-	
+
 	return true; // we have drawn this...
 };
 
@@ -94,36 +94,35 @@ bool	oDropDown::drawListLine(EXTListLineInfo *pInfo, EXTCompInfo* pECI) {
 // properties
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-ECOproperty oDropDownProperties[] = { 
+ECOproperty oDropDownProperties[] = {
 	//	ID						ResID	Type			Flags					ExFlags	EnumStart	EnumEnd
-	anumShowselected,			0,		fftBoolean,		EXTD_FLAG_PROPACT,		0,		0,			0,		// $multiselect
-	oDD_displayCalc,			4200,	fftCharacter,	EXTD_FLAG_PROPGENERAL,	0,		0,			0,		// $displaycalc
-};	
+	anumShowselected, 0, fftBoolean, EXTD_FLAG_PROPACT, 0, 0, 0, // $multiselect
+	oDD_displayCalc, 4200, fftCharacter, EXTD_FLAG_PROPGENERAL, 0, 0, 0, // $displaycalc
+};
 
-qProperties * oDropDown::properties(void) {
-	qProperties *	lvProperties = oBaseComponent::properties();	// we skip the properties in oBaseVisComponent, Omnis implements those in the background for drop down controls
-	
+qProperties *oDropDown::properties(void) {
+	qProperties *lvProperties = oBaseComponent::properties(); // we skip the properties in oBaseVisComponent, Omnis implements those in the background for drop down controls
+
 	// Add the property definition for our visual component here...
 	lvProperties->addElements(oDropDownProperties, sizeof(oDropDownProperties) / sizeof(ECOproperty));
-	
+
 	return lvProperties;
 };
 
-
 // set the value of a property
-qbool oDropDown::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pECI) {
+qbool oDropDown::setProperty(qlong pPropID, EXTfldval &pNewValue, EXTCompInfo *pECI) {
 	// most anum properties are managed by Omnis but some we need to do ourselves, no idea why...
-	
+
 	switch (pPropID) {
 		case anumShowselected: {
-			mShowSelected = pNewValue.getBool()==2;
-			WNDinvalidateRect(mHWnd, NULL);			
-			return qtrue;			
+			mShowSelected = pNewValue.getBool() == 2;
+			WNDinvalidateRect(mHWnd, NULL);
+			return qtrue;
 		}; break;
 		case oDD_displayCalc: {
 			mDisplayCalc = pNewValue;
-			WNDinvalidateRect(mHWnd, NULL);			
-			return qtrue;			
+			WNDinvalidateRect(mHWnd, NULL);
+			return qtrue;
 		}; break;
 		default:
 			return oBaseVisComponent::setProperty(pPropID, pNewValue, pECI);
@@ -132,21 +131,21 @@ qbool oDropDown::setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pEC
 };
 
 // get the value of a property
-qbool oDropDown::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI) {
+qbool oDropDown::getProperty(qlong pPropID, EXTfldval &pGetValue, EXTCompInfo *pECI) {
 	// most anum properties are managed by Omnis but some we need to do ourselves...
-	
+
 	switch (pPropID) {
 		case anumShowselected: {
 			pGetValue.setBool(mShowSelected ? 2 : 1);
-            return true;
+			return true;
 		}; break;
 		case oDD_displayCalc: {
-			pGetValue.setChar((qchar *) mDisplayCalc.cString(), mDisplayCalc.length());
-            return true;
+			pGetValue.setChar((qchar *)mDisplayCalc.cString(), mDisplayCalc.length());
+			return true;
 		}; break;
 		default:
 			return oBaseVisComponent::getProperty(pPropID, pGetValue, pECI);
-			
+
 			break;
 	};
 };
@@ -158,20 +157,20 @@ qbool oDropDown::getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pEC
 // This is our array of methods we support
 // ECOmethodEvent oDropDownMethods[] = {
 //	ID				Resource	Return type		Paramcount		Params					Flags		ExFlags
-//	1,					8000,		fftCharacter,	0,				NULL,					0,			0,			// $testMethod	
+//	1,					8000,		fftCharacter,	0,				NULL,					0,			0,			// $testMethod
 // };
 
 // return an array of method meta data
-qMethods * oDropDown::methods(void) {
-	qMethods * lvMethods = oBaseVisComponent::methods();
-	
-	//	lvMethods->addElements(oDropDownMethods, sizeof(oDropDownMethods) / sizeof(ECOmethodEvent));		
-	
+qMethods *oDropDown::methods(void) {
+	qMethods *lvMethods = oBaseVisComponent::methods();
+
+	//	lvMethods->addElements(oDropDownMethods, sizeof(oDropDownMethods) / sizeof(ECOmethodEvent));
+
 	return lvMethods;
 };
 
 // invoke a method
-int	oDropDown::invokeMethod(qlong pMethodId, EXTCompInfo* pECI) {
+int oDropDown::invokeMethod(qlong pMethodId, EXTCompInfo *pECI) {
 	/*	switch (pMethodId) {
 	 case 1: {
 	 EXTfldval	lvResult;
@@ -195,40 +194,45 @@ int	oDropDown::invokeMethod(qlong pMethodId, EXTCompInfo* pECI) {
 
 ECOmethodEvent oDropDownEvents[] = {
 	//	ID					Resource	Return type		Paramcount		Params					Flags		ExFlags
-	oDD_evClick,			5000,		0,				0,				0,						0,			0,
-};	
+	oDD_evClick,
+	5000,
+	0,
+	0,
+	0,
+	0,
+	0,
+};
 
 // return an array of events meta data
-qEvents *	oDropDown::events(void) {
-	qEvents *	lvEvents = oBaseNVComponent::events();
-	
+qEvents *oDropDown::events(void) {
+	qEvents *lvEvents = oBaseNVComponent::events();
+
 	// Add the event definition for our visual component here...
 	lvEvents->addElements(oDropDownEvents, sizeof(oDropDownEvents) / sizeof(ECOmethodEvent));
-	
+
 	return lvEvents;
 };
 
-void	oDropDown::evClick(qpoint pAt, EXTCompInfo* pECI) {
-    // !BAS! I don't think this is called as we're leaving it up to Omnis to handle the mouse events...
+void oDropDown::evClick(qpoint pAt, EXTCompInfo *pECI) {
+	// !BAS! I don't think this is called as we're leaving it up to Omnis to handle the mouse events...
 
 	bool enabled = (isEnabled() && isActive() && ECOisOMNISinTrueRuntime(mHWnd));
-    if (enabled) {
-        // need to find out if Omnis has an internal ID for its standard evClick
-        ECOsendEvent(mHWnd, oDD_evClick, 0, 0, EEN_EXEC_IMMEDIATE);
-    };
-};	
+	if (enabled) {
+		// need to find out if Omnis has an internal ID for its standard evClick
+		ECOsendEvent(mHWnd, oDD_evClick, 0, 0, EEN_EXEC_IMMEDIATE);
+	};
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // mouse
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // mouse left button pressed down (return true if we finished handling this, false if we want Omnis internal logic)
-bool	oDropDown::evMouseLDown(qpoint pDownAt) {
+bool oDropDown::evMouseLDown(qpoint pDownAt) {
 	return false; // let omnis do its thing
 };
 
 // mouse left button released (return true if we finished handling this, false if we want Omnis internal logic)
-bool	oDropDown::evMouseLUp(qpoint pUpAt) {
+bool oDropDown::evMouseLUp(qpoint pUpAt) {
 	return false; // let omnis do its thing
 };
-

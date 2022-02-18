@@ -24,19 +24,19 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 oImgLayer::oImgLayer(void) {
-	mEnabled	= true;
-	mLeft		= 0;
-	mTop		= 0;
-	mWidth		= 0;	// 0 = autosize
-	mHeight		= 0;	// 0 = autosize
-	mAlpha		= 255;	// 255 = fully opaque
+	mEnabled = true;
+	mLeft = 0;
+	mTop = 0;
+	mWidth = 0; // 0 = autosize
+	mHeight = 0; // 0 = autosize
+	mAlpha = 255; // 255 = fully opaque
 };
 
-oImgLayer::~oImgLayer(void) {
+oImgLayer::~oImgLayer(void){
 	// nothing to do here
 };
 
-const char * oImgLayer::layerType() {
+const char *oImgLayer::layerType() {
 	return "ImgLayer";
 };
 
@@ -44,55 +44,54 @@ bool oImgLayer::enabled() {
 	return mEnabled;
 };
 
-void	oImgLayer::setEnabled(bool pEnabled) {
+void oImgLayer::setEnabled(bool pEnabled) {
 	mEnabled = pEnabled;
 };
 
-qlong	oImgLayer::left() {
+qlong oImgLayer::left() {
 	return mLeft;
 };
 
-void	oImgLayer::setLeft(qlong pNewValue) {
+void oImgLayer::setLeft(qlong pNewValue) {
 	mLeft = pNewValue;
 };
 
-qlong	oImgLayer::top() {
+qlong oImgLayer::top() {
 	return mTop;
 };
 
-void	oImgLayer::setTop(qlong pNewValue) {
+void oImgLayer::setTop(qlong pNewValue) {
 	mTop = pNewValue;
 };
 
-qlong	oImgLayer::width() {
+qlong oImgLayer::width() {
 	return mWidth;
 };
 
-void	oImgLayer::setWidth(qlong pNewValue) {
+void oImgLayer::setWidth(qlong pNewValue) {
 	mWidth = pNewValue;
 };
 
-qlong	oImgLayer::height() {
+qlong oImgLayer::height() {
 	return mHeight;
 };
 
-void	oImgLayer::setHeight(qlong pNewValue) {
+void oImgLayer::setHeight(qlong pNewValue) {
 	mHeight = pNewValue;
 };
 
-void	oImgLayer::getContents(EXTfldval &pContents) {
+void oImgLayer::getContents(EXTfldval &pContents) {
 	pContents.setEmpty(fftBinary, 0);
 };
 
-void	oImgLayer::setContents(EXTfldval &pContents) {
+void oImgLayer::setContents(EXTfldval &pContents){
 	// nothing to do here...
 };
 
 // draw our layer onto the pixmap..
-void	oImgLayer::drawLayer(oRGBAImage & pOnto, bool pMix) {
+void oImgLayer::drawLayer(oRGBAImage &pOnto, bool pMix){
 	// nothing to do here..
-};	
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // oImgBitmap
@@ -110,11 +109,11 @@ oImgBitmap::~oImgBitmap() {
 	};
 };
 
-const char * oImgBitmap::layerType() {
+const char *oImgBitmap::layerType() {
 	return "Bitmap";
 };
 
-qlong	oImgBitmap::width() {
+qlong oImgBitmap::width() {
 	if (mImage == NULL) {
 		return 0;
 	} else if (mWidth == 0) {
@@ -124,46 +123,46 @@ qlong	oImgBitmap::width() {
 	};
 };
 
-void	oImgBitmap::setWidth(qlong pNewValue) {
+void oImgBitmap::setWidth(qlong pNewValue) {
 	if (mImage == NULL) {
-		mWidth = pNewValue;				
+		mWidth = pNewValue;
 	} else if (mImage->width() == pNewValue) {
 		mWidth = 0;
 	} else {
-		mWidth = pNewValue;		
+		mWidth = pNewValue;
 	};
 };
 
-qlong	oImgBitmap::height() {
+qlong oImgBitmap::height() {
 	if (mImage == NULL) {
 		return 0;
 	} else if (mHeight == 0) {
 		return mImage->height();
 	} else {
 		return mHeight;
-	};	
+	};
 };
 
-void	oImgBitmap::setHeight(qlong pNewValue) {
+void oImgBitmap::setHeight(qlong pNewValue) {
 	if (mImage == NULL) {
 		mHeight = pNewValue;
 	} else if (mImage->height() == pNewValue) {
-		mHeight = 0;		
-	} else {		
+		mHeight = 0;
+	} else {
 		mHeight = pNewValue;
 	};
 };
 
-void	oImgBitmap::getContents(EXTfldval &pContents) {
+void oImgBitmap::getContents(EXTfldval &pContents) {
 	if (mImage == NULL) {
-		pContents.setEmpty(fftBinary, 0);		
+		pContents.setEmpty(fftBinary, 0);
 	} else {
-		int				len = 0;
-		unsigned char *	pngdata = mImage->asPNG(len);
+		int len = 0;
+		unsigned char *pngdata = mImage->asPNG(len);
 
 		if (pngdata == NULL) {
 			oBaseComponent::addToTraceLog("getContents: No image");
-			pContents.setEmpty(fftBinary, 0);		
+			pContents.setEmpty(fftBinary, 0);
 		} else {
 			pContents.setBinary(fftBinary, pngdata, len);
 
@@ -172,16 +171,16 @@ void	oImgBitmap::getContents(EXTfldval &pContents) {
 	};
 };
 
-void	oImgBitmap::setContents(EXTfldval &pContents) {
+void oImgBitmap::setContents(EXTfldval &pContents) {
 	if (mImage == NULL) {
 		// really?
 	} else {
 		// We get the binary as is, we assume the contents is raw picture data in any format supported by STB
 		qlong bitmapLen = pContents.getBinLen();
 		if (bitmapLen > 0) {
-			qbyte * bitmapData = (qbyte *)MEMmalloc(sizeof(qbyte) * (bitmapLen+1));
+			qbyte *bitmapData = (qbyte *)MEMmalloc(sizeof(qbyte) * (bitmapLen + 1));
 			if (bitmapData != NULL) {
-				qlong	reallen;
+				qlong reallen;
 				pContents.getBinary(bitmapLen, bitmapData, reallen);
 
 				// and assign it to our image
@@ -199,7 +198,7 @@ void	oImgBitmap::setContents(EXTfldval &pContents) {
 };
 
 // draw our layer onto the pixmap..
-void	oImgBitmap::drawLayer(oRGBAImage & pOnto, bool pMix) {
+void oImgBitmap::drawLayer(oRGBAImage &pOnto, bool pMix) {
 	if (mImage == NULL) {
 		// nothing to draw..
 		oBaseComponent::addToTraceLog("drawLayer: No source image");
@@ -207,8 +206,8 @@ void	oImgBitmap::drawLayer(oRGBAImage & pOnto, bool pMix) {
 	};
 
 	// get the size of our destination bitmap
-	qlong	destwidth	= pOnto.width();
-	qlong	destheight	= pOnto.height();
+	qlong destwidth = pOnto.width();
+	qlong destheight = pOnto.height();
 
 	if ((destwidth == 0) || (destheight == 0)) {
 		// nothing to draw..
@@ -217,48 +216,48 @@ void	oImgBitmap::drawLayer(oRGBAImage & pOnto, bool pMix) {
 	};
 
 	// get the size we want our bitmap to be
-	qlong	sourcewidth		= mImage->width();
-	qlong	sourceheight	= mImage->height();
-	qlong	scaledwidth		= width();
-	qlong	scaledheight	= height();
+	qlong sourcewidth = mImage->width();
+	qlong sourceheight = mImage->height();
+	qlong scaledwidth = width();
+	qlong scaledheight = height();
 
-	if ((sourcewidth==0) || (sourceheight==0)) {
+	if ((sourcewidth == 0) || (sourceheight == 0)) {
 		// nothing to draw..
 		oBaseComponent::addToTraceLog("drawLayer: Empty source image");
 		return;
 	};
 
-	qlong	maxX = (mLeft + scaledwidth);
+	qlong maxX = (mLeft + scaledwidth);
 	if (maxX > destwidth) maxX = destwidth;
 
-	qlong	maxY = (mTop + scaledheight);
+	qlong maxY = (mTop + scaledheight);
 	if (maxY > destheight) maxY = destheight;
-		
+
 	if ((sourcewidth != scaledwidth) || (sourceheight != scaledheight)) {
 		// we're scaling this so we handle this slightly differently
 		// this code works well when enlarging our bitmap but is overkill for making things smaller
 		// look into using the resample logic available in STB, it may do a much better job, but thats for the next version...
-			
-		bool	issmaller = (sourcewidth > scaledwidth) && (sourceheight > scaledheight);
-			
-		float	stepX = (float) sourcewidth;
-		float	stepY = (float) sourceheight;
-				
+
+		bool issmaller = (sourcewidth > scaledwidth) && (sourceheight > scaledheight);
+
+		float stepX = (float)sourcewidth;
+		float stepY = (float)sourceheight;
+
 		stepX = stepX / scaledwidth;
 		stepY = stepY / scaledheight;
-				
-		float	sY = 0.0;
-				
+
+		float sY = 0.0;
+
 		for (qlong dY = mTop; dY < maxY; dY++) {
 			if (dY >= 0) {
-				float	sX = 0.0;
-						
+				float sX = 0.0;
+
 				for (qlong dX = mLeft; dX < maxX; dX++) {
-					if (dX >= 0)  {
+					if (dX >= 0) {
 						sPixel pixel;
 						if (issmaller) {
 							// just get it
-							pixel = (* mImage)((qlong) floor(sX), (qlong) floor(sY));
+							pixel = (*mImage)((qlong)floor(sX), (qlong)floor(sY));
 						} else {
 							// interpolate
 							pixel = mImage->getPixel(sX, sY);
@@ -269,36 +268,35 @@ void	oImgBitmap::drawLayer(oRGBAImage & pOnto, bool pMix) {
 							pOnto(dX, dY) = pixel;
 						};
 					};
-							
+
 					sX += stepX;
 				};
 			};
 			sY += stepY;
-		}; 
+		};
 	} else {
 		// not scaled? just copy it!
-		qlong	sY = 0;
-				
+		qlong sY = 0;
+
 		for (qlong dY = mTop; dY < maxY; dY++) {
 			if (dY >= 0) {
-				qlong	sX = 0;
-				
+				qlong sX = 0;
+
 				for (qlong dX = mLeft; dX < maxX; dX++) {
-					if (dX >= 0)  {
-						sPixel	pixel = (*mImage)(sX, sY);
+					if (dX >= 0) {
+						sPixel pixel = (*mImage)(sX, sY);
 						if (pMix) {
 							pOnto(dX, dY) = oRGBAImage::mixPixel(pOnto(dX, dY), pixel, mAlpha);
 						} else {
 							pOnto(dX, dY) = pixel;
 						};
 					};
-							
+
 					sX++;
 				};
 			};
-					
-			sY++;
-		};				
-	};			
-};	
 
+			sY++;
+		};
+	};
+};

@@ -16,44 +16,44 @@
 #include "omnis.xcomp.framework.h"
 
 enum oCountButtonPropIDs {
-	oCB_counter			= 100,
-	oCB_radius			= 101,
-	oCB_spacing			= 102,
-	oCB_countColour		= 103,
+	oCB_counter = 100,
+	oCB_radius = 101,
+	oCB_spacing = 102,
+	oCB_countColour = 103,
 };
 
 enum oCountButtonEventIDs {
-	oCB_evClick			= 100,
+	oCB_evClick = 100,
 };
 
 class oCountButton : public oBaseVisComponent {
 private:
-	qulong						mIconID;
-	int							mCounter;
-	int							mRadius;
-	int							mSpacing;
-	qcol						mCountColour;
-	
+	qulong mIconID;
+	int mCounter;
+	int mRadius;
+	int mSpacing;
+	qcol mCountColour;
+
 public:
 	oCountButton(void);
 	~oCountButton(void);
-	
-	static oCountButton *		newObject(void);
-	
-	virtual void				doPaint(EXTCompInfo* pECI);											// Do our drawing in here
-	
+
+	static oCountButton *newObject(void);
+
+	virtual void doPaint(EXTCompInfo *pECI); // Do our drawing in here
+
 	// properties
-	static  qProperties *		properties(void);													// return an array of property data
-	virtual qbool				setProperty(qlong pPropID,EXTfldval &pNewValue,EXTCompInfo* pECI);	// set the value of a property
-	virtual qbool				getProperty(qlong pPropID,EXTfldval &pGetValue,EXTCompInfo* pECI);	// get the value of a property
-	
+	static qProperties *properties(void); // return an array of property data
+	virtual qbool setProperty(qlong pPropID, EXTfldval &pNewValue, EXTCompInfo *pECI); // set the value of a property
+	virtual qbool getProperty(qlong pPropID, EXTfldval &pGetValue, EXTCompInfo *pECI); // get the value of a property
+
 	// methods
-	static  qMethods *			methods(void);														// return array of method meta data
-	virtual int					invokeMethod(qlong pMethodId, EXTCompInfo* pECI);					// invoke a method
-	
+	static qMethods *methods(void); // return array of method meta data
+	virtual int invokeMethod(qlong pMethodId, EXTCompInfo *pECI); // invoke a method
+
 	// events
-	static	qEvents *			events(void);														// return an array of events meta data
-	virtual void				evClick(qpoint pAt, EXTCompInfo* pECI);								// mouse click at this location
+	static qEvents *events(void); // return an array of events meta data
+	virtual void evClick(qpoint pAt, EXTCompInfo *pECI); // mouse click at this location
 };
 
 #endif

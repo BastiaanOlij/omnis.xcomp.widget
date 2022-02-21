@@ -1,0 +1,109 @@
+# Workflow to automatically compile a Linux/Windows library on commit/push
+name: Build on push
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events, but only for the master branch we'll create .zip files
+on:
+  [push, pull_request]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This job builds the plugin for our target platforms
+  build:
+    name: Building for ${{ matrix.platform }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          # faster testing by disabling the others...
+          - os: macos-latest
+            platform: macos
+          - os: windows-latest
+            platform: windows
+
+    steps:
+      - name: Setup actions
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Add msbuild to PATH (Windows)
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x64
+        if: matrix.platform == 'windows'
+
+      - name: Get SDK (MacOS)
+        run: |
+          curl -O "ftp://ftp.omnis.net/OmnisStudio/Studio102_31315/SDK/osx64/OSX-SDK-10.2-31315.dmg"
+          hdiutil attach OSX-SDK-10.2-31315.dmg
+          cp -a /volumes/OSX-SDK-10.2-31315/OSX-SDK-10.2-31315/. thirdparty/omnis.sdk/mac/
+          hdiutil detach /volumes/OSX-SDK-10.2-31315
+        if: matrix.platform == 'macos'
+
+      - name: Get SDK (Windows)
+        run: |
+          curl -O "ftp://ftp.omnis.net/OmnisStudio/Studio102_31315/SDK/windows/Windows-SDK-10.2-31315-x86-x64.zip"
+          tar -xf Windows-SDK-10.2-31315-x86-x64.zip
+          xcopy /E /I Windows-SDK-10.2-31315-x86-x64\* thirdparty\omnis.sdk\win\
+        if: matrix.platform == 'windows'
+
+      - name: Build (MacOS)
+        run: |
+          xcodebuild -project oWidget.xcodeproj build 
+        if: matrix.platform == 'macos'
+
+      - name: Build (Windows)
+        run: |
+          MSBuild oWidget.vcxproj /property:Platform=x64 /property:Configuration="UNICODE Release"
+        if: matrix.platform == 'windows'
+
+      - name: Upload build files (artifacts) (MacOS)
+        uses: actions/upload-artifact@v2
+        with:
+          name: xcomp-macos
+          path: |
+            _OSXUnicode
+        if: matrix.platform == 'macos'
+
+      - name: Upload build files (artifacts) (Windows)
+        uses: actions/upload-artifact@v2
+        with:
+          name: xcomp-windows
+          path: |
+            URel64/oWidget.dll
+        if: matrix.platform == 'windows'
+
+# This job collects the build output and assembles the final asset (artifact)
+  asset:
+    name: Assembling the asset (artifact)
+    runs-on: ubuntu-20.04
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
+      - name: Copy files to destination
+        run: |
+          mkdir oWidget
+          mkdir oWidget/macos
+          mkdir oWidget/windows
+          cp -a xcomp-macos/. oWidget/macos/
+          cp xcomp-windows/oWidget.dll oWidget/windows/
+      - name: Get tag name
+        run: |
+          echo "GITHUB_SHA_SHORT=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags')
+      - name: Zip asset
+        run: |
+          zip -qq -r oWidget.zip oWidget/.
+      - name: Create and upload asset
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: "oWidget.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+

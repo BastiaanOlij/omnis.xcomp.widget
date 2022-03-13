@@ -1,0 +1,3 @@
+[submodule "thirdparty/omnis.xcomp.framework"]
+	path = thirdparty/omnis.xcomp.framework
+	url = https://github.com/BastiaanOlij/omnis.xcomp.framework

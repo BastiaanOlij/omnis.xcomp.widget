@@ -20,28 +20,28 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D377AD87-8C8E-47F3-987D-428CF82E73FF}</ProjectGuid>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>oWidget</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -99,7 +99,7 @@
     <ClCompile>
       <Optimization>MinSpace</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\complib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>thirdparty\omnis.sdk\win\complib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;iswin32;isXCOMPLIB;NO_STRICT;isunicode;UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -121,7 +121,7 @@
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;omnisu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\URel/generic.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>thirdparty\omnis.sdk\win\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>.\Generic.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>.\URel/GENERIC.pdb</ProgramDatabaseFile>
@@ -148,7 +148,7 @@
     <ClCompile>
       <Optimization>MinSpace</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\complib;..\omnis.xcomp.framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>thirdparty\omnis.sdk\win\complib;thirdparty\omnis.xcomp.framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;is64bit;_WINDOWS;iswin32;isXCOMPLIB;NO_STRICT;isunicode;UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;_UNICODE;OMNISSDK=102;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -170,7 +170,7 @@
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;omnisu64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutputPath)$(ProjectName).dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>thirdparty\omnis.sdk\win\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>.\$(ProjectName).def</ModuleDefinitionFile>
       <ProgramDatabaseFile>$(OutputPath)$(ProjectName).pdb</ProgramDatabaseFile>
@@ -196,7 +196,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\complib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>thirdparty\omnis.sdk\win\complib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;iswin32;isXCOMPLIB;NO_STRICT;isunicode;_UNICODE;UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -218,7 +218,7 @@
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;omnisu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\UDeb/generic.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>thirdparty\omnis.sdk\win\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>.\Generic.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -244,7 +244,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\complib;..\omnis.xcomp.framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>thirdparty\omnis.sdk\win\complib;thirdparty\omnis.xcomp.framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;is64bit;_WINDOWS;iswin32;isXCOMPLIB;NO_STRICT;isunicode;_UNICODE;UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;OMNISSDK=102;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
@@ -265,7 +265,7 @@
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;omnisu64_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutputPath)$(ProjectName).dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>thirdparty\omnis.sdk\win\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>.\$(ProjectName).def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -281,15 +281,15 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\omnis.xcomp.framework\FrameworkWndProc.cpp" />
-    <ClCompile Include="..\omnis.xcomp.framework\oBaseComponent.cpp" />
-    <ClCompile Include="..\omnis.xcomp.framework\oBaseNVComponent.cpp" />
-    <ClCompile Include="..\omnis.xcomp.framework\oBaseVisComponent.cpp" />
-    <ClCompile Include="..\omnis.xcomp.framework\oDrawingCanvas.cpp" />
-    <ClCompile Include="..\omnis.xcomp.framework\oRGBAImage.cpp" />
-    <ClCompile Include="..\omnis.xcomp.framework\oUTF8.cpp" />
-    <ClCompile Include="..\omnis.xcomp.framework\oXCompLib.cpp" />
-    <ClCompile Include="..\omnis.xcomp.framework\qString.cpp" />
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\FrameworkWndProc.cpp" />
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oBaseComponent.cpp" />
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oBaseNVComponent.cpp" />
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oBaseVisComponent.cpp" />
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oDrawingCanvas.cpp" />
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oRGBAImage.cpp" />
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oUTF8.cpp" />
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oXCompLib.cpp" />
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\qString.cpp" />
     <ClCompile Include="Src\oCountButton.cpp" />
     <ClCompile Include="Src\oDataList.cpp" />
     <ClCompile Include="Src\oDateTime.cpp" />
@@ -312,17 +312,17 @@
     <Image Include="English.lproj\oWidget.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\omnis.xcomp.framework\oBaseComponent.h" />
-    <ClInclude Include="..\omnis.xcomp.framework\oBaseNVComponent.h" />
-    <ClInclude Include="..\omnis.xcomp.framework\oBaseVisComponent.h" />
-    <ClInclude Include="..\omnis.xcomp.framework\oDrawingCanvas.h" />
-    <ClInclude Include="..\omnis.xcomp.framework\omnis.xcomp.framework.h" />
-    <ClInclude Include="..\omnis.xcomp.framework\oRGBAImage.h" />
-    <ClInclude Include="..\omnis.xcomp.framework\oUTF8.h" />
-    <ClInclude Include="..\omnis.xcomp.framework\oXCompLib.h" />
-    <ClInclude Include="..\omnis.xcomp.framework\qArray.h" />
-    <ClInclude Include="..\omnis.xcomp.framework\qString.h" />
-    <ClInclude Include="..\omnis.xcomp.framework\xCompStandardIncludes.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oBaseComponent.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oBaseNVComponent.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oBaseVisComponent.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oDrawingCanvas.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\omnis.xcomp.framework.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oRGBAImage.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oUTF8.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oXCompLib.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\qArray.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\qString.h" />
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\xCompStandardIncludes.h" />
     <ClInclude Include="Src\monitor_mac.h" />
     <ClInclude Include="Src\oCountButton.h" />
     <ClInclude Include="Src\oDataList.h" />

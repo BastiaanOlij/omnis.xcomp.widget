@@ -1,3 +1,6 @@
 [submodule "thirdparty/omnis.xcomp.framework"]
 	path = thirdparty/omnis.xcomp.framework
 	url = https://github.com/BastiaanOlij/omnis.xcomp.framework
+[submodule "thirdparty/omnis.sdk.source"]
+	path = thirdparty/omnis.sdk.source
+	url = https://github.com/OmnisStudio/Omnis-10.22-SDK

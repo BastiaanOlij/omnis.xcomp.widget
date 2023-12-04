@@ -23,11 +23,11 @@ jobs:
             platform: windows
 
     steps:
-      - name: Setup actions
-        uses: actions/checkout@v2
+      - name: Checkout source
+        uses: actions/checkout@v4
         with:
           submodules: 'recursive'
-
+  
       - name: Add msbuild to PATH (Windows)
         uses: microsoft/setup-msbuild@v1.1
         with:
@@ -36,17 +36,15 @@ jobs:
 
       - name: Get SDK (MacOS)
         run: |
-          curl -O "ftp://ftp.omnis.net/OmnisStudio/Studio102_31315/SDK/osx64/OSX-SDK-10.2-31315.dmg"
-          hdiutil attach OSX-SDK-10.2-31315.dmg
-          cp -a /volumes/OSX-SDK-10.2-31315/OSX-SDK-10.2-31315/. thirdparty/omnis.sdk/mac/
-          hdiutil detach /volumes/OSX-SDK-10.2-31315
+          hdiutil attach thirdparty/omnis.sdk.source/OSX-SDK-10.22.dmg
+          cp -a /volumes/OSX-SDK-10.22/OSX_SDK_10.22/. thirdparty/omnis.sdk/mac/
+          hdiutil detach /volumes/OSX-SDK-10.22
         if: matrix.platform == 'macos'
 
       - name: Get SDK (Windows)
         run: |
-          curl -O "ftp://ftp.omnis.net/OmnisStudio/Studio102_31315/SDK/windows/Windows-SDK-10.2-31315-x86-x64.zip"
-          tar -xf Windows-SDK-10.2-31315-x86-x64.zip
-          xcopy /E /I Windows-SDK-10.2-31315-x86-x64\* thirdparty\omnis.sdk\win\
+          tar -xf thirdparty/omnis.sdk.source/Windows-SDK-10.22-x86-x64.zip
+          xcopy /E /I Windows-SDK-10.22-x86-x64\* thirdparty\omnis.sdk\win\
         if: matrix.platform == 'windows'
 
       - name: Build (MacOS)

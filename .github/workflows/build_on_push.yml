@@ -36,15 +36,23 @@ jobs:
 
       - name: Get SDK (MacOS)
         run: |
-          hdiutil attach thirdparty/omnis.sdk.source/OSX-SDK-10.22.dmg
-          cp -a /volumes/OSX-SDK-10.22/OSX_SDK_10.22/. thirdparty/omnis.sdk/mac/
-          hdiutil detach /volumes/OSX-SDK-10.22
+          omnis_sdk=$(curl -s "https://filestore.omnis.net/omnisrestservlet/ws/5975/api/file_browser/browser/file?file=/OmnisStudio/Studio1100_36251/SDK/macOS-SDK-11-36251.dmg&browsertype=0&odppid=blank" | awk {'print $1'})
+          curl -O "$omnis_sdk"
+          hdiutil attach macOS-SDK-11-36251.dmg
+          cp -a /volumes/macOS-SDK-11-36251/macOS_SDK_11_36251/. thirdparty/omnis.sdk/mac/
+          hdiutil detach /volumes/macOS-SDK-11-36251
         if: matrix.platform == 'macos'
 
       - name: Get SDK (Windows)
         run: |
-          tar -xf thirdparty/omnis.sdk.source/Windows-SDK-10.22-x86-x64.zip
-          xcopy /E /I Windows-SDK-10.22-x86-x64\* thirdparty\omnis.sdk\win\
+          $response = Invoke-WebRequest -uri "https://filestore.omnis.net/omnisrestservlet/ws/5975/api/file_browser/browser/file?file=/OmnisStudio/Studio1100_36251/SDK/Windows-SDK-11-36251-x64.zip&browsertype=0&odppid=blank"
+          $omnissdk = [System.Text.Encoding]::UTF8.GetString($response.content)
+          Invoke-WebRequest -uri $omnissdk -OutFile WindowsSDK.zip
+          mkdir WindowsSDK
+          cd WindowsSDK
+          tar -xf ../WindowsSDK.zip
+          cd ..
+          xcopy /E /I WindowsSDK\* thirdparty\omnis.sdk\win\
         if: matrix.platform == 'windows'
 
       - name: Build (MacOS)
@@ -54,23 +62,23 @@ jobs:
 
       - name: Build (Windows)
         run: |
-          MSBuild oWidget.vcxproj /property:Platform=x64 /property:Configuration="UNICODE Release"
+          MSBuild oWidget.vcxproj /property:Platform=x64 /property:Configuration="Release"
         if: matrix.platform == 'windows'
 
       - name: Upload build files (artifacts) (MacOS)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: xcomp-macos
           path: |
-            _OSXUnicode
+            build/release
         if: matrix.platform == 'macos'
 
       - name: Upload build files (artifacts) (Windows)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: xcomp-windows
           path: |
-            URel64/oWidget.dll
+            build/Release_x64/xcomp/oWidget.dll
         if: matrix.platform == 'windows'
 
 # This job collects the build output and assembles the final asset (artifact)
@@ -83,7 +91,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Download all workflow run artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
       - name: Copy files to destination
         run: |
           mkdir oWidget

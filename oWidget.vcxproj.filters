@@ -1,31 +1,110 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\omnis.xcomp.framework\FrameworkWndProc.cpp">
+    <None Include="oWidget.DEF" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oBaseComponent.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oBaseNVComponent.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oBaseVisComponent.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oDrawingCanvas.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\omnis.xcomp.framework.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oRGBAImage.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oUTF8.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\oXCompLib.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\qArray.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\qString.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\omnis.xcomp.framework\xCompStandardIncludes.h">
+      <Filter>omnis.xcomp.framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\oCountButton.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\oDataList.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\oDateTime.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\oDLNode.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\oDropDown.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\oFontDropDown.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\oImage.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\oImgLayer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\oRoundedButton.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\widget.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{042c8f37-28e8-4eac-833d-4d8cd3ba4f61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{10e9e5b8-e8a7-4a18-a057-3e0006209318}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="omnis.xcomp.framework">
+      <UniqueIdentifier>{f46b3caa-59da-41fa-aea0-0fc061e6e6e5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\FrameworkWndProc.cpp">
       <Filter>omnis.xcomp.framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\omnis.xcomp.framework\oBaseComponent.cpp">
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oBaseComponent.cpp">
       <Filter>omnis.xcomp.framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\omnis.xcomp.framework\oBaseNVComponent.cpp">
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oBaseNVComponent.cpp">
       <Filter>omnis.xcomp.framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\omnis.xcomp.framework\oBaseVisComponent.cpp">
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oBaseVisComponent.cpp">
       <Filter>omnis.xcomp.framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\omnis.xcomp.framework\oDrawingCanvas.cpp">
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oDrawingCanvas.cpp">
       <Filter>omnis.xcomp.framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\omnis.xcomp.framework\oRGBAImage.cpp">
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oRGBAImage.cpp">
       <Filter>omnis.xcomp.framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\omnis.xcomp.framework\oUTF8.cpp">
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oUTF8.cpp">
       <Filter>omnis.xcomp.framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\omnis.xcomp.framework\oXCompLib.cpp">
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\oXCompLib.cpp">
       <Filter>omnis.xcomp.framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\omnis.xcomp.framework\qString.cpp">
+    <ClCompile Include="thirdparty\omnis.xcomp.framework\qString.cpp">
       <Filter>omnis.xcomp.framework</Filter>
     </ClCompile>
     <ClCompile Include="Src\oCountButton.cpp">
@@ -60,103 +139,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\omnis.xcomp.framework\oBaseComponent.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\omnis.xcomp.framework\oBaseNVComponent.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\omnis.xcomp.framework\oBaseVisComponent.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\omnis.xcomp.framework\oDrawingCanvas.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\omnis.xcomp.framework\omnis.xcomp.framework.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\omnis.xcomp.framework\oRGBAImage.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\omnis.xcomp.framework\oUTF8.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\omnis.xcomp.framework\oXCompLib.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\omnis.xcomp.framework\qArray.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\omnis.xcomp.framework\qString.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\omnis.xcomp.framework\xCompStandardIncludes.h">
-      <Filter>omnis.xcomp.framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\monitor_mac.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\oCountButton.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\oDataList.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\oDateTime.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\oDLNode.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\oDropDown.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\oFontDropDown.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\oImage.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\oImgLayer.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\oRoundedButton.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\widget.h">
-      <Filter>include</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="English.lproj\oWidget.rc">
-      <Filter>resources</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="English.lproj\oWidget.bmp">
+    <Image Include="resources\oWidget.bmp">
       <Filter>resources</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="oWidget.DEF">
+    <ResourceCompile Include="resources\oWidget.rc">
       <Filter>resources</Filter>
-    </None>
-    <None Include="Src\monitor_mac.mm">
-      <Filter>source</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="omnis.xcomp.framework">
-      <UniqueIdentifier>{c20f8e9d-d2be-476f-a12b-14e42b3b4cff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resources">
-      <UniqueIdentifier>{2cfb916a-e048-43c9-9130-a4c78a7cd316}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include">
-      <UniqueIdentifier>{61a31417-af98-43b4-9552-efdfa379d348}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source">
-      <UniqueIdentifier>{f4ec4f4a-ad69-4ade-9393-f753e05664f6}</UniqueIdentifier>
-    </Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -1,284 +1,161 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="UNICODE Debug|Win32">
-      <Configuration>UNICODE Debug</Configuration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="UNICODE Debug|x64">
-      <Configuration>UNICODE Debug</Configuration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="UNICODE Release|Win32">
-      <Configuration>UNICODE Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="UNICODE Release|x64">
-      <Configuration>UNICODE Release</Configuration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D377AD87-8C8E-47F3-987D-428CF82E73FF}</ProjectGuid>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>oWidget</ProjectName>
+    <RootNamespace>oWidget</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Debug|Win32'" Label="Configuration">
+  <Import Project="thirdparty\omnis.sdk\win\master\windows\omnis_configuration.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
-    <UseOfMfc>false</UseOfMfc>
+  <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Debug|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
-    <UseOfMfc>false</UseOfMfc>
+  <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Release|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
-    <UseOfMfc>false</UseOfMfc>
+  <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Release|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
-    <UseOfMfc>false</UseOfMfc>
+  <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Debug|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+    <Import Project="windows\omnis_environment.props" />
+    <Import Project="windows\xcomp.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Debug|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+    <Import Project="windows\omnis_environment.props" />
+    <Import Project="windows\xcomp.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Release|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+    <Import Project="windows\omnis_environment.props" />
+    <Import Project="windows\xcomp.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Release|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+    <Import Project="windows\omnis_environment.props" />
+    <Import Project="windows\xcomp.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>11.0.60315.1</_ProjectFileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Release|Win32'">
-    <OutDir>.\URel\</OutDir>
-    <IntDir>.\URel\</IntDir>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Release|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>.\URel64\</OutDir>
-    <IntDir>.\URel64\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Debug|Win32'">
-    <OutDir>.\UDeb\</OutDir>
-    <IntDir>.\UDeb\</IntDir>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>.\UDeb64\</OutDir>
-    <IntDir>.\UDeb64\</IntDir>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Release|Win32'">
-    <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Release/GENERIC.tlb</TypeLibraryName>
-      <HeaderFileName />
-    </Midl>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;isXCOMPLIB;NO_STRICT;WIN32;_WINDOWS;iswin32;isunicode;UNICODE;_UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;OMNISSDK=110;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <Optimization>MinSpace</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>thirdparty\omnis.sdk\win\complib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;iswin32;isXCOMPLIB;NO_STRICT;isunicode;UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <StructMemberAlignment>2Bytes</StructMemberAlignment>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
-      <PrecompiledHeaderOutputFile>.\URel/GENERIC.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\URel/</AssemblerListingLocation>
-      <ObjectFileName>.\URel/</ObjectFileName>
-      <ProgramDataBaseFileName>.\URel/</ProgramDataBaseFileName>
-      <WarningLevel>Level3</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;isunicode;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0809</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;omnisu.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\URel/generic.dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>thirdparty\omnis.sdk\win\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ModuleDefinitionFile>.\Generic.def</ModuleDefinitionFile>
-      <ProgramDatabaseFile>.\URel/GENERIC.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <DataExecutionPrevention />
-      <ImportLibrary>.\URel/GENERIC.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
-    <Bscmake>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\URel/GENERIC.bsc</OutputFile>
-    </Bscmake>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Release|x64'">
-    <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TypeLibraryName>.\Release/GENERIC.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
-    <ClCompile>
-      <Optimization>MinSpace</Optimization>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>thirdparty\omnis.sdk\win\complib;thirdparty\omnis.xcomp.framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;is64bit;_WINDOWS;iswin32;isXCOMPLIB;NO_STRICT;isunicode;UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;_UNICODE;OMNISSDK=102;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <StructMemberAlignment>Default</StructMemberAlignment>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
-      <PrecompiledHeaderOutputFile>$(OutputPath)$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>$(OutputPath)</AssemblerListingLocation>
-      <ObjectFileName>$(OutputPath)</ObjectFileName>
-      <ProgramDataBaseFileName>$(OutputPath)</ProgramDataBaseFileName>
-      <WarningLevel>Level3</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-    </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;isunicode;_UNICODE;UNICODE;is64bit;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0809</Culture>
-    </ResourceCompile>
-    <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;omnisu64.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutputPath)$(ProjectName).dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>thirdparty\omnis.sdk\win\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ModuleDefinitionFile>.\$(ProjectName).def</ModuleDefinitionFile>
-      <ProgramDatabaseFile>$(OutputPath)$(ProjectName).pdb</ProgramDatabaseFile>
-      <SubSystem>Windows</SubSystem>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
-      <ImportLibrary>$(OutputPath)$(ProjectName).lib</ImportLibrary>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-    </Link>
-    <Bscmake>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\URel64/GENERIC.bsc</OutputFile>
-    </Bscmake>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Debug|Win32'">
-    <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Debug/GENERIC.tlb</TypeLibraryName>
-      <HeaderFileName />
-    </Midl>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>thirdparty\omnis.sdk\win\complib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;iswin32;isXCOMPLIB;NO_STRICT;isunicode;_UNICODE;UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <PreprocessorDefinitions>$(OM_C_DEBUG_FLAGS);_DEBUG;isXCOMPLIB;NO_STRICT;WIN32;_WINDOWS;iswin32;isunicode;UNICODE;_UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;OMNISSDK=110;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <StructMemberAlignment>2Bytes</StructMemberAlignment>
-      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
-      <PrecompiledHeaderOutputFile>.\UDeb/GENERIC.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\UDeb/</AssemblerListingLocation>
-      <ObjectFileName>.\UDeb/</ObjectFileName>
-      <ProgramDataBaseFileName>.\UDeb/</ProgramDataBaseFileName>
-      <WarningLevel>Level3</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;isunicode;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0809</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;omnisu.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\UDeb/generic.dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>thirdparty\omnis.sdk\win\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ModuleDefinitionFile>.\Generic.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\UDeb/GENERIC.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <DataExecutionPrevention />
-      <ImportLibrary>.\UDeb/GENERIC.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
-    <Bscmake>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\UDeb/GENERIC.bsc</OutputFile>
-    </Bscmake>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='UNICODE Debug|x64'">
-    <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TypeLibraryName>.\Debug/GENERIC.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MinSpace</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <PreprocessorDefinitions>NDEBUG;isXCOMPLIB;NO_STRICT;is64bit;_WINDOWS;iswin32;isunicode;UNICODE;_UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;OMNISSDK=110;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;isunicode;_UNICODE;UNICODE;is64bit;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0809</Culture>
+    </ResourceCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>thirdparty\omnis.sdk\win\complib;thirdparty\omnis.xcomp.framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;is64bit;_WINDOWS;iswin32;isXCOMPLIB;NO_STRICT;isunicode;_UNICODE;UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;OMNISSDK=102;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>$(OM_C_DEBUG_FLAGS);_DEBUG;isXCOMPLIB;NO_STRICT;is64bit;_WINDOWS;iswin32;isunicode;UNICODE;_UNICODE;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_DEPRECATE;OMNISSDK=110;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <StructMemberAlignment>Default</StructMemberAlignment>
-      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
-      <PrecompiledHeaderOutputFile>$(OutputPath)$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>$(OutputPath)</AssemblerListingLocation>
-      <ObjectFileName>$(OutputPath)</ObjectFileName>
-      <ProgramDataBaseFileName>$(OutputPath)</ProgramDataBaseFileName>
-      <WarningLevel>Level3</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;isunicode;_UNICODE;UNICODE;is64bit;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0809</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;omnisu64_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutputPath)$(ProjectName).dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>thirdparty\omnis.sdk\win\ulibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ModuleDefinitionFile>.\$(ProjectName).def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutputPath)$(ProjectName).pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
-      <ImportLibrary>$(OutputPath)$(ProjectName).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
     </Link>
-    <Bscmake>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\UDeb64/GENERIC.bsc</OutputFile>
-    </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="thirdparty\omnis.xcomp.framework\FrameworkWndProc.cpp" />
@@ -303,13 +180,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="oWidget.DEF" />
-    <None Include="Src\monitor_mac.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="English.lproj\oWidget.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="English.lproj\oWidget.bmp" />
+    <ResourceCompile Include="resources\oWidget.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thirdparty\omnis.xcomp.framework\oBaseComponent.h" />
@@ -323,7 +196,6 @@
     <ClInclude Include="thirdparty\omnis.xcomp.framework\qArray.h" />
     <ClInclude Include="thirdparty\omnis.xcomp.framework\qString.h" />
     <ClInclude Include="thirdparty\omnis.xcomp.framework\xCompStandardIncludes.h" />
-    <ClInclude Include="Src\monitor_mac.h" />
     <ClInclude Include="Src\oCountButton.h" />
     <ClInclude Include="Src\oDataList.h" />
     <ClInclude Include="Src\oDateTime.h" />
@@ -334,6 +206,9 @@
     <ClInclude Include="Src\oImgLayer.h" />
     <ClInclude Include="Src\oRoundedButton.h" />
     <ClInclude Include="Src\widget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\oWidget.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to versions in this repository
 
+## [1.26] - 2024-07-20
+- Update to Studio 11
+
 ## [1.25] - 2023-10-31
 - Fixing word wrap issue
 - Update to Studio 10.22

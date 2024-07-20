@@ -1,0 +1,97 @@
+
+1   BITMAP  DISCARDABLE     "OWIDGET.BMP"
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+	1000			"Widget Library"
+
+// objects
+	2000			"oDateTime"
+	2001			"oCountButton"
+	2002			"oDataList"
+	2003			"oDropDown"
+	2004			"oImage"
+	2005			"oFontDropDown"
+	2006			"oRoundedButton"
+
+// properties
+	4000			"$localtime:our datetime in the local timezone"
+	4001			"$utc:our datetime as UTC"
+	4100			"$counter:counter to display"
+	4101			"$radius:radius"
+	4102			"$spacing:spacing"
+	4103			"$countColor:Background color of our counter"
+	4104			"$fillColor:Fill color for our button"
+	4105			"$iconPos:0 = left, 1 = right"
+	4110			"$columncount:Number of columns we display"
+	4111			"$columncalcs:Our column calculations, tab delimited"
+	4112			"$columnwidths:Our columns widths"
+	4113			"$columnaligns:Our column alignment"
+	4114			"$maxrowheight:Maximum row height"
+	4115			"$columnPrefix:This calculation gets added to every line"
+	4116			"$verticalExtends:Limits which columns wrapping text will increase the row height"
+	4117			"$evenColor:Alternative background color for even lines (default color = ignore)"
+	4118			"$selectColor:Background color for selected lines (default color = use system)"
+	4120			"$groupcalcs:calculations by which we group"
+	4121			"$treeIndent:Number of pixels we indent our nodes in our treelist with"
+	4122			"$filtercalc:calculation by which to filter which lines we show"
+	4123			"$deselectOnGroupClick:Deselect lines when we click on a node"
+	4124			"$parentCalcs:calculations that identify a group as a parent group"
+	4200			"$displaycalc:If set, alternative display calculation"
+	4201			"$fontColumn:Column number containing our font name"
+	4300			"$layercount:Number of layers"
+	4301			"$currentLayer:Layer we have selected"
+	4302			"$layertype:Type of layer"
+	4303			"$layerleft:Left of layer"
+	4304			"$layertop:Top of layer"
+	4305			"$layerwidth:Width of layer"
+	4306			"$layerheight:Height of layer"
+	4307			"$layercontents:Contents of the layer"
+	4308			"$layerenabled:Layer is enabled"
+	4309			"$image:Our image"
+	4310			"$imageWidth:Width of our image (0 = use layer 1)"
+	4311			"$imageHeight:Height of our image (0 = use layer 1)"
+
+// Events
+	5000			"click:User clicked on our field"
+	5001			"HScrolled:Field was horizontally scrolled"
+	5002			"VScrolled:Field was vertically scrolled"
+	5003			"ColumnResized:Column was resized"
+	5004			"DoubleClick:User double clicked on our field"
+	
+// parameters
+	7000			"seconds:Seconds"
+	7001			"lineNo:Line number"
+	7002			"X:X-coord"
+	7003			"Y:Y-coord"
+	7100			"layer:Layer"
+
+// methods
+	8000			"$addSeconds:$addSeconds() Add seconds to datetime."
+	8010			"$isvisible:$isVisible(pvLineNo) Is line visible?"
+	8011			"$lineAtPos:$lineAtPos(pvY) which line is at this Y coord"
+	8012			"$lineAtMouse:$lineAtMouse() which line is below the mouse"
+	8100			"$addLayer:$addLayer() add a layer to our image."
+	8101			"$remLayer:$remLayer(pLayer) removes a layer from our image"
+
+// static methods
+	9000			"$monitors:$monitors() returns detailed info about connected monitors"
+
+// methodtext
+	10000			"on evClick ;; Button has been clicked"
+	10001			"Quit event handler (Pass to next handler)"
+	10002			" "
+
+	10010			"on evClick ;; line (pLineNo) has been clicked"
+	10011			"Quit event handler (Pass to next handler)"
+	10012			" "
+
+	10020			"on evClick ;; Line has been clicked"
+	10021			"Quit event handler (Pass to next handler)"
+	10022			" "
+
+// Entry point
+	31000			"FrameworkWndProc"
+END
+
+

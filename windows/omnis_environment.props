@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <OMNIS_BUILD_ROOT>build\$(Configuration)_$(PlatformShortName)</OMNIS_BUILD_ROOT>
+    <OMNIS_INTBUILD_DIR>intbuild</OMNIS_INTBUILD_DIR>
+    <DEBUGSYMBOLS_LOCATION>$(OMNIS_INTBUILD_DIR)\debugsymbols_$(PlatformShortName)</DEBUGSYMBOLS_LOCATION>
+    <SDK_LOCATION>thirdparty\omnis.sdk\win</SDK_LOCATION>
+    <CONFIG>$(Configuration)</CONFIG>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(OMNIS_BUILD_ROOT)\</OutDir>
+    <IntDir>$(OMNIS_INTBUILD_DIR)\$(ProjectName)\$(Configuration)_$(PlatformShortName)\</IntDir>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <StructMemberAlignment>$(BYTE_PACKING)</StructMemberAlignment>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile Condition="'$(Configuration.Contains(`Release`))' == 'true'">$(DEBUGSYMBOLS_LOCATION)\$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="OMNIS_BUILD_ROOT">
+      <Value>$(OMNIS_BUILD_ROOT)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="OMNIS_INTBUILD_DIR">
+      <Value>$(OMNIS_INTBUILD_DIR)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="DEBUGSYMBOLS_LOCATION">
+      <Value>$(DEBUGSYMBOLS_LOCATION)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SDK_LOCATION">
+      <Value>$(SDK_LOCATION)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="CONFIG">
+      <Value>$(CONFIG)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

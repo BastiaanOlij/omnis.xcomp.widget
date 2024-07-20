@@ -1,0 +1,61 @@
+//
+//  omnis.xcconfig
+//  build_all
+//
+//  Copyright © 2023 Omnis Software Ltd. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+XCOMP_BUNDLE_IDENTIFIER = omnis.xcomp.widget
+XCOMP_PRODUCT_NAME = oWidget
+
+OMNIS_SDK_ROOT = macosx
+OMNIS_DEPLOYMENT_TARGET = 10.14
+OMNIS_BUILD_ROOT = $(SRCROOT)/build
+CPP_LANG_DIALECT = c++17
+CPP_STD_LIBRARY = libc++
+
+MACOSX_DEPLOYMENT_TARGET = $OMNIS_DEPLOYMENT_TARGET
+OMNIS_ACTIVE_ARCH_ONLY[config=Deployment] = NO
+OMNIS_ACTIVE_ARCH_ONLY[config=Development] = YES
+ONLY_ACTIVE_ARCH = $OMNIS_ACTIVE_ARCH_ONLY
+ARCHS = $(ARCHS_STANDARD)
+DEPLOYMENT_LOCATION = YES
+SKIP_INSTALL = NO
+INSTALL_ROOT = /
+INSTALL_PATH = /
+ALWAYS_SEARCH_USER_PATHS = NO
+CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO
+CODE_SIGN_STYLE = Manual
+
+OMNIS_CODE_SIGNING_IDENTITY[config=Deployment] = -
+OMNIS_CODE_SIGNING_IDENTITY[config=Development] = -
+
+OMNIS_CONFIG[config=Deployment] = Release
+OMNIS_CONFIG[config=Development] = Debug
+
+OMNIS_FILES_ROOT = $OMNIS_BUILD_ROOT/$OMNIS_CONFIG
+
+COMPLIB_DIR[config=Deployment] = $(SRCROOT)/thirdparty/omnis.sdk/mac/complib
+COMPLIB_DIR[config=Development] = $(SRCROOT)/thirdparty/omnis.sdk/mac/complib_debug
+
+OMNISRC_DIR = $(SRCROOT)/thirdparty/omnis.sdk/mac/tools
+
+DWARF_DSYM_FOLDER_PATH_PREFIX = $(OMNIS_BUILD_ROOT)/DebugSymbols
+
+// jscomp
+OMNIS_JSCOMP_DIR = jscomp
+OMNIS_JSCOMP_INSTALL_DIR = $OMNIS_FILES_ROOT/$OMNIS_JSCOMP_DIR
+OMNIS_JSCOMP_PREFIX_PATH = $COMPLIB_DIR/complib.framework/Versions/A/Headers/carbnuni.h
+
+// xcomp
+OMNIS_XCOMP_DIR = xcomp
+OMNIS_XCOMP_INSTALL_DIR = $OMNIS_FILES_ROOT/$OMNIS_XCOMP_DIR
+OMNIS_XCOMP_HEADER_PATHS = $COMPLIB_DIR/complib.framework/Headers
+OMNIS_XCOMP_REZ_PATHS = $COMPLIB_DIR/complib.framework/Versions/A/Resources
+OMNIS_XCOMP_PREFIX_PATH = $COMPLIB_DIR/complib.framework/Versions/A/Headers/carbnuni.h
+OMNIS_XCOMP_FRAMEWORK_PATH = $COMPLIB_DIR/
+
+OMNIS_C_FLAGS = "-DOMNISSDK=110"

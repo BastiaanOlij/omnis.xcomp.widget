@@ -3,39 +3,38 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2D7DE4B517CE03B300642BA9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2D7DE4B217CE03B300642BA9 /* InfoPlist.strings */; };
-		2DAD106F17BCEE60005A7F56 /* u_complib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD106E17BCEE60005A7F56 /* u_complib.framework */; };
-		2DD7697817BBA5F4005F1CFB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DD7697717BBA5F4005F1CFB /* Cocoa.framework */; };
-		E35E3E1327C321F000A81C66 /* oImgLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E0827C321F000A81C66 /* oImgLayer.cpp */; };
-		E35E3E1427C321F000A81C66 /* oDLNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E0927C321F000A81C66 /* oDLNode.cpp */; };
-		E35E3E1527C321F000A81C66 /* monitor_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E0A27C321F000A81C66 /* monitor_mac.mm */; };
-		E35E3E1627C321F000A81C66 /* oImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E0B27C321F000A81C66 /* oImage.cpp */; };
-		E35E3E1727C321F000A81C66 /* oRoundedButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E0C27C321F000A81C66 /* oRoundedButton.cpp */; };
-		E35E3E1827C321F000A81C66 /* oDateTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E0D27C321F000A81C66 /* oDateTime.cpp */; };
-		E35E3E1927C321F000A81C66 /* oDropDown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E0E27C321F000A81C66 /* oDropDown.cpp */; };
-		E35E3E1A27C321F000A81C66 /* oCountButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E0F27C321F000A81C66 /* oCountButton.cpp */; };
-		E35E3E1B27C321F000A81C66 /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E1027C321F000A81C66 /* widget.cpp */; };
-		E35E3E1C27C321F000A81C66 /* oFontDropDown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E1127C321F000A81C66 /* oFontDropDown.cpp */; };
-		E35E3E1D27C321F000A81C66 /* oDataList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E35E3E1227C321F000A81C66 /* oDataList.cpp */; };
-		E35E3E2227C3220300A81C66 /* oWidget.rc in Resources */ = {isa = PBXBuildFile; fileRef = E35E3E1E27C3220300A81C66 /* oWidget.rc */; };
-		E35E3E2327C3220300A81C66 /* oWidget.bmp in Resources */ = {isa = PBXBuildFile; fileRef = E35E3E2027C3220300A81C66 /* oWidget.bmp */; };
-		E3BB4ED627B9EC0A00A3AA81 /* oXCompLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB4EC327B9EC0A00A3AA81 /* oXCompLib.cpp */; };
-		E3BB4ED727B9EC0A00A3AA81 /* oBaseVisComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB4EC427B9EC0A00A3AA81 /* oBaseVisComponent.cpp */; };
-		E3BB4ED827B9EC0A00A3AA81 /* oUTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB4EC527B9EC0A00A3AA81 /* oUTF8.cpp */; };
-		E3BB4ED927B9EC0B00A3AA81 /* oBaseComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB4EC927B9EC0A00A3AA81 /* oBaseComponent.cpp */; };
-		E3BB4EDA27B9EC0B00A3AA81 /* oBaseNVComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB4ECD27B9EC0A00A3AA81 /* oBaseNVComponent.cpp */; };
-		E3BB4EDB27B9EC0B00A3AA81 /* oDrawingCanvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB4ECF27B9EC0A00A3AA81 /* oDrawingCanvas.cpp */; };
-		E3BB4EDC27B9EC0B00A3AA81 /* FrameworkWndProc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB4ED027B9EC0A00A3AA81 /* FrameworkWndProc.cpp */; };
-		E3BB4EDD27B9EC0B00A3AA81 /* oRGBAImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB4ED227B9EC0A00A3AA81 /* oRGBAImage.cpp */; };
-		E3BB4EDE27B9EC0B00A3AA81 /* qString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB4ED527B9EC0A00A3AA81 /* qString.cpp */; };
+		304CD2D71CB7F5190096035F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 304CD2D61CB7F5190096035F /* Cocoa.framework */; };
+		96CA4E550907E8CC00C234AA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
+		96CA4E660907EB0700C234AA /* complib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CA4E650907EB0700C234AA /* complib.framework */; };
+		DE1E76832C1A86770095FAB9 /* oBaseComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E76722C1A86770095FAB9 /* oBaseComponent.cpp */; };
+		DE1E76842C1A86770095FAB9 /* FrameworkWndProc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E76732C1A86770095FAB9 /* FrameworkWndProc.cpp */; };
+		DE1E76852C1A86770095FAB9 /* oRGBAImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E76752C1A86770095FAB9 /* oRGBAImage.cpp */; };
+		DE1E76862C1A86770095FAB9 /* oBaseVisComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E76762C1A86770095FAB9 /* oBaseVisComponent.cpp */; };
+		DE1E76872C1A86770095FAB9 /* oUTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E76792C1A86770095FAB9 /* oUTF8.cpp */; };
+		DE1E76882C1A86770095FAB9 /* oBaseNVComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E767A2C1A86770095FAB9 /* oBaseNVComponent.cpp */; };
+		DE1E76892C1A86770095FAB9 /* oXCompLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E767D2C1A86770095FAB9 /* oXCompLib.cpp */; };
+		DE1E768A2C1A86770095FAB9 /* oDrawingCanvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E767F2C1A86770095FAB9 /* oDrawingCanvas.cpp */; };
+		DE1E768B2C1A86770095FAB9 /* qString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E76812C1A86770095FAB9 /* qString.cpp */; };
+		DE1E76922C1A86B40095FAB9 /* oCountButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E768F2C1A86B40095FAB9 /* oCountButton.cpp */; };
+		DE1E76932C1A86B40095FAB9 /* oDataList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E76902C1A86B40095FAB9 /* oDataList.cpp */; };
+		DE1E76942C1A86B40095FAB9 /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE1E76912C1A86B40095FAB9 /* widget.cpp */; };
+		DEF6E8F62C1AAA310082AE42 /* oWidget.rc in Resources */ = {isa = PBXBuildFile; fileRef = DEF6E8F52C1AAA310082AE42 /* oWidget.rc */; };
+		E3E27E682C4B724100E523D0 /* oDropDown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3E27E602C4B724100E523D0 /* oDropDown.cpp */; };
+		E3E27E692C4B724100E523D0 /* oImgLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3E27E612C4B724100E523D0 /* oImgLayer.cpp */; };
+		E3E27E6A2C4B724100E523D0 /* oRoundedButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3E27E622C4B724100E523D0 /* oRoundedButton.cpp */; };
+		E3E27E6B2C4B724100E523D0 /* oDateTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3E27E632C4B724100E523D0 /* oDateTime.cpp */; };
+		E3E27E6C2C4B724100E523D0 /* oDLNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3E27E642C4B724100E523D0 /* oDLNode.cpp */; };
+		E3E27E6D2C4B724100E523D0 /* oFontDropDown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3E27E652C4B724100E523D0 /* oFontDropDown.cpp */; };
+		E3E27E6E2C4B724100E523D0 /* monitor_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = E3E27E662C4B724100E523D0 /* monitor_mac.mm */; };
+		E3E27E6F2C4B724100E523D0 /* oImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3E27E672C4B724100E523D0 /* oImage.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
-		2DDD8B9017F426C100F4E765 /* PBXBuildRule */ = {
+		96CA4E5C0907E8CC00C234AA /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.rc";
@@ -44,481 +43,498 @@
 			);
 			isEditable = 1;
 			outputFiles = (
-				"$(INPUT_FILE_DIR)/Localizable.strings",
+				$INSTALL_PATH/$CONTENTS_FOLDER_PATH/Resources/en.lproj/Localizable.strings,
 			);
-			script = "$PROJECT_DIR/thirdparty/omnis.sdk/mac/tools/omnisrc64.app/Contents/MacOS/omnisrc64 INPUT_FILE_PATH TEMP_FILE_DIR REZ_SEARCH_PATHS XCOMP\nif [ -f $TEMP_FILE_DIR/omnisrc/Bitmap.strings ]; then\ncp $TEMP_FILE_DIR/omnisrc/Bitmap.strings $INSTALL_DIR/$CONTENTS_FOLDER_PATH/Resources\nfi\ncp -R $TEMP_FILE_DIR/omnisrc/ $INPUT_FILE_DIR\n\nshopt -s nullglob\nif [ ! -z \"`echo $TEMP_FILE_DIR/omnisrc/*.PNG`\" ]; then\ncp $TEMP_FILE_DIR/omnisrc/*.PNG $INSTALL_DIR/$CONTENTS_FOLDER_PATH/Resources\nfi\ncp -R $TEMP_FILE_DIR/omnisrc/ $INPUT_FILE_DIR\n";
+			script = "# Check for omnisrc:\nif [ ! -d $OMNISRC_DIR/omnisrc64.app ]; then\n  echo \"error: omnisrc64 is missing\"\n  exit 1\nfi\n\nRES_OUT=\"$INSTALL_PATH/$CONTENTS_FOLDER_PATH/Resources\"\nmkdir -p \"$RES_OUT/en.lproj\"\n\n$OMNISRC_DIR/omnisrc64.app/Contents/MacOS/omnisrc64 INPUT_FILE_PATH TEMP_FILE_DIR REZ_SEARCH_PATHS XCOMP\n\nif [ -f $TEMP_FILE_DIR/omnisrc/Bitmap.strings ]; then\n    cp $TEMP_FILE_DIR/omnisrc/Bitmap.strings \"$RES_OUT\"\nfi\nshopt -s nullglob\nif [ ! -z \"`echo $TEMP_FILE_DIR/omnisrc/*.PNG`\" ]; then\n    cp $TEMP_FILE_DIR/omnisrc/*.PNG \"$RES_OUT\"\nfi\n\ncp -R $TEMP_FILE_DIR/omnisrc/Localizable.strings \"$RES_OUT/en.lproj/\"\n";
 		};
 /* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
-		2D7DE4B317CE03B300642BA9 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2DAD106E17BCEE60005A7F56 /* u_complib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = u_complib.framework; path = ../complib/u_complib.framework; sourceTree = "<group>"; };
-		2DD7697417BBA5F4005F1CFB /* oWidget.u_xcomp */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = oWidget.u_xcomp; sourceTree = BUILT_PRODUCTS_DIR; };
-		2DD7697717BBA5F4005F1CFB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		2DD7697A17BBA5F4005F1CFB /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		2DD7697B17BBA5F4005F1CFB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		2DD7697C17BBA5F4005F1CFB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		E35E3DFD27C321DF00A81C66 /* oCountButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oCountButton.h; path = Src/oCountButton.h; sourceTree = "<group>"; };
-		E35E3DFE27C321DF00A81C66 /* oFontDropDown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oFontDropDown.h; path = Src/oFontDropDown.h; sourceTree = "<group>"; };
-		E35E3DFF27C321DF00A81C66 /* widget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = widget.h; path = Src/widget.h; sourceTree = "<group>"; };
-		E35E3E0027C321DF00A81C66 /* oDropDown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDropDown.h; path = Src/oDropDown.h; sourceTree = "<group>"; };
-		E35E3E0127C321DF00A81C66 /* oDataList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDataList.h; path = Src/oDataList.h; sourceTree = "<group>"; };
-		E35E3E0227C321DF00A81C66 /* oDateTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDateTime.h; path = Src/oDateTime.h; sourceTree = "<group>"; };
-		E35E3E0327C321DF00A81C66 /* oImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oImage.h; path = Src/oImage.h; sourceTree = "<group>"; };
-		E35E3E0427C321DF00A81C66 /* oImgLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oImgLayer.h; path = Src/oImgLayer.h; sourceTree = "<group>"; };
-		E35E3E0527C321DF00A81C66 /* oDLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDLNode.h; path = Src/oDLNode.h; sourceTree = "<group>"; };
-		E35E3E0627C321DF00A81C66 /* oRoundedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oRoundedButton.h; path = Src/oRoundedButton.h; sourceTree = "<group>"; };
-		E35E3E0727C321DF00A81C66 /* monitor_mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = monitor_mac.h; path = Src/monitor_mac.h; sourceTree = "<group>"; };
-		E35E3E0827C321F000A81C66 /* oImgLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oImgLayer.cpp; path = Src/oImgLayer.cpp; sourceTree = SOURCE_ROOT; };
-		E35E3E0927C321F000A81C66 /* oDLNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDLNode.cpp; path = Src/oDLNode.cpp; sourceTree = SOURCE_ROOT; };
-		E35E3E0A27C321F000A81C66 /* monitor_mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = monitor_mac.mm; path = Src/monitor_mac.mm; sourceTree = SOURCE_ROOT; };
-		E35E3E0B27C321F000A81C66 /* oImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oImage.cpp; path = Src/oImage.cpp; sourceTree = SOURCE_ROOT; };
-		E35E3E0C27C321F000A81C66 /* oRoundedButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oRoundedButton.cpp; path = Src/oRoundedButton.cpp; sourceTree = SOURCE_ROOT; };
-		E35E3E0D27C321F000A81C66 /* oDateTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDateTime.cpp; path = Src/oDateTime.cpp; sourceTree = SOURCE_ROOT; };
-		E35E3E0E27C321F000A81C66 /* oDropDown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDropDown.cpp; path = Src/oDropDown.cpp; sourceTree = SOURCE_ROOT; };
-		E35E3E0F27C321F000A81C66 /* oCountButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oCountButton.cpp; path = Src/oCountButton.cpp; sourceTree = SOURCE_ROOT; };
-		E35E3E1027C321F000A81C66 /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = widget.cpp; path = Src/widget.cpp; sourceTree = SOURCE_ROOT; };
-		E35E3E1127C321F000A81C66 /* oFontDropDown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oFontDropDown.cpp; path = Src/oFontDropDown.cpp; sourceTree = SOURCE_ROOT; };
-		E35E3E1227C321F000A81C66 /* oDataList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDataList.cpp; path = Src/oDataList.cpp; sourceTree = SOURCE_ROOT; };
-		E35E3E1F27C3220300A81C66 /* English */ = {isa = PBXFileReference; lastKnownFileType = text; name = English; path = English.lproj/oWidget.rc; sourceTree = "<group>"; };
-		E35E3E2127C3220300A81C66 /* English */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = English; path = English.lproj/oWidget.bmp; sourceTree = "<group>"; };
-		E3BB4EC227B9EC0A00A3AA81 /* oUTF8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oUTF8.h; path = thirdparty/omnis.xcomp.framework/oUTF8.h; sourceTree = SOURCE_ROOT; };
-		E3BB4EC327B9EC0A00A3AA81 /* oXCompLib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oXCompLib.cpp; path = thirdparty/omnis.xcomp.framework/oXCompLib.cpp; sourceTree = SOURCE_ROOT; };
-		E3BB4EC427B9EC0A00A3AA81 /* oBaseVisComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseVisComponent.cpp; path = thirdparty/omnis.xcomp.framework/oBaseVisComponent.cpp; sourceTree = SOURCE_ROOT; };
-		E3BB4EC527B9EC0A00A3AA81 /* oUTF8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oUTF8.cpp; path = thirdparty/omnis.xcomp.framework/oUTF8.cpp; sourceTree = SOURCE_ROOT; };
-		E3BB4EC627B9EC0A00A3AA81 /* qString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qString.h; path = thirdparty/omnis.xcomp.framework/qString.h; sourceTree = SOURCE_ROOT; };
-		E3BB4EC727B9EC0A00A3AA81 /* oBaseNVComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseNVComponent.h; path = thirdparty/omnis.xcomp.framework/oBaseNVComponent.h; sourceTree = SOURCE_ROOT; };
-		E3BB4EC827B9EC0A00A3AA81 /* oXCompLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oXCompLib.h; path = thirdparty/omnis.xcomp.framework/oXCompLib.h; sourceTree = SOURCE_ROOT; };
-		E3BB4EC927B9EC0A00A3AA81 /* oBaseComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseComponent.cpp; path = thirdparty/omnis.xcomp.framework/oBaseComponent.cpp; sourceTree = SOURCE_ROOT; };
-		E3BB4ECA27B9EC0A00A3AA81 /* oDrawingCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDrawingCanvas.h; path = thirdparty/omnis.xcomp.framework/oDrawingCanvas.h; sourceTree = SOURCE_ROOT; };
-		E3BB4ECB27B9EC0A00A3AA81 /* xCompStandardIncludes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xCompStandardIncludes.h; path = thirdparty/omnis.xcomp.framework/xCompStandardIncludes.h; sourceTree = SOURCE_ROOT; };
-		E3BB4ECC27B9EC0A00A3AA81 /* oBaseVisComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseVisComponent.h; path = thirdparty/omnis.xcomp.framework/oBaseVisComponent.h; sourceTree = SOURCE_ROOT; };
-		E3BB4ECD27B9EC0A00A3AA81 /* oBaseNVComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseNVComponent.cpp; path = thirdparty/omnis.xcomp.framework/oBaseNVComponent.cpp; sourceTree = SOURCE_ROOT; };
-		E3BB4ECE27B9EC0A00A3AA81 /* qArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qArray.h; path = thirdparty/omnis.xcomp.framework/qArray.h; sourceTree = SOURCE_ROOT; };
-		E3BB4ECF27B9EC0A00A3AA81 /* oDrawingCanvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDrawingCanvas.cpp; path = thirdparty/omnis.xcomp.framework/oDrawingCanvas.cpp; sourceTree = SOURCE_ROOT; };
-		E3BB4ED027B9EC0A00A3AA81 /* FrameworkWndProc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameworkWndProc.cpp; path = thirdparty/omnis.xcomp.framework/FrameworkWndProc.cpp; sourceTree = SOURCE_ROOT; };
-		E3BB4ED127B9EC0A00A3AA81 /* oBaseComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseComponent.h; path = thirdparty/omnis.xcomp.framework/oBaseComponent.h; sourceTree = SOURCE_ROOT; };
-		E3BB4ED227B9EC0A00A3AA81 /* oRGBAImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oRGBAImage.cpp; path = thirdparty/omnis.xcomp.framework/oRGBAImage.cpp; sourceTree = SOURCE_ROOT; };
-		E3BB4ED327B9EC0A00A3AA81 /* oRGBAImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oRGBAImage.h; path = thirdparty/omnis.xcomp.framework/oRGBAImage.h; sourceTree = SOURCE_ROOT; };
-		E3BB4ED427B9EC0A00A3AA81 /* omnis.xcomp.framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = omnis.xcomp.framework.h; path = thirdparty/omnis.xcomp.framework/omnis.xcomp.framework.h; sourceTree = SOURCE_ROOT; };
-		E3BB4ED527B9EC0A00A3AA81 /* qString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qString.cpp; path = thirdparty/omnis.xcomp.framework/qString.cpp; sourceTree = SOURCE_ROOT; };
+		089C167EFE841241C02AAC07 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		304CD2D61CB7F5190096035F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		62173718279B1A2D008C41A4 /* mac/omnis.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = mac/omnis.xcconfig; sourceTree = "<group>"; };
+		96CA4E650907EB0700C234AA /* complib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = complib.framework; path = thirdparty/omnis.sdk/mac/complib/complib.framework; sourceTree = SOURCE_ROOT; };
+		DDD258BC092896A5006B6BC3 /* oWidget.u_xcomp */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = oWidget.u_xcomp; path = oWidget.u_xcomp; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE1E766F2C1A86770095FAB9 /* oBaseNVComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseNVComponent.h; path = thirdparty/omnis.xcomp.framework/oBaseNVComponent.h; sourceTree = "<group>"; };
+		DE1E76702C1A86770095FAB9 /* omnis.xcomp.framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = omnis.xcomp.framework.h; path = thirdparty/omnis.xcomp.framework/omnis.xcomp.framework.h; sourceTree = "<group>"; };
+		DE1E76712C1A86770095FAB9 /* oUTF8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oUTF8.h; path = thirdparty/omnis.xcomp.framework/oUTF8.h; sourceTree = "<group>"; };
+		DE1E76722C1A86770095FAB9 /* oBaseComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseComponent.cpp; path = thirdparty/omnis.xcomp.framework/oBaseComponent.cpp; sourceTree = "<group>"; };
+		DE1E76732C1A86770095FAB9 /* FrameworkWndProc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameworkWndProc.cpp; path = thirdparty/omnis.xcomp.framework/FrameworkWndProc.cpp; sourceTree = "<group>"; };
+		DE1E76742C1A86770095FAB9 /* oRGBAImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oRGBAImage.h; path = thirdparty/omnis.xcomp.framework/oRGBAImage.h; sourceTree = "<group>"; };
+		DE1E76752C1A86770095FAB9 /* oRGBAImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oRGBAImage.cpp; path = thirdparty/omnis.xcomp.framework/oRGBAImage.cpp; sourceTree = "<group>"; };
+		DE1E76762C1A86770095FAB9 /* oBaseVisComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseVisComponent.cpp; path = thirdparty/omnis.xcomp.framework/oBaseVisComponent.cpp; sourceTree = "<group>"; };
+		DE1E76772C1A86770095FAB9 /* oBaseVisComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseVisComponent.h; path = thirdparty/omnis.xcomp.framework/oBaseVisComponent.h; sourceTree = "<group>"; };
+		DE1E76782C1A86770095FAB9 /* qString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qString.h; path = thirdparty/omnis.xcomp.framework/qString.h; sourceTree = "<group>"; };
+		DE1E76792C1A86770095FAB9 /* oUTF8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oUTF8.cpp; path = thirdparty/omnis.xcomp.framework/oUTF8.cpp; sourceTree = "<group>"; };
+		DE1E767A2C1A86770095FAB9 /* oBaseNVComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oBaseNVComponent.cpp; path = thirdparty/omnis.xcomp.framework/oBaseNVComponent.cpp; sourceTree = "<group>"; };
+		DE1E767B2C1A86770095FAB9 /* oXCompLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oXCompLib.h; path = thirdparty/omnis.xcomp.framework/oXCompLib.h; sourceTree = "<group>"; };
+		DE1E767C2C1A86770095FAB9 /* oBaseComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oBaseComponent.h; path = thirdparty/omnis.xcomp.framework/oBaseComponent.h; sourceTree = "<group>"; };
+		DE1E767D2C1A86770095FAB9 /* oXCompLib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oXCompLib.cpp; path = thirdparty/omnis.xcomp.framework/oXCompLib.cpp; sourceTree = "<group>"; };
+		DE1E767E2C1A86770095FAB9 /* qArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qArray.h; path = thirdparty/omnis.xcomp.framework/qArray.h; sourceTree = "<group>"; };
+		DE1E767F2C1A86770095FAB9 /* oDrawingCanvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDrawingCanvas.cpp; path = thirdparty/omnis.xcomp.framework/oDrawingCanvas.cpp; sourceTree = "<group>"; };
+		DE1E76802C1A86770095FAB9 /* oDrawingCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDrawingCanvas.h; path = thirdparty/omnis.xcomp.framework/oDrawingCanvas.h; sourceTree = "<group>"; };
+		DE1E76812C1A86770095FAB9 /* qString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qString.cpp; path = thirdparty/omnis.xcomp.framework/qString.cpp; sourceTree = "<group>"; };
+		DE1E76822C1A86770095FAB9 /* xCompStandardIncludes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xCompStandardIncludes.h; path = thirdparty/omnis.xcomp.framework/xCompStandardIncludes.h; sourceTree = "<group>"; };
+		DE1E768C2C1A86A00095FAB9 /* oDataList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oDataList.h; path = Src/oDataList.h; sourceTree = "<group>"; };
+		DE1E768D2C1A86A00095FAB9 /* widget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = widget.h; path = Src/widget.h; sourceTree = "<group>"; };
+		DE1E768E2C1A86A00095FAB9 /* oCountButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oCountButton.h; path = Src/oCountButton.h; sourceTree = "<group>"; };
+		DE1E768F2C1A86B40095FAB9 /* oCountButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oCountButton.cpp; path = Src/oCountButton.cpp; sourceTree = "<group>"; };
+		DE1E76902C1A86B40095FAB9 /* oDataList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDataList.cpp; path = Src/oDataList.cpp; sourceTree = "<group>"; };
+		DE1E76912C1A86B40095FAB9 /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = widget.cpp; path = Src/widget.cpp; sourceTree = "<group>"; };
+		DEF6E8F52C1AAA310082AE42 /* oWidget.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = oWidget.rc; path = resources/oWidget.rc; sourceTree = "<group>"; };
+		E3E27E582C4B71B100E523D0 /* oDLNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = oDLNode.h; path = Src/oDLNode.h; sourceTree = "<group>"; };
+		E3E27E592C4B71B100E523D0 /* oImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = oImage.h; path = Src/oImage.h; sourceTree = "<group>"; };
+		E3E27E5A2C4B71B100E523D0 /* oDateTime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = oDateTime.h; path = Src/oDateTime.h; sourceTree = "<group>"; };
+		E3E27E5B2C4B71B100E523D0 /* oDropDown.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = oDropDown.h; path = Src/oDropDown.h; sourceTree = "<group>"; };
+		E3E27E5C2C4B71B100E523D0 /* oFontDropDown.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = oFontDropDown.h; path = Src/oFontDropDown.h; sourceTree = "<group>"; };
+		E3E27E5D2C4B71B100E523D0 /* monitor_mac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = monitor_mac.h; path = Src/monitor_mac.h; sourceTree = "<group>"; };
+		E3E27E5E2C4B71B100E523D0 /* oImgLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = oImgLayer.h; path = Src/oImgLayer.h; sourceTree = "<group>"; };
+		E3E27E5F2C4B71B100E523D0 /* oRoundedButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = oRoundedButton.h; path = Src/oRoundedButton.h; sourceTree = "<group>"; };
+		E3E27E602C4B724100E523D0 /* oDropDown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDropDown.cpp; path = Src/oDropDown.cpp; sourceTree = "<group>"; };
+		E3E27E612C4B724100E523D0 /* oImgLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oImgLayer.cpp; path = Src/oImgLayer.cpp; sourceTree = "<group>"; };
+		E3E27E622C4B724100E523D0 /* oRoundedButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oRoundedButton.cpp; path = Src/oRoundedButton.cpp; sourceTree = "<group>"; };
+		E3E27E632C4B724100E523D0 /* oDateTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDateTime.cpp; path = Src/oDateTime.cpp; sourceTree = "<group>"; };
+		E3E27E642C4B724100E523D0 /* oDLNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oDLNode.cpp; path = Src/oDLNode.cpp; sourceTree = "<group>"; };
+		E3E27E652C4B724100E523D0 /* oFontDropDown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oFontDropDown.cpp; path = Src/oFontDropDown.cpp; sourceTree = "<group>"; };
+		E3E27E662C4B724100E523D0 /* monitor_mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = monitor_mac.mm; path = Src/monitor_mac.mm; sourceTree = "<group>"; };
+		E3E27E672C4B724100E523D0 /* oImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oImage.cpp; path = Src/oImage.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2DD7697117BBA5F4005F1CFB /* Frameworks */ = {
+		96CA4E590907E8CC00C234AA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DD7697817BBA5F4005F1CFB /* Cocoa.framework in Frameworks */,
-				2DAD106F17BCEE60005A7F56 /* u_complib.framework in Frameworks */,
+				304CD2D71CB7F5190096035F /* Cocoa.framework in Frameworks */,
+				96CA4E660907EB0700C234AA /* complib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2D3F845B17C50A43008A8E5D /* Headers */ = {
+		089C166AFE841209C02AAC07 /* oWidget */ = {
 			isa = PBXGroup;
 			children = (
-				E35E3E0727C321DF00A81C66 /* monitor_mac.h */,
-				E35E3DFD27C321DF00A81C66 /* oCountButton.h */,
-				E35E3E0127C321DF00A81C66 /* oDataList.h */,
-				E35E3E0227C321DF00A81C66 /* oDateTime.h */,
-				E35E3E0527C321DF00A81C66 /* oDLNode.h */,
-				E35E3E0027C321DF00A81C66 /* oDropDown.h */,
-				E35E3DFE27C321DF00A81C66 /* oFontDropDown.h */,
-				E35E3E0327C321DF00A81C66 /* oImage.h */,
-				E35E3E0427C321DF00A81C66 /* oImgLayer.h */,
-				E35E3E0627C321DF00A81C66 /* oRoundedButton.h */,
-				E35E3DFF27C321DF00A81C66 /* widget.h */,
+				DE1E766E2C1A863F0095FAB9 /* omnis.xcomp.frameworks */,
+				62173718279B1A2D008C41A4 /* mac/omnis.xcconfig */,
+				96D631340905093100E0F291 /* Headers */,
+				08FB77ADFE841716C02AAC07 /* Source */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
+				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
-			name = Headers;
+			name = oWidget;
 			sourceTree = "<group>";
 		};
-		2D7DE4AF17CE02C100642BA9 /* Resources */ = {
+		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				E35E3E2027C3220300A81C66 /* oWidget.bmp */,
-				E35E3E1E27C3220300A81C66 /* oWidget.rc */,
-				2D7DE4B217CE03B300642BA9 /* InfoPlist.strings */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		2DD7696B17BBA5F4005F1CFB = {
-			isa = PBXGroup;
-			children = (
-				E3BB4EC127B9EBE200A3AA81 /* omnis.xcomp.frameworks */,
-				2D3F845B17C50A43008A8E5D /* Headers */,
-				2DD7697D17BBA5F4005F1CFB /* Source */,
-				2D7DE4AF17CE02C100642BA9 /* Resources */,
-				2DD7697617BBA5F4005F1CFB /* External Frameworks and Libraries */,
-				2DD7697517BBA5F4005F1CFB /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		2DD7697517BBA5F4005F1CFB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2DD7697417BBA5F4005F1CFB /* oWidget.u_xcomp */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		2DD7697617BBA5F4005F1CFB /* External Frameworks and Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				2DD7697717BBA5F4005F1CFB /* Cocoa.framework */,
-				2DAD106E17BCEE60005A7F56 /* u_complib.framework */,
-				2DD7697917BBA5F4005F1CFB /* Other Frameworks */,
+				304CD2D61CB7F5190096035F /* Cocoa.framework */,
+				96CA4E650907EB0700C234AA /* complib.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
 		};
-		2DD7697917BBA5F4005F1CFB /* Other Frameworks */ = {
+		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				2DD7697A17BBA5F4005F1CFB /* AppKit.framework */,
-				2DD7697B17BBA5F4005F1CFB /* CoreData.framework */,
-				2DD7697C17BBA5F4005F1CFB /* Foundation.framework */,
+				DEF6E8F52C1AAA310082AE42 /* oWidget.rc */,
+				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
 			);
-			name = "Other Frameworks";
+			name = Resources;
 			sourceTree = "<group>";
 		};
-		2DD7697D17BBA5F4005F1CFB /* Source */ = {
+		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				E35E3E0A27C321F000A81C66 /* monitor_mac.mm */,
-				E35E3E0F27C321F000A81C66 /* oCountButton.cpp */,
-				E35E3E1227C321F000A81C66 /* oDataList.cpp */,
-				E35E3E0D27C321F000A81C66 /* oDateTime.cpp */,
-				E35E3E0927C321F000A81C66 /* oDLNode.cpp */,
-				E35E3E0E27C321F000A81C66 /* oDropDown.cpp */,
-				E35E3E1127C321F000A81C66 /* oFontDropDown.cpp */,
-				E35E3E0B27C321F000A81C66 /* oImage.cpp */,
-				E35E3E0827C321F000A81C66 /* oImgLayer.cpp */,
-				E35E3E0C27C321F000A81C66 /* oRoundedButton.cpp */,
-				E35E3E1027C321F000A81C66 /* widget.cpp */,
+				E3E27E662C4B724100E523D0 /* monitor_mac.mm */,
+				E3E27E632C4B724100E523D0 /* oDateTime.cpp */,
+				E3E27E642C4B724100E523D0 /* oDLNode.cpp */,
+				E3E27E602C4B724100E523D0 /* oDropDown.cpp */,
+				E3E27E652C4B724100E523D0 /* oFontDropDown.cpp */,
+				E3E27E672C4B724100E523D0 /* oImage.cpp */,
+				E3E27E612C4B724100E523D0 /* oImgLayer.cpp */,
+				E3E27E622C4B724100E523D0 /* oRoundedButton.cpp */,
+				DE1E76912C1A86B40095FAB9 /* widget.cpp */,
+				DE1E768F2C1A86B40095FAB9 /* oCountButton.cpp */,
+				DE1E76902C1A86B40095FAB9 /* oDataList.cpp */,
 			);
 			name = Source;
-			path = generic;
 			sourceTree = "<group>";
 		};
-		E3BB4EC127B9EBE200A3AA81 /* omnis.xcomp.frameworks */ = {
+		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E3BB4ED027B9EC0A00A3AA81 /* FrameworkWndProc.cpp */,
-				E3BB4EC927B9EC0A00A3AA81 /* oBaseComponent.cpp */,
-				E3BB4ED127B9EC0A00A3AA81 /* oBaseComponent.h */,
-				E3BB4ECD27B9EC0A00A3AA81 /* oBaseNVComponent.cpp */,
-				E3BB4EC727B9EC0A00A3AA81 /* oBaseNVComponent.h */,
-				E3BB4EC427B9EC0A00A3AA81 /* oBaseVisComponent.cpp */,
-				E3BB4ECC27B9EC0A00A3AA81 /* oBaseVisComponent.h */,
-				E3BB4ECF27B9EC0A00A3AA81 /* oDrawingCanvas.cpp */,
-				E3BB4ECA27B9EC0A00A3AA81 /* oDrawingCanvas.h */,
-				E3BB4ED427B9EC0A00A3AA81 /* omnis.xcomp.framework.h */,
-				E3BB4ED227B9EC0A00A3AA81 /* oRGBAImage.cpp */,
-				E3BB4ED327B9EC0A00A3AA81 /* oRGBAImage.h */,
-				E3BB4EC527B9EC0A00A3AA81 /* oUTF8.cpp */,
-				E3BB4EC227B9EC0A00A3AA81 /* oUTF8.h */,
-				E3BB4EC327B9EC0A00A3AA81 /* oXCompLib.cpp */,
-				E3BB4EC827B9EC0A00A3AA81 /* oXCompLib.h */,
-				E3BB4ECE27B9EC0A00A3AA81 /* qArray.h */,
-				E3BB4ED527B9EC0A00A3AA81 /* qString.cpp */,
-				E3BB4EC627B9EC0A00A3AA81 /* qString.h */,
-				E3BB4ECB27B9EC0A00A3AA81 /* xCompStandardIncludes.h */,
+				DDD258BC092896A5006B6BC3 /* oWidget.u_xcomp */,
 			);
-			path = omnis.xcomp.frameworks;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		96D631340905093100E0F291 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				E3E27E5D2C4B71B100E523D0 /* monitor_mac.h */,
+				E3E27E5A2C4B71B100E523D0 /* oDateTime.h */,
+				E3E27E582C4B71B100E523D0 /* oDLNode.h */,
+				E3E27E5B2C4B71B100E523D0 /* oDropDown.h */,
+				E3E27E5C2C4B71B100E523D0 /* oFontDropDown.h */,
+				E3E27E592C4B71B100E523D0 /* oImage.h */,
+				E3E27E5E2C4B71B100E523D0 /* oImgLayer.h */,
+				E3E27E5F2C4B71B100E523D0 /* oRoundedButton.h */,
+				DE1E768D2C1A86A00095FAB9 /* widget.h */,
+				DE1E768E2C1A86A00095FAB9 /* oCountButton.h */,
+				DE1E768C2C1A86A00095FAB9 /* oDataList.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		DE1E766E2C1A863F0095FAB9 /* omnis.xcomp.frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DE1E76732C1A86770095FAB9 /* FrameworkWndProc.cpp */,
+				DE1E76722C1A86770095FAB9 /* oBaseComponent.cpp */,
+				DE1E767C2C1A86770095FAB9 /* oBaseComponent.h */,
+				DE1E767A2C1A86770095FAB9 /* oBaseNVComponent.cpp */,
+				DE1E766F2C1A86770095FAB9 /* oBaseNVComponent.h */,
+				DE1E76762C1A86770095FAB9 /* oBaseVisComponent.cpp */,
+				DE1E76772C1A86770095FAB9 /* oBaseVisComponent.h */,
+				DE1E767F2C1A86770095FAB9 /* oDrawingCanvas.cpp */,
+				DE1E76802C1A86770095FAB9 /* oDrawingCanvas.h */,
+				DE1E76702C1A86770095FAB9 /* omnis.xcomp.framework.h */,
+				DE1E76752C1A86770095FAB9 /* oRGBAImage.cpp */,
+				DE1E76742C1A86770095FAB9 /* oRGBAImage.h */,
+				DE1E76792C1A86770095FAB9 /* oUTF8.cpp */,
+				DE1E76712C1A86770095FAB9 /* oUTF8.h */,
+				DE1E767D2C1A86770095FAB9 /* oXCompLib.cpp */,
+				DE1E767B2C1A86770095FAB9 /* oXCompLib.h */,
+				DE1E767E2C1A86770095FAB9 /* qArray.h */,
+				DE1E76812C1A86770095FAB9 /* qString.cpp */,
+				DE1E76782C1A86770095FAB9 /* qString.h */,
+				DE1E76822C1A86770095FAB9 /* xCompStandardIncludes.h */,
+			);
+			name = omnis.xcomp.frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2DD7697317BBA5F4005F1CFB /* UnicodeCore */ = {
+		96CA4E530907E8CC00C234AA /* XCOMP */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2DD7698617BBA5F4005F1CFB /* Build configuration list for PBXNativeTarget "UnicodeCore" */;
+			buildConfigurationList = 96CA4E5D0907E8CC00C234AA /* Build configuration list for PBXNativeTarget "XCOMP" */;
 			buildPhases = (
-				2DD7697017BBA5F4005F1CFB /* Sources */,
-				2DD7697117BBA5F4005F1CFB /* Frameworks */,
-				2DD7697217BBA5F4005F1CFB /* Resources */,
+				96CA4E570907E8CC00C234AA /* Sources */,
+				96CA4E590907E8CC00C234AA /* Frameworks */,
+				96CA4E540907E8CC00C234AA /* Resources */,
 			);
 			buildRules = (
-				2DDD8B9017F426C100F4E765 /* PBXBuildRule */,
+				96CA4E5C0907E8CC00C234AA /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
-			name = UnicodeCore;
-			productName = generic;
-			productReference = 2DD7697417BBA5F4005F1CFB /* oWidget.u_xcomp */;
+			name = XCOMP;
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = oWidget;
+			productReference = DDD258BC092896A5006B6BC3 /* oWidget.u_xcomp */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		2DD7696C17BBA5F4005F1CFB /* Project object */ = {
+		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
-				ORGANIZATIONNAME = "Omnis Software Ltd";
+				LastUpgradeCheck = 1420;
 			};
-			buildConfigurationList = 2DD7696F17BBA5F4005F1CFB /* Build configuration list for PBXProject "oWidget" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
-			hasScannedForEncodings = 0;
+			buildConfigurationList = 96CF455E08FBABD1003AA3FE /* Build configuration list for PBXProject "oWidget" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
+				Base,
 				English,
 			);
-			mainGroup = 2DD7696B17BBA5F4005F1CFB;
-			productRefGroup = 2DD7697517BBA5F4005F1CFB /* Products */;
+			mainGroup = 089C166AFE841209C02AAC07 /* oWidget */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2DD7697317BBA5F4005F1CFB /* UnicodeCore */,
+				96CA4E530907E8CC00C234AA /* XCOMP */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		2DD7697217BBA5F4005F1CFB /* Resources */ = {
+		96CA4E540907E8CC00C234AA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E35E3E2227C3220300A81C66 /* oWidget.rc in Resources */,
-				2D7DE4B517CE03B300642BA9 /* InfoPlist.strings in Resources */,
-				E35E3E2327C3220300A81C66 /* oWidget.bmp in Resources */,
+				96CA4E550907E8CC00C234AA /* InfoPlist.strings in Resources */,
+				DEF6E8F62C1AAA310082AE42 /* oWidget.rc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2DD7697017BBA5F4005F1CFB /* Sources */ = {
+		96CA4E570907E8CC00C234AA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3BB4EDE27B9EC0B00A3AA81 /* qString.cpp in Sources */,
-				E3BB4ED927B9EC0B00A3AA81 /* oBaseComponent.cpp in Sources */,
-				E3BB4ED727B9EC0A00A3AA81 /* oBaseVisComponent.cpp in Sources */,
-				E3BB4EDC27B9EC0B00A3AA81 /* FrameworkWndProc.cpp in Sources */,
-				E3BB4ED827B9EC0A00A3AA81 /* oUTF8.cpp in Sources */,
-				E3BB4EDB27B9EC0B00A3AA81 /* oDrawingCanvas.cpp in Sources */,
-				E35E3E1527C321F000A81C66 /* monitor_mac.mm in Sources */,
-				E35E3E1427C321F000A81C66 /* oDLNode.cpp in Sources */,
-				E35E3E1827C321F000A81C66 /* oDateTime.cpp in Sources */,
-				E35E3E1B27C321F000A81C66 /* widget.cpp in Sources */,
-				E3BB4EDD27B9EC0B00A3AA81 /* oRGBAImage.cpp in Sources */,
-				E35E3E1927C321F000A81C66 /* oDropDown.cpp in Sources */,
-				E35E3E1727C321F000A81C66 /* oRoundedButton.cpp in Sources */,
-				E35E3E1627C321F000A81C66 /* oImage.cpp in Sources */,
-				E35E3E1327C321F000A81C66 /* oImgLayer.cpp in Sources */,
-				E35E3E1D27C321F000A81C66 /* oDataList.cpp in Sources */,
-				E35E3E1C27C321F000A81C66 /* oFontDropDown.cpp in Sources */,
-				E35E3E1A27C321F000A81C66 /* oCountButton.cpp in Sources */,
-				E3BB4EDA27B9EC0B00A3AA81 /* oBaseNVComponent.cpp in Sources */,
-				E3BB4ED627B9EC0A00A3AA81 /* oXCompLib.cpp in Sources */,
+				DE1E76942C1A86B40095FAB9 /* widget.cpp in Sources */,
+				E3E27E6D2C4B724100E523D0 /* oFontDropDown.cpp in Sources */,
+				E3E27E6E2C4B724100E523D0 /* monitor_mac.mm in Sources */,
+				E3E27E6C2C4B724100E523D0 /* oDLNode.cpp in Sources */,
+				DE1E768B2C1A86770095FAB9 /* qString.cpp in Sources */,
+				E3E27E682C4B724100E523D0 /* oDropDown.cpp in Sources */,
+				DE1E76872C1A86770095FAB9 /* oUTF8.cpp in Sources */,
+				DE1E76922C1A86B40095FAB9 /* oCountButton.cpp in Sources */,
+				DE1E76882C1A86770095FAB9 /* oBaseNVComponent.cpp in Sources */,
+				DE1E76862C1A86770095FAB9 /* oBaseVisComponent.cpp in Sources */,
+				E3E27E692C4B724100E523D0 /* oImgLayer.cpp in Sources */,
+				DE1E76832C1A86770095FAB9 /* oBaseComponent.cpp in Sources */,
+				DE1E768A2C1A86770095FAB9 /* oDrawingCanvas.cpp in Sources */,
+				E3E27E6F2C4B724100E523D0 /* oImage.cpp in Sources */,
+				E3E27E6B2C4B724100E523D0 /* oDateTime.cpp in Sources */,
+				DE1E76842C1A86770095FAB9 /* FrameworkWndProc.cpp in Sources */,
+				DE1E76852C1A86770095FAB9 /* oRGBAImage.cpp in Sources */,
+				E3E27E6A2C4B724100E523D0 /* oRoundedButton.cpp in Sources */,
+				DE1E76932C1A86B40095FAB9 /* oDataList.cpp in Sources */,
+				DE1E76892C1A86770095FAB9 /* oXCompLib.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		2D7DE4B217CE03B300642BA9 /* InfoPlist.strings */ = {
+		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				2D7DE4B317CE03B300642BA9 /* English */,
+				089C167EFE841241C02AAC07 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		E35E3E1E27C3220300A81C66 /* oWidget.rc */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E35E3E1F27C3220300A81C66 /* English */,
-			);
-			name = oWidget.rc;
-			sourceTree = "<group>";
-		};
-		E35E3E2027C3220300A81C66 /* oWidget.bmp */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E35E3E2127C3220300A81C66 /* English */,
-			);
-			name = oWidget.bmp;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		2DD7698417BBA5F4005F1CFB /* Development */ = {
+		96CA4E5E0907E8CC00C234AA /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 62173718279B1A2D008C41A4 /* mac/omnis.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
-				CLANG_CXX_LIBRARY = "compiler-default";
+				BUILD_VARIANTS = normal;
+				CLANG_CXX_LANGUAGE_STANDARD = $CPP_LANG_DIALECT;
+				CLANG_CXX_LIBRARY = $CPP_STD_LIBRARY;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
-				CONFIGURATION_BUILD_DIR = $PROJECT_DIR/_OSXUnicodeDbg;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CODE_SIGN_IDENTITY = $OMNIS_CODE_SIGNING_IDENTITY;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				DEPLOYMENT_LOCATION = YES;
+				FRAMEWORK_SEARCH_PATHS = $OMNIS_XCOMP_FRAMEWORK_PATH;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = (
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/mac/prefix_d.h";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = $OMNIS_XCOMP_HEADER_PATHS;
+				INFOPLIST_FILE = $PROJECT_DIR/Info.plist;
+				INIT_ROUTINE = "";
+				INSTALL_PATH = $OMNIS_XCOMP_INSTALL_DIR;
+				LIBRARY_STYLE = DYNAMIC;
+				MACOSX_DEPLOYMENT_TARGET = $OMNIS_DEPLOYMENT_TARGET;
+				ONLY_ACTIVE_ARCH = $OMNIS_ACTIVE_ARCH_ONLY;
+				OTHER_CFLAGS = "$(OMNIS_C_FLAGS)";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
 					"-fshort-wchar",
 					"-Dismach_o",
 					"-Wno-comment",
-					"-DOMNISSDK=102",
+					"-Wno-switch",
 				);
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = $XCOMP_BUNDLE_IDENTIFIER;
+				PRODUCT_NAME = $XCOMP_PRODUCT_NAME;
+				RESMERGER_SOURCES_FORK = data;
 				REZ_SEARCH_PATHS = (
 					$PROJECT_DIR,
-					$PROJECT_DIR/English.lproj,
+					$PROJECT_DIR/en.lproj,
+					$OMNIS_XCOMP_REZ_PATHS,
 				);
-				SDKROOT = macosx;
-				STRIP_INSTALLED_PRODUCT = NO;
+				SDKROOT = $OMNIS_SDK_ROOT;
+				WRAPPER_EXTENSION = u_xcomp;
+				ZERO_LINK = NO;
 			};
 			name = Development;
 		};
-		2DD7698517BBA5F4005F1CFB /* Deployment */ = {
+		96CA4E5F0907E8CC00C234AA /* Deployment */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 62173718279B1A2D008C41A4 /* mac/omnis.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
-				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_CXX_LANGUAGE_STANDARD = $CPP_LANG_DIALECT;
+				CLANG_CXX_LIBRARY = $CPP_STD_LIBRARY;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
-				CONFIGURATION_BUILD_DIR = $PROJECT_DIR/_OSXUnicode;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CODE_SIGN_IDENTITY = $OMNIS_CODE_SIGNING_IDENTITY;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEPLOYMENT_LOCATION = YES;
+				DWARF_DSYM_FOLDER_PATH = $DWARF_DSYM_FOLDER_PATH_PREFIX/$OMNIS_XCOMP_DIR;
+				FRAMEWORK_SEARCH_PATHS = $OMNIS_XCOMP_FRAMEWORK_PATH;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_CFLAGS = (
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/mac/prefix_r.h";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = $OMNIS_XCOMP_HEADER_PATHS;
+				INFOPLIST_FILE = $PROJECT_DIR/Info.plist;
+				INSTALL_PATH = $OMNIS_XCOMP_INSTALL_DIR;
+				LIBRARY_STYLE = DYNAMIC;
+				MACOSX_DEPLOYMENT_TARGET = $OMNIS_DEPLOYMENT_TARGET;
+				ONLY_ACTIVE_ARCH = $OMNIS_ACTIVE_ARCH_ONLY;
+				OTHER_CFLAGS = "$(OMNIS_C_FLAGS)";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
 					"-fshort-wchar",
 					"-Dismach_o",
 					"-Wno-comment",
-					"-DOMNISSDK=102",
+					"-Wno-switch",
 				);
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = $XCOMP_BUNDLE_IDENTIFIER;
+				PRODUCT_NAME = $XCOMP_PRODUCT_NAME;
+				RESMERGER_SOURCES_FORK = data;
 				REZ_SEARCH_PATHS = (
 					$PROJECT_DIR,
-					$PROJECT_DIR/English.lproj,
+					$PROJECT_DIR/en.lproj,
+					$OMNIS_XCOMP_REZ_PATHS,
 				);
-				SDKROOT = macosx;
-				STRIP_INSTALLED_PRODUCT = NO;
+				SDKROOT = $OMNIS_SDK_ROOT;
+				SKIP_INSTALL = NO;
+				WRAPPER_EXTENSION = u_xcomp;
+				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
-		2DD7698717BBA5F4005F1CFB /* Development */ = {
+		96CF455F08FBABD1003AA3FE /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_TEMP_DIR = "$(PROJECT_DIR)";
-				DSTROOT = /;
-				EXPORTED_SYMBOLS_FILE = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/thirdparty/omnis.sdk/mac/complib\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = $PROJECT_DIR/thirdparty/omnis.sdk/mac/complib/u_complib.framework/Headers/carbnuni.h;
-				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = $PROJECT_DIR/thirdparty/omnis.sdk/mac/complib/u_complib.framework/Headers;
-				INFOPLIST_FILE = $PROJECT_DIR/Info.plist;
-				INSTALL_PATH = $PROJECT_DIR/_OSXUnicodeDbg;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = $CPP_LANG_DIALECT;
+				CLANG_CXX_LIBRARY = $CPP_STD_LIBRARY;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "";
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = omnix.xcomp.owidget;
-				PRODUCT_NAME = oWidget;
-				WRAPPER_EXTENSION = u_xcomp;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = $OMNIS_SDK_ROOT;
 			};
 			name = Development;
 		};
-		2DD7698817BBA5F4005F1CFB /* Deployment */ = {
+		96CF456008FBABD1003AA3FE /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_TEMP_DIR = "$(PROJECT_DIR)";
-				DSTROOT = /;
-				EXPORTED_SYMBOLS_FILE = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/thirdparty/omnis.sdk/mac/complib\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = $PROJECT_DIR/thirdparty/omnis.sdk/mac/complib/u_complib.framework/Headers/carbnuni.h;
-				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = $PROJECT_DIR/thirdparty/omnis.sdk/mac/complib/u_complib.framework/Headers;
-				INFOPLIST_FILE = $PROJECT_DIR/Info.plist;
-				INSTALL_PATH = $PROJECT_DIR/_OSXUnicode;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = $CPP_LANG_DIALECT;
+				CLANG_CXX_LIBRARY = $CPP_STD_LIBRARY;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "";
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = omnix.xcomp.owidget;
-				PRODUCT_NAME = oWidget;
-				WRAPPER_EXTENSION = u_xcomp;
+				SDKROOT = $OMNIS_SDK_ROOT;
 			};
 			name = Deployment;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2DD7696F17BBA5F4005F1CFB /* Build configuration list for PBXProject "oWidget" */ = {
+		96CA4E5D0907E8CC00C234AA /* Build configuration list for PBXNativeTarget "XCOMP" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2DD7698417BBA5F4005F1CFB /* Development */,
-				2DD7698517BBA5F4005F1CFB /* Deployment */,
+				96CA4E5E0907E8CC00C234AA /* Development */,
+				96CA4E5F0907E8CC00C234AA /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Deployment;
 		};
-		2DD7698617BBA5F4005F1CFB /* Build configuration list for PBXNativeTarget "UnicodeCore" */ = {
+		96CF455E08FBABD1003AA3FE /* Build configuration list for PBXProject "oWidget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2DD7698717BBA5F4005F1CFB /* Development */,
-				2DD7698817BBA5F4005F1CFB /* Deployment */,
+				96CF455F08FBABD1003AA3FE /* Development */,
+				96CF456008FBABD1003AA3FE /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Deployment;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 2DD7696C17BBA5F4005F1CFB /* Project object */;
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
 }
